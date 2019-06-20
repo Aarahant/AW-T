@@ -1,0 +1,103 @@
+{
+    "modules": {
+        "HomeScreen": {
+            "authorization_bin": "Authorization Bin",
+            "employees": "Employees",
+            "log_out": "Log Out",
+            "settings": "Settings",
+            "title": "Main Menu"
+        },
+        "Settings": {
+            "language": "Language"
+        },
+        "BandejaDeAutorizaciones": {
+            "BandejaDeAutorizaciones": {
+                "title": "Authorization bin"
+            },
+            "AutorizacionPorTDC": {
+                "title": "Authorization bin",
+                "days_without_attending": "Days without attending"
+            },
+            "AutorizacionOC": {
+                "title": "Purchase order",
+                "status": "Status",
+                "date": "Date",
+                "comments": "Comments",
+                "report_title":"Report",
+                "report_text":"Purchase Order Preview",
+                "authorization_levels": "Authorization Levels",
+                "material_list": "Material List",
+                "justification":"Justification",
+                "write_justification":"Write the justification for your decision",
+                "accept": "Accept",
+                "reject": "Reject",
+                "cancel": "Cancel",
+                "number":"Document number",
+                "purchase_order_data_title":"Purchase order details",
+                "material_procurer": "Material procurer",
+                "messages": {
+                    "attention": "Attention",
+                    "authorization_s": "The purchase order and the respective payment advance's bill ({{ info_Pago }}) will be authorized. Do you wish to continue?",
+                    "authorization": "The purchase order will be authorized. ¿Do you wish to continue?",
+                    "rejection": "This rejection will return the amount to the requisition to able to be placed in another purchase order. Do you wish to continue?",
+                    "cancelation":"Canceling this purchase order will also cancel the amount in the requisition. Do you wish to continue?",
+                    "ok": "OK",
+                    "yes": "Yes",
+                    "no": "no"
+                },
+                "validations": {
+                    "missing_justification": "Please add a justification for your decision."
+                }
+            } 
+        }
+    },
+    "transactions": {
+        "CNCIAS": {
+            "CNCIASDSC": "Company"
+        },
+        "BANAUT": {
+            "BANAUTNDC": "Document number",
+            "BANAUTTDC": "Document type",
+            "BANAUTFEC": "Date"
+        },
+        "TIPAUT": {
+            "TIPAUTDSC": "Authorization type"
+        },
+        "CNCDIR": {
+            "CNCDIRNOM": "Supplier"
+        },
+        "PMCTPR": {
+            "PMCTPRDSC":  "Project"
+        },
+        "ACOCPA": {
+            "ACOCPAQTY": "Quantity",
+            "ACOCPAUM": "Measure unit",
+            "ACOCPAMNTIN": "Amount",
+            "ACOCPAPU": "Unit price",
+            "ACOCPAFOC1": "Purchase Order Date",
+            "ACOCPAFOC": "Date",
+            "ACOCPAMNT": "Amount"
+        },
+        "ACMVOI": {
+            "ACMVOIDCP3":"Requisition No.",
+            "ACMVOIDLP3":"Line",
+            "ACMVOICOM":"Justification",
+            "ACMVOIQTA":"Additional",
+            "ACMVOIPORA": "Percentage in advance",
+            "ACMVOIBAUT": "Observations"
+        },
+        "PMCTCG": {
+            "PMCTCGDSC":"Charge account"
+        },
+        "CNTCPG": {
+            "CNTCPGDSC": "Payment conditions"
+        }
+    },
+    "common": {
+        "session": {
+            "alert_title": "Attention",
+            "alert_content": "The session has expired.",
+            "alert_ok": "OK"
+        }
+    }
+}

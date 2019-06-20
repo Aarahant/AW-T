@@ -1,0 +1,106 @@
+{
+    "modules": {
+        "HomeScreen": {
+            "authorization_bin": "Bandeja de Autorizaciones",
+            "employees": "Empleados",
+            "log_out": "Cerrar sesión",
+            "settings": "Configuración",
+            "title": "Menú Principal"
+        },
+        "Settings": {
+            "language": "Idioma"
+        },
+        "BandejaDeAutorizaciones": {
+            "BandejaDeAutorizaciones": {
+                "title": "Bandeja de autorizaciones"
+            },
+            "AutorizacionPorTDC": {
+                "title": "Bandeja de autorizaciones",
+                "days_without_attending": "Días sin atender"
+            },
+            "AutorizacionOC": {
+                "title": "Orden de compra",
+                "status": "Estatus",
+                "date": "Fecha",
+                "comments": "Comentarios",
+                "report_title":"Reporte",
+                "report_text":"Preliminar de la Orden de Compra",
+                "authorization_levels": "Niveles de Autorización",
+                "material_list": "Lista de Insumos",
+                "justification":"Justificación",
+                "write_justification":"Escriba la justificación de su decisión",
+                "accept": "Aceptar",
+                "reject": "Rechazar",
+                "cancel": "Cancelar",
+                "number":"Número de documento",
+                "purchase_order_data_title":"Datos de la orden de compra",
+                "material_procurer": "Procurador de insumos",
+                "messages": {
+                    "attention": "Atención",
+                    "authorization_s": "Se autorizará la Orden de Compra y el Pago de la factura del anticipo correspondiente ({{ info_Pago }}) ¿Desea continuar con el proceso?",
+                    "authorization": "Se autorizará la Orden de Compra ¿Desea continuar con el proceso?",
+                    "rejection": "Este Rechazo regresará la cantidad a la requisición para poder ser colocada en otra orden de compra. ¿Desea continuar con el proceso?",
+                    "cancelation":"Esta Cancelación de Orden de Compra tambien cancelará esta cantidad en la requisición. ¿Desea continuar con el proceso?",
+                    "ok": "OK",
+                    "yes": "Sí",
+                    "no": "No"
+                },
+                "validations": {
+                    "missing_justification": "Por favor justifique su decisión."
+                }
+            } 
+        }
+    },
+    "transactions": {
+        "CNCIAS": {
+            "CNCIASDSC": "Compañía"
+        },
+        "BANAUT": {
+            "BANAUTNDC": "Número de documento",
+            "BANAUTTDC": "Tipo de documento",
+            "BANAUTFEC": "Fecha"
+        },
+        "TIPAUT": {
+            "TIPAUTDSC": "Tipo de autorización"
+        },
+        "CNCDIR": {
+            "CNCDIRNOM": "Proveedor"
+        },
+        "PMCTPR": {
+            "PMCTPRDSC":  "Proyecto"
+        },
+        "ACOCPA": {
+            "ACOCPAQTY": "Cantidad",
+            "ACOCPAUM": "Unidad",
+            "ACOCPAMNTIN": "Cantidad",
+            "ACOCPAPU": "Precio Unitario",
+            "ACOCPAFOC1": "Fecha de Orden de Compra",
+            "ACOCPAFOC": "Fecha",
+            "ACOCPAMNT":"Monto"
+        },
+        "ACMVOI": {
+            "ACMVOIDCP3":"No. de Requisición",
+            "ACMVOIDLP3":"Línea",
+            "ACMVOICOM":"Justificación",
+            "ACMVOIQTA":"Adicional",
+            "ACMVOIPORA":"Porcentaje de anticipo",
+            "ACMVOIBAUT":"Observaciones"
+        },
+        "PMCTCG": {
+            "PMCTCGDSC": "Cuenta de Cargo"
+        },
+        "CNTCPG": {
+            "CNTCPGDSC": "Condiciones de Pago"
+        }
+    },
+    "common": {
+        "session": {
+            "alert_title": "Atención",
+            "alert_content": "La sesión ha expirado.",
+            "alert_ok": "OK"
+        }
+    },
+    "router": {
+        "authorization_bin": "Bandeja de autorización"
+    }
+}

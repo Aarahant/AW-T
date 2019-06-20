@@ -1,0 +1,74 @@
+import React from 'react';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Text,
+  Image
+} from 'react-native'; 
+import { Actions } from 'react-native-router-flux';
+// import axios from 'axios';
+import I18n from 'react-native-i18n';
+
+
+export default class Idioma extends React.Component {
+
+    cambiar_lenguaje(lang){
+        I18n.locale = lang;
+        // global.language = lang;
+        Actions.refresh();
+        Actions.load();
+        Actions.main();
+        // Actions.popTo("home_screen");
+    }
+
+    render() { 
+        var flags = [
+          require('../../../assets/images/mexico.png'),
+          require('../../../assets/images/usa.png')
+        ];
+        return ( 
+            <View style={styles.container}>
+            <ScrollView contentContainerStyle={styles.contentContainer}>
+            <TouchableOpacity
+            style={styles.emailItem}
+            onPress={() => this.cambiar_lenguaje('en') }>
+                <View style={{flexDirection: 'row'}}>
+                <Image source={flags[1]} style={{width: 52, height: 30}}/>
+                <View style={{flex:1, margin:5}}>
+                    <Text> English (USA) </Text>
+                </View>
+                </View>
+            </TouchableOpacity>
+            <TouchableOpacity 
+            style={styles.emailItem}
+            onPress={() => this.cambiar_lenguaje('es') }>
+                <View style={{flexDirection: 'row'}}>
+                <Image source={flags[0]} style={{width: 52, height: 30}}/>
+                <View style={{flex:1, margin:5}}>
+                    <Text> Español (MX) </Text>
+                </View>
+                </View>
+            </TouchableOpacity>
+            </ScrollView>
+        </View>
+        );
+    }                                                                                     
+}
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#fff',
+    },
+    contentContainer: {
+      paddingTop: 0,
+      height: '100%'
+    },
+    emailItem:{
+      borderBottomWidth: 0.5,
+      borderColor: 'rgba(0,0,0,0.3)',
+      padding: 10
+    }
+  });
