@@ -20,7 +20,8 @@ export default class AutorizacionPorTDC extends React.Component {
     this.state = {
         filtros_bandeja: {
           "TOKEN_P": global.token,
-          "TIPAUTID_P": this.props.TIPAUTID
+          "TIPAUTID_P": this.props.TIPAUTID,
+          "LOCALE_P": global.language
         },
         loading: true,
         BandejaTDC: [],

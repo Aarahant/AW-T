@@ -116,11 +116,22 @@ android {
             include "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
         }
     }
+	
+	signingConfigs {
+		release {
+		  storeFile file('KDS_llave.keystore')
+		  storePassword 'ServerDca20181'
+		  keyAlias 'llave'
+		  keyPassword 'ServerDca20181'
+		}
+	}
+	
     buildTypes {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-        }
+			signingConfig signingConfigs.release
+		}
     }
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->

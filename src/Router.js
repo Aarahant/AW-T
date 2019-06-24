@@ -19,6 +19,7 @@ import AutorizacionOC from './components/Autorizaciones/AutorizacionOC';
 import Settings from './components/Settings/Settings';
 import Idioma from './components/Settings/Idioma';
 import LoadingScreen from './components/LoadingScreen';
+import IdiomaInicial from './components/IdiomaInicial';
 
 const RouterComponent = () => {
     return (
@@ -28,15 +29,20 @@ const RouterComponent = () => {
                     key="auth"
                     type="reset"
                     style={style.navBarStyle}
-                >
-                    <Scene
-                        hideNavBar
-                        title="Inicio de sesión"
-                        key="login"
-                        component={Login}
-                        initial
-                        style={style.sceneStyle}
-                    />
+                > 
+                <Scene
+                    hideNavBar
+                    title="Inicio de sesión"
+                    key="login"
+                    component={Login}
+                    initial
+                    style={style.sceneStyle}
+                />
+                <Scene
+                    title = "Elegir Idioma"
+                    key="idioma_inicial"
+                    component={IdiomaInicial}
+                />
                 </Stack>
                 <Stack
                     key="load"

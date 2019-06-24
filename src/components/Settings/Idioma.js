@@ -8,20 +8,42 @@ import {
   Image
 } from 'react-native'; 
 import { Actions } from 'react-native-router-flux';
-// import axios from 'axios';
+import axios from 'axios';
 import I18n from 'react-native-i18n';
 
 
 export default class Idioma extends React.Component {
 
-    cambiar_lenguaje(lang){
-        I18n.locale = lang;
-        // global.language = lang;
-        Actions.refresh();
-        Actions.load();
-        Actions.main();
-        // Actions.popTo("home_screen");
+  cambiar_lenguaje(lang){
+    // I18n.locale = lang;
+    console.log("####################### Lenguaje");
+    console.log(lang);
+    axios.post('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/rest/restpActualizarLocale', 
+    {
+      "TOKEN_P": global.token,
+      "LOCALEID_P": lang
     }
+   ).then(response => {
+     if (response.data.SUCCESS){
+      global.language = lang;
+      I18n.locale = lang;
+      Actions.refresh();
+      Actions.load();
+      Actions.main();
+     } else {
+       Alert.alert(
+         strings('common.session.alert_title'),
+         strings('common.session.alert_content'),
+         [
+           { text: strings('common.session.alert_ok'), onPress: () => Actions.auth() }
+         ],
+         { cancelable: false }
+       );
+       Actions.auth();
+     }
+    })
+    .catch(error => console.log(error));
+  }
 
     render() { 
         var flags = [
@@ -33,7 +55,7 @@ export default class Idioma extends React.Component {
             <ScrollView contentContainerStyle={styles.contentContainer}>
             <TouchableOpacity
             style={styles.emailItem}
-            onPress={() => this.cambiar_lenguaje('en') }>
+            onPress={() => this.cambiar_lenguaje('en-US') }>
                 <View style={{flexDirection: 'row'}}>
                 <Image source={flags[1]} style={{width: 52, height: 30}}/>
                 <View style={{flex:1, margin:5}}>
@@ -43,7 +65,7 @@ export default class Idioma extends React.Component {
             </TouchableOpacity>
             <TouchableOpacity 
             style={styles.emailItem}
-            onPress={() => this.cambiar_lenguaje('es') }>
+            onPress={() => this.cambiar_lenguaje('es-MX') }>
                 <View style={{flexDirection: 'row'}}>
                 <Image source={flags[0]} style={{width: 52, height: 30}}/>
                 <View style={{flex:1, margin:5}}>

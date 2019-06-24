@@ -24,7 +24,6 @@ import { Actions } from 'react-native-router-flux';
 import axios from 'axios';
 import { strings } from '../i18n';
 import I18n from 'react-native-i18n';
-// import { Card } from '@shoutem/ui';
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
@@ -61,7 +60,6 @@ export default class HomeScreen extends React.Component {
   };
 
   async componentDidMount() {
-    // I18n.locale = 'en';
     console.log("===============STAR WARS CHRISTMAS SPECIAL============")
     console.log(this.props);
     console.log(global.token);
@@ -124,6 +122,7 @@ export default class HomeScreen extends React.Component {
   render() {
     var randomImages = [
       require('../../assets/images/sys_kds.png'),
+      require('../../assets/images/kds_movil_logo.png')
     ];
 
     const ContPendientes = this.state.BandejaAut.cont_pendientes;
@@ -225,11 +224,11 @@ export default class HomeScreen extends React.Component {
 
     
     let AutCardStyle;
-    switch (I18n.locale){
-      case 'en':
+    switch (global.language){
+      case 'en-US':
         AutCardStyle = styles.cardAutLvl1;
         break;
-      case 'es':
+      case 'es-MX':
         AutCardStyle = styles.cardAutLvl2;
         break;
       default:

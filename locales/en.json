@@ -1,5 +1,10 @@
 {
     "modules": {
+        "Login":{
+            "username": "Username",
+            "password": "Password",
+            "login": "Login"
+        },
         "HomeScreen": {
             "authorization_bin": "Authorization Bin",
             "employees": "Employees",

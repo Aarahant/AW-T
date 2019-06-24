@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 // import { Actions } from 'react-native-router-flux';
 // import { Bars } from 'react-native-loader';
 

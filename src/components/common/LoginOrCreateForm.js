@@ -10,6 +10,8 @@ import {
 import {Button} from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import axios from 'axios';
+import { strings } from '../../i18n';
+import I18n from 'react-native-i18n';
 
 class LoginOrCreateForm extends Component {
   constructor(props) {
@@ -24,6 +26,7 @@ class LoginOrCreateForm extends Component {
   }
   
   componentDidMount() {
+    console.log(I18n.locale);
     this.setState({
       can_click_login: true
     });
@@ -66,9 +69,17 @@ class LoginOrCreateForm extends Component {
         .post('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/rest/restpAutenticacionUsuario', payload)
         .then(response => {
           if (response.data.SUCCESS){
-            const token = response.data.TOKEN;
-            global.token = token;
-            Actions.main();
+            global.token = response.data.TOKEN;
+            if (response.data.LOCALIZED) {
+              global.language = response.data.LOCALE;
+              I18n.locale = response.data.LOCALE;
+              Actions.main();
+            } else {
+              this.setState({
+                can_click_login: true
+              });
+              Actions.idioma_inicial();
+            }
           } else {
             ToastAndroid.showWithGravityAndOffset(response.data.RESPUESTA, ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
             this.setState({
@@ -135,7 +146,7 @@ class LoginOrCreateForm extends Component {
 
   renderButton() {
     return (
-      <Button title="Iniciar sesión" 
+      <Button title={strings('modules.Login.login')} 
       buttonStyle={{backgroundColor: '#135c79', width:130}} 
       onPress={this.handleRequest.bind(this)}/>  
     );
@@ -158,7 +169,7 @@ class LoginOrCreateForm extends Component {
           {/* {SystemLogo} */}
           <Image style={kds_logo_image} source={require("../../../assets/images/logo_animado_v1.gif")}/>
           <View style = {viewFontLogin}>
-            <Text style = {fontLogin}> Usuario</Text>
+            <Text style = {fontLogin}> {strings('modules.Login.username')}</Text>
           </View>
           <View style={fieldStyle}>
             <TextInput
@@ -168,7 +179,7 @@ class LoginOrCreateForm extends Component {
               style={textInputStyle}
             />
           </View>
-          <View style = {viewFontLogin}><Text style = {fontLogin}> Contraseña </Text></View>
+          <View style = {viewFontLogin}><Text style = {fontLogin}> {strings('modules.Login.password')}</Text></View>
           <View style={fieldStyle}>
             <TextInput
               secureTextEntry

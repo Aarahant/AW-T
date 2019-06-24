@@ -1,5 +1,10 @@
 {
     "modules": {
+        "Login":{
+            "username": "Usuario",
+            "password": "Contraseña",
+            "login": "Iniciar sesión"
+        },
         "HomeScreen": {
             "authorization_bin": "Bandeja de Autorizaciones",
             "employees": "Empleados",

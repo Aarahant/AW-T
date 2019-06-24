@@ -379,10 +379,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  textInputStyle: {
-    padding: 10,
-    fontSize: 16
-  },
   justificación: {
     flexDirection: 'row',
     justifyContent: 'center'
@@ -511,6 +507,15 @@ const styles = StyleSheet.create({
   containerButton: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 15
+    marginBottom: 15,
+    marginTop: 5
+  },
+  textInputStyle: {
+    padding: 4,
+    fontSize: 16,
+    flex: 1,
+    // padding: 6,
+    backgroundColor: '#73c0c7',
+    marginHorizontal: 5
   }
 });

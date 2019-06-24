@@ -1,2 +1,2 @@
 global.token = '';
-global.language = 'es';
+global.language = '';
