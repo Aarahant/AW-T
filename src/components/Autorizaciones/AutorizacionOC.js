@@ -93,34 +93,60 @@ export default class AutorizacionOC extends React.Component {
 
   renderNiveles(data){
     return (
-      <TouchableHighlight style={styles.navCardTouch}>
-        <View style={styles.navCard}> 
-          <View style={styles.navCardContent}>
+      // <TouchableHighlight style={styles.navCardTouch}>
+      //   <View style={styles.navCard}> 
+          <View style={styles.Contenedor}>
             <Text style={styles.postTitle}>{data.item.ACOCPAL2NIVEL} - {data.item.CNUSERDSC}</Text>
             <Text style={styles.postContent}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.status")}: {data.item.estatus_aut}</Text>
             <Text style={styles.postContent}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.date")}: {data.item.ACOCPAL2FECOP}</Text>
             <Text style={styles.postContent}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.comments")}: {data.item.ACOCPAL2COM}</Text>
           </View>
-        </View>
-      </TouchableHighlight>
+      //   </View>
+      // </TouchableHighlight> 
     );
   }
 
   renderInsumos(data){
     return (
-      <TouchableHighlight style={styles.navCardTouch}>
-        <View style={styles.navCard}> 
-          <View style={styles.navCardContent}>
-            <Text style={styles.postTitle}>{data.item.INPRODDSC}</Text>
-            <Text style={styles.postContent}>{strings("transactions.ACMVOI.ACMVOIDCP3")}: {data.item.ACMVOIDCP3}  {strings("transactions.ACMVOI.ACMVOIDLP3")}: {data.item.ACMVOIDLP3}</Text>
-            <Text style={styles.postContent}>{strings("transactions.ACOCPA.ACOCPAFOC1")}: {data.item.ACOCPAFOC1}</Text> 
-            <Text style={styles.postContent}>{strings("transactions.PMCTCG.PMCTCGDSC")}: {data.item.PMCTCGDSC}</Text>
-            <Text style={styles.postContent}>{strings("transactions.ACOCPA.ACOCPAQTY")}: {data.item.ACOCPAQTY}  {data.item.ACOCPAUM}  {strings("transactions.ACMVOI.ACMVOIQTA")}: {data.item.ACMVOIQTA}</Text>
-            <Text style={styles.postContent}>{strings("transactions.ACOCPA.ACOCPAMNTIN")}: ${data.item.ACOCPAMNTIN}  {strings("transactions.ACOCPA.ACOCPAPU")}: ${data.item.ACOCPAPU}</Text>
-            <Text style={styles.postContent}>{strings("transactions.ACMVOI.ACMVOICOM")}: {data.item.ACMVOICOM}</Text> 
+      // <TouchableHighlight style={styles.navCardTouch}>
+      //   <View style={styles.navCard}> 
+          <View style={styles.Contenedor}>
+            <Text style={styles.TituloInsumo}>{data.item.INPRODDSC}</Text>
+            <Text style={styles.TotalInsumo}>
+              {strings("transactions.ACOCPA.ACOCPAMNTIN")}: 
+              <Text style={styles.TotalInsumoArgent}> ${data.item.ACOCPAMNTIN} </Text>
+            </Text>
+            <Text style={styles.subTitulo}>
+              {strings("transactions.ACMVOI.ACMVOIDCP3")}:
+              <Text style={styles.información}> {data.item.ACMVOIDCP3}  </Text>  
+              {strings("transactions.ACMVOI.ACMVOIDLP3")}: 
+              <Text style={styles.información}> {data.item.ACMVOIDLP3}</Text>
+             </Text>
+            <Text style={styles.subTitulo}>
+              {strings("transactions.ACOCPA.ACOCPAFOC1")}: 
+              <Text style={styles.información}> {data.item.ACOCPAFOC1}</Text>
+            </Text> 
+            <Text style={styles.subTitulo}>
+              {strings("transactions.PMCTCG.PMCTCGDSC")}: 
+              <Text style={styles.información}> {data.item.PMCTCGDSC}</Text>
+            </Text>
+            <Text style={styles.subTitulo}> 
+              {strings("transactions.ACOCPA.ACOCPAQTY")}: 
+              <Text style={styles.información}> {data.item.ACOCPAQTY}  {data.item.ACOCPAUM}  </Text>
+              {strings("transactions.ACMVOI.ACMVOIQTA")}: 
+              <Text style={styles.información}> {data.item.ACMVOIQTA}</Text>
+            </Text>
+            <Text style={styles.subTitulo}> 
+              {strings("transactions.ACOCPA.ACOCPAPU")}:
+              <Text style={styles.información}> ${data.item.ACOCPAPU}</Text>
+            </Text>
+            <Text style={styles.subTitulo}>
+              {strings("transactions.ACMVOI.ACMVOICOM")}: 
+              <Text style={styles.información}> {data.item.ACMVOICOM}</Text>
+            </Text> 
           </View>
-        </View>
-      </TouchableHighlight>
+      //   </View>
+      // </TouchableHighlight>
     );
   }
 
@@ -295,8 +321,8 @@ export default class AutorizacionOC extends React.Component {
                 subtitle={strings("modules.BandejaDeAutorizaciones.AutorizacionOC.report_text")}
               />
             </TouchableHighlight>
-            <View style ={styles.header}>
-              <Text style = {styles.pub}>
+            <View style ={styles.separadorContainer}>
+              <Text style = {styles.separador}>
                 {strings("modules.BandejaDeAutorizaciones.AutorizacionOC.authorization_levels")}
               </Text>
             </View>
@@ -305,8 +331,8 @@ export default class AutorizacionOC extends React.Component {
               keyExtractor= {(item, index) => niveles + index.toString()}
               renderItem={this.renderNiveles.bind(this)}
             />
-            <View style ={styles.header}>
-              <Text style = {styles.pub}>
+            <View style ={styles.separadorContainer}>
+              <Text style = {styles.separador}>
                 {strings("modules.BandejaDeAutorizaciones.AutorizacionOC.material_list")}
               </Text>
             </View>
@@ -327,7 +353,7 @@ export default class AutorizacionOC extends React.Component {
                   value={justificacion}
                   autoCorrect={true}
                   multiline = {true}
-                  numberOfLines={3}
+                  numberOfLines={1}
                   maxLength={250}
                   onChangeText={this.onJustificacionChange.bind(this)}
                   style={styles.textInputStyle}
@@ -391,13 +417,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 22,
   },
-  pub: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontWeight: 'bold',
-    fontSize: 18,
-    marginTop: 20,
+  separador: {
+    alignItems: 'flex-start',
+    // justifyContent: 'center',
+    // fontWeight: 'bold',
+    fontSize: 24,
+    marginTop: 12,
     marginBottom: 12,
+    paddingHorizontal: 15
+    // color: 'white'
+  },
+  separadorContainer:{
+    alignItems: 'flex-start',
+    // justifyContent: 'center',
+    backgroundColor: '#f2f2f2'
   },
   profilepicWrap:{
       width: 180,
@@ -493,7 +526,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgb(15, 127, 121)'
+    backgroundColor: 'rgb(13, 114, 109)'
   },
   titleJustificacion: {
     alignItems: 'center',
@@ -514,8 +547,28 @@ const styles = StyleSheet.create({
     padding: 4,
     fontSize: 16,
     flex: 1,
-    // padding: 6,
-    backgroundColor: '#73c0c7',
+    backgroundColor: 'rgb(103, 173, 179)',
     marginHorizontal: 5
+  },
+  Contenedor: {
+    margin: 15
+  },
+  TituloInsumo: {
+    fontSize: 20,
+    color: 'black'
+  },
+  TotalInsumo: {
+    fontSize: 19
+  },
+  TotalInsumoArgent: {
+    fontSize: 19,
+    color: '#a5c97f'
+  },
+  subTitulo: {
+    fontSize: 16
+  },
+  información: {
+    fontSize: 16,
+    color: '#b7b6b6'
   }
 });

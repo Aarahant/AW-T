@@ -5,7 +5,9 @@ import {
   View,
   Text,
   FlatList,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Image
 } from 'react-native'; 
 import { Header} from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
@@ -60,31 +62,42 @@ export default class AutorizacionPorTDC extends React.Component {
 
   renderItem(data){
     let informacion;
+    let dayColor = "red";
     informacion = 
-      <View style={{flexDirection: 'row'}}>
-        <View style={{flex:1, margin:5}}>
-          <Text style = {{fontWeight: "bold"}} >{data.item.BANAUTNDC}</Text>
-          <Text > {strings('transactions.CNCIAS.CNCIASDSC')}: {data.item.CNCIASDSC}</Text>
-        <Text > {strings('transactions.CNCDIR.CNCDIRNOM')}: {data.item.CNCDIRNOM}</Text>
-        <Text > {strings('transactions.PMCTPR.PMCTPRDSC')}: {data.item.PMCTPRDSC}</Text>
-        <Text > {strings('transactions.BANAUT.BANAUTFEC')}: {data.item.BANAUTFEC}</Text>
-        <Text > {strings('modules.BandejaDeAutorizaciones.AutorizacionPorTDC.days_without_attending')}: {data.item.dias_sin_atender}</Text>
+      <View>
+        <View>
+          <Text style={styles.curvedCardHeader}>{data.item.CNCIASDSC} - 
+            <Text style={styles.curvedCardHeaderHighlighted}> {data.item.BANAUTNDC}</Text>
+          </Text>
+          <Text style={styles.curvedCardSubtitleHighlighted}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPorTDC.days_without_attending')}: 
+            <Text style={{color: dayColor}}> {data.item.dias_sin_atender}</Text>
+          </Text>
+          <Text style={styles.curvedCardSubtitle}>{strings('transactions.CNCDIR.CNCDIRNOM')}</Text>
+          <Text style={styles.curvedCardContent}>{data.item.CNCDIRNOM}</Text>
+          <Text style={styles.curvedCardSubtitle}>{strings('transactions.PMCTPR.PMCTPRDSC')}</Text>
+          <Text style={styles.curvedCardContent}>{data.item.PMCTPRDSC}</Text>
+          <Text style={styles.curvedCardSubtitle}>{strings('transactions.BANAUT.BANAUTFEC')}:
+            <Text style={styles.curvedCardContent}> {data.item.BANAUTFEC}</Text>
+          </Text>
         </View>
       </View>
     if (data.item.BANAUTTDC == 'OMP'){
       return (
         <TouchableOpacity
-          style={styles.emailItem}
-          onPress={() => Actions.autorizacion_oc(data.item)}
-        >
-        {informacion}
+            onPress={() => Actions.autorizacion_oc(data.item)}
+          >
+          <View style={styles.curvedCard}>
+              {informacion}
+          </View>
         </TouchableOpacity>
       );
     }else {
       return(
-        <TouchableOpacity style={styles.emailItem}> 
-          {informacion} 
-        </TouchableOpacity>
+        <TouchableWithoutFeedback> 
+          <View style={styles.curvedCard}>
+            {informacion} 
+          </View>
+        </TouchableWithoutFeedback>
       );
     }
   } 
@@ -97,28 +110,37 @@ export default class AutorizacionPorTDC extends React.Component {
     const loading = this.state.loading;
     const Bandeja = this.state.BandejaTDC.sdtRestBandejaAut;
     const tipoDeDoc = this.state.BandejaTDC.TIPAUTDSC;
-    console.log("####################### TIPO DE DOCUMENTO");
-    console.log(tipoDeDoc)
-    // console.log("########### The Last Jedi #####")
-    // console.log(Bandeja)
-
+    let IndicadorAusenciaDatos;
+    
+    
     if (loading != true) {
+      if (Bandeja.length === 0) {
+        IndicadorAusenciaDatos = <View style={styles.center}>
+          <Text style={{width: 200}}>No tiene autorizaciones pendientes</Text>
+          <Image style={{width: 200}} source={require('../../../assets/images/caja_vacia.png')} ></Image>
+        </View>
+      }
+  
       return (   
         <View style={styles.container}>   
-          <Header
+          {/* <Header
               backgroundColor='#003366'
               leftComponent={{ icon: "search", color: '#fff', onPress:() => console.log("#### Búsqueda") }}
               centerComponent={{ text: tipoDeDoc, style: { color: '#fff' } }}
-          />
-        <View style={styles.container}>
-          <ScrollView contentContainerStyle={styles.contentContainer}>
-            <FlatList
-              data={Bandeja}
-              keyExtractor= {(item, index) => index.toString() + item.BANAUTNDC.toString() }
-              renderItem={this.renderItem.bind(this)}
-            />
-          </ScrollView>
-        </View>
+          /> */}
+          {IndicadorAusenciaDatos}
+          <View style={styles.container}>
+            <ScrollView contentContainerStyle={styles.contentContainer}>
+               {/* <View style={styles.center}> 
+                <Text style={styles.mainTitle}>{tipoDeDoc}</Text>
+              </View> */}
+              <FlatList
+                data={Bandeja}
+                keyExtractor= {(item, index) => index.toString() + item.BANAUTNDC.toString() }
+                renderItem={this.renderItem.bind(this)}
+              />
+            </ScrollView>
+          </View>
         </View>
       );
     } else {
@@ -165,4 +187,48 @@ const styles = StyleSheet.create({
   emailSubject: {
     color: 'rgba(0,0,0,0.5)'
   },
+  curvedCard:{
+    padding: 20,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    elevation: 10,
+    marginTop: 5,
+    marginBottom: 15,
+    marginLeft: 15,
+    marginRight: 15
+  },
+  curvedCardHeader:{
+    fontSize: 26,
+    color: "black"
+  },
+  curvedCardHeaderHighlighted: {
+    fontSize: 26,
+    color: "rgb(38, 51, 140)"
+  },
+  curvedCardSubtitle: {
+    fontSize: 16,
+    color: "grey"
+  },
+  curvedCardContent: {
+    fontSize: 16,
+    color: "#B7B6B6"
+  },
+  curvedCardSubtitleHighlighted: {
+    fontSize: 18,
+    color: "black"
+  },
+  mainTitleContainer:{
+    alignItems: "center",
+    justifyContent: 'center'
+  },
+  mainTitle:{
+    fontSize: 20,
+    color: "black",
+  },
+  center: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 });
