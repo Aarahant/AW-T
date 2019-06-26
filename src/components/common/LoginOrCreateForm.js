@@ -147,7 +147,7 @@ class LoginOrCreateForm extends Component {
   renderButton() {
     return (
       <Button title={strings('modules.Login.login')} 
-      buttonStyle={{backgroundColor: '#135c79', width:130}} 
+      buttonStyle={{backgroundColor: '#135c79', width:130, elevation: 1}} 
       onPress={this.handleRequest.bind(this)}/>  
     );
   }
@@ -218,7 +218,8 @@ const style = StyleSheet.create({
     flex: 1,
     padding: 6,
     fontSize: 16,
-    backgroundColor: '#73c0c7'
+    backgroundColor: '#73c0c7',
+    elevation: 1
   },
   fieldStyle: {
     flexDirection: 'row',

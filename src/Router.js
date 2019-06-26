@@ -30,19 +30,19 @@ const RouterComponent = () => {
                     type="reset"
                     style={style.navBarStyle}
                 > 
-                <Scene
-                    hideNavBar
-                    title="Inicio de sesión"
-                    key="login"
-                    component={Login}
-                    initial
-                    style={style.sceneStyle}
-                />
-                <Scene
-                    title = "Elegir Idioma"
-                    key="idioma_inicial"
-                    component={IdiomaInicial}
-                />
+                    <Scene
+                        hideNavBar
+                        title="Inicio de sesión"
+                        key="login"
+                        component={Login}
+                        initial
+                        style={style.sceneStyle}
+                    />
+                    <Scene
+                        title = "Elegir Idioma"
+                        key="idioma_inicial"
+                        component={IdiomaInicial}
+                    />
                 </Stack>
                 <Stack
                     key="load"
@@ -63,7 +63,7 @@ const RouterComponent = () => {
                 >
                     <Scene
                         hideNavBar
-                        title="Principio"
+                        title=""
                         key="home_screen"
                         component={HomeScreen}
                         initial                        
@@ -71,12 +71,12 @@ const RouterComponent = () => {
 
                     {/* Escenas relacionadas al Personal */}
                     <Scene
-                        title="Personal"
+                        title=""
                         key="musician_list"
                         component={MusicianList}
                     />
                     <Scene
-                        title="Perfil del empleado"
+                        title=""
                         key="profile_detail"
                         component={ProfileDetail}
                     />
@@ -84,31 +84,31 @@ const RouterComponent = () => {
                     {/* Bandeja de autorizaciones */}
                     <Scene
                         // Distribución de autorizaciones pendientes según su tipo de documento
-                        title="Bandeja de Autorizaciones"
+                        title=""
                         key="bandeja_de_autorizaciones"
                         component={BandejaDeAutorizaciones}
                     />
                     <Scene
                         // Autorizaciones pendientes por tipo de documento seleccionado
-                        title="Bandeja de Autorizaciones"
+                        title=""
                         key="autorizacion_por_tdc"
                         component={AutorizacionPorTDC}
                     />
                     <Scene
                         // Detalles de la autorizacion de orden de compra
-                        title="Orden de Compra"
+                        title=""
                         key="autorizacion_oc"
                         component={AutorizacionOC}
                     />
 
                     {/* Configuración */}
                     <Scene
-                        title="Configuración"
+                        title=""
                         key="settings"
                         component={Settings}
                     />
                     <Scene
-                        title="Selección de Idioma"
+                        title=""
                         key="idiomas"
                         component={Idioma}
                     />

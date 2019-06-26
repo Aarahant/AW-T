@@ -138,7 +138,6 @@ export default class HomeScreen extends React.Component {
       color_pend = '#ff4d4d';
       estatus = 'error';
     }
-
     let AutPend;
     let AutBadge;
     if (ContPendientes > 0) {
@@ -247,15 +246,19 @@ export default class HomeScreen extends React.Component {
             backgroundColor= '#1aa6a8' //'#003366'
             leftComponent={{ icon: 'menu', color: '#fff', onPress:() => this.refs['mainDrawer'].openDrawer() }}
             centerComponent={{ text: strings('modules.HomeScreen.title'), style: { color: '#fff' } }}
+            containerStyle={{
+              elevation: 5,
+              borderWidth: 0
+            }}
           />
             <View style={styles.container}>
               <ScrollView>
-                <View style = {{flexDirection: 'row', flex: 1}}>
+                <View style = {{flexDirection: 'row', flex: 1, paddingTop: 5}}>
                   <View style={styles.columna}>
                     <TouchableOpacity onPress={() => {Actions.bandeja_de_autorizaciones()}}>  
                       <Card
                         title= {strings('modules.HomeScreen.authorization_bin')}
-                        containerStyle = {AutCardStyle}
+                        containerStyle = {styles.curvedCardLeft}
                         image={require('../../assets/images/autorizaciones_300.png')}
                         imageStyle = {styles.imgCard}
                       > 
@@ -265,7 +268,7 @@ export default class HomeScreen extends React.Component {
 
                     <TouchableOpacity onPress={() => {Actions.bandeja_de_autorizaciones()}}>  
                       <Card
-                        containerStyle = {styles.cardAutLvl1}
+                        containerStyle = {styles.curvedCardLeft}
                         title='Autorizaciones left'
                         image={require('../../assets/images/autorizaciones_300.png')}
                         imageStyle = {styles.imgCard}
@@ -278,7 +281,7 @@ export default class HomeScreen extends React.Component {
                   <View style={styles.columna}> 
                     <TouchableOpacity onPress={() => {Actions.bandeja_de_autorizaciones()}}>  
                       <Card
-                        containerStyle = {styles.cardAutLvl1}
+                        containerStyle = {styles.curvedCardRight}
                         title='Autorizaciones right'
                         image={require('../../assets/images/autorizaciones_300.png')}
                         imageStyle = {styles.imgCard}
@@ -351,7 +354,7 @@ const styles = StyleSheet.create({
   },
   columna: {
     flex: 0,
-    width: "45%",
+    width: "50%",
     height: undefined,
     // alignSelf: 'flex-end',
     justifyContent: 'flex-start'
@@ -458,7 +461,31 @@ menuOptionFinal:{
   borderWidth: 1,
   borderBottomWidth: 1,
   borderColor: 'rgb(224,224,224)'
-}
+},
+curvedCardLeft:{
+  // padding: 20,
+  borderRadius: 10,
+  backgroundColor: 'white',
+  elevation: 6,
+  marginTop: 0,
+  marginBottom: 10,
+  marginLeft: 8,
+  marginRight: 5
+},
+curvedCardRight:{
+  // padding: 20,
+  borderRadius: 10,
+  backgroundColor: 'white',
+  elevation: 6,
+  marginTop: 0,
+  marginBottom: 10,
+  marginLeft: 5,
+  marginRight: 10
+},
+curvedCardHeader:{
+  fontSize: 26,
+  color: "black"
+},
 // ,
 // overAllContainer: {
 //   marginTop: 80

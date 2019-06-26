@@ -11,12 +11,15 @@ import {
   Button,
   ToastAndroid,
   Alert,
-  Linking
+  Linking,
+  Dimensions
 } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import axios from 'axios';
 import { Actions } from 'react-native-router-flux';
 import { strings } from '../../i18n';
+import ProgressBarAnimated from 'react-native-progress-bar-animated';
+import NumberFormat from 'react-number-format';
 
 export default class AutorizacionOC extends React.Component {
   constructor(props) {
@@ -36,6 +39,7 @@ export default class AutorizacionOC extends React.Component {
   }
 
   componentDidMount() {
+    this.titleInterval = setInterval(() => this.updateTitle(),1);
     // console.log("############### Han Solo")
     const keys = this.state.parametros; 
     axios.post('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/rest/restgAutOrdenCompra', keys
@@ -91,19 +95,56 @@ export default class AutorizacionOC extends React.Component {
     .catch(error =>  console.log(error));
   }
 
+  updateTitle() {
+    Actions.refresh({title: strings("modules.BandejaDeAutorizaciones.AutorizacionOC.title")});
+    clearInterval(this.titleInterval);
+  }
+
   renderNiveles(data){
-    return (
-      // <TouchableHighlight style={styles.navCardTouch}>
-      //   <View style={styles.navCard}> 
-          <View style={styles.Contenedor}>
-            <Text style={styles.postTitle}>{data.item.ACOCPAL2NIVEL} - {data.item.CNUSERDSC}</Text>
-            <Text style={styles.postContent}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.status")}: {data.item.estatus_aut}</Text>
-            <Text style={styles.postContent}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.date")}: {data.item.ACOCPAL2FECOP}</Text>
-            <Text style={styles.postContent}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.comments")}: {data.item.ACOCPAL2COM}</Text>
-          </View>
-      //   </View>
-      // </TouchableHighlight> 
-    );
+    let estatusAutStyle;
+    switch (data.item.ACOCPAAUHE){
+      case 0:
+        estatusAutStyle = styles.información;
+        break;
+      case 1:
+        estatusAutStyle = styles.estatuts_autorizo;
+        break;
+      case 2:
+        estatusAutStyle = styles.estatuts_cancelado;
+        break;
+      case 3:
+        estatusAutStyle = styles.estatuts_rechazo;
+        break;
+      default:
+        estatusAutStyle = styles.información;
+        break;
+    }
+    if (data.item.pendiente_aut){
+      return (
+        <View style={styles.Contenedor}>
+          <Text style={styles.postTitle}>{data.item.ACOCPAL2NIVEL} - {data.item.CNUSERDSC}</Text>
+          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.status")}:
+            <Text  style={estatusAutStyle}> {data.item.estatus_aut}</Text>
+          </Text>
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.Contenedor}>
+          <Text style={styles.postTitle}>{data.item.ACOCPAL2NIVEL} - {data.item.CNUSERDSC}</Text>
+          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.status")}: 
+            <Text style={estatusAutStyle}> {data.item.estatus_aut}</Text>
+          </Text>
+          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.date")}: 
+            <Text style={styles.información}> {data.item.ACOCPAL2FECOP}</Text>
+          </Text>
+          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.comments")}: 
+            <Text style={styles.información}> {data.item.ACOCPAL2COM}</Text>
+          </Text>
+        </View>
+      );
+    }
+    
   }
 
   renderInsumos(data){
@@ -112,9 +153,9 @@ export default class AutorizacionOC extends React.Component {
       //   <View style={styles.navCard}> 
           <View style={styles.Contenedor}>
             <Text style={styles.TituloInsumo}>{data.item.INPRODDSC}</Text>
-            <Text style={styles.TotalInsumo}>
-              {strings("transactions.ACOCPA.ACOCPAMNTIN")}: 
-              <Text style={styles.TotalInsumoArgent}> ${data.item.ACOCPAMNTIN} </Text>
+            <Text style={styles.TotalInsumo}> 
+              {strings("transactions.ACOCPA.ACOCPAMNTIN")}:
+              <NumberFormat value={parseFloat(data.item.ACOCPAMNTIN)} displayType={'text'} renderText={value => <Text style={styles.TotalInsumoArgent}> {value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>  
             </Text>
             <Text style={styles.subTitulo}>
               {strings("transactions.ACMVOI.ACMVOIDCP3")}:
@@ -131,14 +172,14 @@ export default class AutorizacionOC extends React.Component {
               <Text style={styles.información}> {data.item.PMCTCGDSC}</Text>
             </Text>
             <Text style={styles.subTitulo}> 
-              {strings("transactions.ACOCPA.ACOCPAQTY")}: 
-              <Text style={styles.información}> {data.item.ACOCPAQTY}  {data.item.ACOCPAUM}  </Text>
-              {strings("transactions.ACMVOI.ACMVOIQTA")}: 
-              <Text style={styles.información}> {data.item.ACMVOIQTA}</Text>
+              {strings("transactions.ACOCPA.ACOCPAQTY")}:
+              <NumberFormat value={parseFloat(data.item.ACOCPAQTY)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} {data.item.ACOCPAUM} </Text>} thousandSeparator={true} prefix={''}></NumberFormat> 
+              {strings("transactions.ACMVOI.ACMVOIQTA")}:
+              <NumberFormat value={parseFloat(data.item.ACMVOIQTA)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} </Text>} thousandSeparator={true} prefix={''}></NumberFormat> 
             </Text>
             <Text style={styles.subTitulo}> 
               {strings("transactions.ACOCPA.ACOCPAPU")}:
-              <Text style={styles.información}> ${data.item.ACOCPAPU}</Text>
+              <NumberFormat value={parseFloat(data.item.ACOCPAPU)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
             </Text>
             <Text style={styles.subTitulo}>
               {strings("transactions.ACMVOI.ACMVOICOM")}: 
@@ -286,7 +327,9 @@ export default class AutorizacionOC extends React.Component {
     const datos = this.state.aut_data;
     const insumos = this.state.aut_data.sdtRestListaInsumosAut;
     const niveles = this.state.aut_data.sdtRestNivelesAut;
-    const justificacion = this.state.justificacion
+    const justificacion = this.state.justificacion;
+    const advancePercentage = parseInt(datos.ACMVOIPORA);
+
     if (loading != true) {
       return (   
         <View style={styles.container}>
@@ -301,16 +344,23 @@ export default class AutorizacionOC extends React.Component {
               <Text style={styles.contenido}>{datos.CNCDIRNOM}</Text>
               <Text style={styles.subtitulo}>{strings("transactions.PMCTPR.PMCTPRDSC")}</Text>
               <Text style={styles.contenido}>{datos.PMCTPRDSC}</Text> 
-              <Text style={styles.subtitulo}>{strings("transactions.CNTCPG.CNTCPGDSC")}</Text>
-              <Text style={styles.contenidoCondPago}>{datos.CNTPGODSC}</Text> 
               <Text style={styles.subtitulo}>{strings("transactions.ACOCPA.ACOCPAMNT")}</Text>
-              <Text style={styles.contenido}>{datos.ACOCPAMNT}{datos.ACOCPAMON} </Text>
+              <NumberFormat value={parseFloat(datos.ACOCPAMNT)} displayType={'text'} renderText={value => <Text style={styles.contenidoMonto}>{value} {datos.ACOCPAMON}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
+              <Text style={styles.subtitulo}>{strings("transactions.CNTCPG.CNTCPGDSC")}</Text>
+              <Text style={styles.contenido}>{datos.CNTPGODSC}</Text> 
               <Text style={styles.subtitulo}>{strings("transactions.ACMVOI.ACMVOIBAUT")}</Text>
               <Text style={styles.contenidoLargo}>{datos.ACMVOIOBAUT}</Text> 
               <Text style={styles.subtitulo}>{strings("transactions.ACOCPA.ACOCPAFOC")}</Text>
               <Text style={styles.contenido}>{datos.ACOCPAFOC}</Text>
               <Text style={styles.subtitulo}>{strings("transactions.ACMVOI.ACMVOIPORA")}</Text>
               <Text style={styles.contenido}>{datos.ACMVOIPORA}%</Text>
+              <ProgressBarAnimated
+                width={Dimensions.get("window").width - 50}
+                borderRadius={10}
+                value={advancePercentage}
+                backgroundColor="#d5edff"
+
+              />
             </View>
             <TouchableHighlight onPress={() =>
               Linking.openURL('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/' + this.state.pdfLink)}>
@@ -363,9 +413,11 @@ export default class AutorizacionOC extends React.Component {
                 <TouchableHighlight style ={styles.ocButton}>
                   <Button title={strings("modules.BandejaDeAutorizaciones.AutorizacionOC.accept")}  color="rgb(124, 183, 62)" onPress={this.aceptarOC.bind(this)}/>
                 </TouchableHighlight>
+                <Text>{" "}</Text>
                 <TouchableHighlight style ={styles.ocButton}>
                   <Button title={strings("modules.BandejaDeAutorizaciones.AutorizacionOC.reject")} color="#rgb(216, 87, 57)" onPress={this.rechazarOC.bind(this)}/>
                 </TouchableHighlight>
+                <Text>{" "}</Text>
                 <TouchableHighlight style ={styles.ocButton}>
                   <Button title={strings("modules.BandejaDeAutorizaciones.AutorizacionOC.cancel")} color="rgb(19, 92, 121)" onPress={this.cancelarOC.bind(this)}/>
                 </TouchableHighlight>
@@ -511,7 +563,7 @@ const styles = StyleSheet.create({
     color: 'rgb(38, 51, 140)',
     fontSize: 20
   },
-  contenidoCondPago: {
+  contenidoMonto: {
     fontFamily: 'sans-serif-condensed',
     color: 'rgb(0, 143, 41)',
     fontSize: 18
@@ -554,21 +606,42 @@ const styles = StyleSheet.create({
     margin: 15
   },
   TituloInsumo: {
+    fontFamily: 'sans-serif-condensed',
     fontSize: 20,
     color: 'black'
   },
   TotalInsumo: {
+    fontFamily: 'sans-serif-condensed',
     fontSize: 19
   },
   TotalInsumoArgent: {
+    fontFamily: 'sans-serif-condensed',
     fontSize: 19,
-    color: '#a5c97f'
+    color: 'rgb(0, 143, 41)'
+    // color: '#a5c97f'
   },
   subTitulo: {
+    fontFamily: 'sans-serif-condensed',
     fontSize: 16
   },
   información: {
+    fontFamily: 'sans-serif-condensed',
     fontSize: 16,
     color: '#b7b6b6'
+  },
+  estatuts_autorizo: {
+    fontFamily: 'sans-serif-condensed',
+    fontSize: 17,
+    color: 'rgb(124, 183, 62)'
+  },
+  estatuts_cancelado: {
+    fontFamily: 'sans-serif-condensed',
+    fontSize: 17,
+    color: 'rgb(19, 92, 121)'
+  },
+  estatuts_rechazo: {
+    fontFamily: 'sans-serif-condensed',
+    fontSize: 17,
+    color: 'rgb(216, 87, 57)'
   }
 });

@@ -13,11 +13,16 @@
             "title": "Menú Principal"
         },
         "Settings": {
-            "language": "Idioma"
+            "title": "Configuración",
+            "language": "Idioma",
+            "Idioma": {
+                "title": "Idioma"
+            }
         },
         "BandejaDeAutorizaciones": {
             "BandejaDeAutorizaciones": {
-                "title": "Bandeja de autorizaciones"
+                "title": "Bandeja de autorizaciones",
+                "non_pending": "No tiene autorizaciones pendientes"
             },
             "AutorizacionPorTDC": {
                 "title": "Bandeja de autorizaciones",

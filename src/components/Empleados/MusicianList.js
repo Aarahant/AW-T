@@ -14,6 +14,7 @@ import {
 import { Actions } from 'react-native-router-flux';
 import axios from 'axios';
 import {  Header} from 'react-native-elements';
+import { strings } from '../../i18n';
 
 
 
@@ -53,11 +54,12 @@ export default class MusicianList extends React.Component {
   }
 
   async componentDidMount() {
-    console.log("############## Props en MusicianList");
-    console.log(this.props);
-    console.log(global.token);
+    this.titleInterval = setInterval(() => this.updateTitle(),1);
+    // console.log("############## Props en MusicianList");
+    // console.log(this.props);
+    // console.log(global.token);
     this.arrayholder = [];
-    console.log("#####################rouge one")
+    // console.log("#####################rouge one")
     axios
       .post('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/rest/restgEmpleados',
       {
@@ -87,7 +89,11 @@ export default class MusicianList extends React.Component {
         }
       })
       .catch(error =>  console.log(error));
+  }
 
+  updateTitle() {
+    Actions.refresh({title: strings("modules.Settings.Idioma.title")});
+    clearInterval(this.titleInterval);
   }
 
   renderItem(data){

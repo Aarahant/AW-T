@@ -12,8 +12,10 @@
     "react-native": "0.59.9",
     "react-native-elements": "^1.1.0",
     "react-native-i18n": "^2.0.15",
+    "react-native-progress-bar-animated": "^1.0.6",
     "react-native-router-flux": "^4.0.6",
-    "react-native-vector-icons": "^6.5.0"
+    "react-native-vector-icons": "^6.5.0",
+    "react-number-format": "^4.0.8"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",

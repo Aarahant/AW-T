@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import { Actions } from 'react-native-router-flux';
+import { strings } from '../../i18n';
 
 export default class ProfileDetail extends React.Component {
   constructor(props) {
@@ -29,6 +30,7 @@ export default class ProfileDetail extends React.Component {
   }
 
   componentDidMount() {
+    this.titleInterval = setInterval(() => this.updateTitle(),1);
     // console.log("############### Han Solo")
     axios.post('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/rest/restgEmpleadosInfo', 
       this.state.empleado_keys
@@ -52,6 +54,11 @@ export default class ProfileDetail extends React.Component {
       //  console.log(this.state.empleado_data);
      })
      .catch(error =>  console.log(error));
+  }
+
+  updateTitle() {
+    Actions.refresh({title: strings("modules.Settings.Idioma.title")});
+    clearInterval(this.titleInterval);
   }
 
   render() { 

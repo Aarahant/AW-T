@@ -33,6 +33,7 @@ export default class AutorizacionPorTDC extends React.Component {
   }
 
   async componentDidMount() {
+    this.titleInterval = setInterval(() => this.updateTitle(),1);
     axios
       .post('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/rest/restgBandejaListaAut',
        this.state.filtros_bandeja
@@ -60,6 +61,11 @@ export default class AutorizacionPorTDC extends React.Component {
       // console.log(this.state.BandejaTDC);
   }
 
+  updateTitle() {
+    Actions.refresh({title: strings("modules.BandejaDeAutorizaciones.AutorizacionPorTDC.title")});
+    clearInterval(this.titleInterval);
+  }
+
   renderItem(data){
     let informacion;
     let dayColor = "red";
@@ -71,7 +77,7 @@ export default class AutorizacionPorTDC extends React.Component {
           </Text>
           <Text style={styles.curvedCardSubtitleHighlighted}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPorTDC.days_without_attending')}: 
             <Text style={{color: dayColor}}> {data.item.dias_sin_atender}</Text>
-          </Text>
+          </Text> 
           <Text style={styles.curvedCardSubtitle}>{strings('transactions.CNCDIR.CNCDIRNOM')}</Text>
           <Text style={styles.curvedCardContent}>{data.item.CNCDIRNOM}</Text>
           <Text style={styles.curvedCardSubtitle}>{strings('transactions.PMCTPR.PMCTPRDSC')}</Text>
@@ -112,28 +118,21 @@ export default class AutorizacionPorTDC extends React.Component {
     const tipoDeDoc = this.state.BandejaTDC.TIPAUTDSC;
     let IndicadorAusenciaDatos;
     
-    
     if (loading != true) {
       if (Bandeja.length === 0) {
-        IndicadorAusenciaDatos = <View style={styles.center}>
-          <Text style={{width: 200}}>No tiene autorizaciones pendientes</Text>
-          <Image style={{width: 200}} source={require('../../../assets/images/caja_vacia.png')} ></Image>
+        IndicadorAusenciaDatos =
+        <View style={styles.pushedDown}> 
+          {/* <View style={styles.center}> */}
+            <Text style={{width: 250, textAlign: "center", fontSize: 20}}>{strings("modules.BandejaDeAutorizaciones.BandejaDeAutorizaciones.non_pending")}</Text>
+            <Image style={{width: 150, height: 150}} source={require("../../../assets/images/caja_vacia.png")}></Image>
+          {/* </View> */}
         </View>
       }
-  
       return (   
         <View style={styles.container}>   
-          {/* <Header
-              backgroundColor='#003366'
-              leftComponent={{ icon: "search", color: '#fff', onPress:() => console.log("#### Búsqueda") }}
-              centerComponent={{ text: tipoDeDoc, style: { color: '#fff' } }}
-          /> */}
           {IndicadorAusenciaDatos}
           <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.contentContainer}>
-               {/* <View style={styles.center}> 
-                <Text style={styles.mainTitle}>{tipoDeDoc}</Text>
-              </View> */}
               <FlatList
                 data={Bandeja}
                 keyExtractor= {(item, index) => index.toString() + item.BANAUTNDC.toString() }
@@ -151,7 +150,7 @@ export default class AutorizacionPorTDC extends React.Component {
       );
     }
   }
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -226,6 +225,13 @@ const styles = StyleSheet.create({
     color: "black",
   },
   center: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  pushedDown:{
+    marginTop: 100,
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',

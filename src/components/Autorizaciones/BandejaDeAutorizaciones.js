@@ -18,9 +18,7 @@ import I18n from 'react-native-i18n';
 export default class BandejaDeAutorizaciones extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      title: "Holiwis",
       loading: true,
       BandejaAut: [],
       data: [],
@@ -28,6 +26,7 @@ export default class BandejaDeAutorizaciones extends React.Component {
   }
 
   async componentDidMount() {
+    this.titleInterval = setInterval(() => this.updateTitle(),1);
     axios
       .post('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/rest/restgBandejaTipoAut',
       {
@@ -55,8 +54,11 @@ export default class BandejaDeAutorizaciones extends React.Component {
         
       }
       ).catch(error =>  console.log(error));
-
-      this.interval = setInterval(() => axios
+    this.interval = setInterval(() => this.updateBin(),10000);
+  }
+  
+  updateBin(){
+    axios
       .post('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/rest/restgBandejaTipoAut',
       {
         "TOKEN_P": global.token,
@@ -68,8 +70,6 @@ export default class BandejaDeAutorizaciones extends React.Component {
             BandejaAut: response.data,
             loading: false
           });
-          console.log("######### pendientillos");
-          console.log(this.state.BandejaAut.sdtBandejaTipoAut[2].cont_pendientes)
           this.arrayholder = response.data;
         } else {
           Alert.alert(
@@ -82,13 +82,16 @@ export default class BandejaDeAutorizaciones extends React.Component {
           );
           Actions.auth();
         }
-      }
-      ).catch(error =>  console.log(error)),
-      10000);
+      }).catch(error =>  console.log(error));
+  }
+
+  updateTitle() {
+    Actions.refresh({title: strings("modules.BandejaDeAutorizaciones.BandejaDeAutorizaciones.title")});
+    clearInterval(this.titleInterval);
   }
   
   componentWillUnmount() {
-    clearInterval(this.interval)
+    clearInterval(this.interval);
   }
 
   renderItem(data){

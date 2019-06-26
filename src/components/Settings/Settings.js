@@ -14,8 +14,16 @@ import { strings } from '../../i18n';
 
 export default class Settings extends React.Component {
 
- render() { 
+  componentDidMount() {
+    this.titleInterval = setInterval(() => this.updateTitle(),1);
+  }
 
+  updateTitle() {
+    Actions.refresh({title: strings("modules.Settings.title")});
+    clearInterval(this.titleInterval);
+  }
+
+  render() { 
     return ( 
     <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.contentContainer}>

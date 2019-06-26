@@ -12,8 +12,8 @@ import LoginOrCreateForm from './common/LoginOrCreateForm';
 class Login extends Component {
   render() {
     return (
-      <ImageBackground source={require('../../assets/images/blue_background.png')} style={{width: '100%', height: '100%'}}>
-      <ScrollView >
+      <ScrollView style={{backgroundColor: "#24aebb"}}>
+        <ImageBackground source={require('../../assets/images/blue_background.png')} style={{width: '100%'}}>
           <View style={styles.mainDiv} >
             {/* <Text style={styles.screenTitle}>AW&T</Text>
             <Text style={styles.flavorText}>KDS:Anywhere and Anytime</Text> */}
@@ -21,8 +21,8 @@ class Login extends Component {
               <LoginOrCreateForm />
             </View>
           </View>
-        </ScrollView>
-      </ImageBackground>
+        </ImageBackground>
+      </ScrollView>
     );
   }
 }
