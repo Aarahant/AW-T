@@ -19,6 +19,7 @@ import { strings } from '../../i18n';
 
 
 
+numformat
 export default class MusicianList extends React.Component {
   constructor(props) {
     super(props);
