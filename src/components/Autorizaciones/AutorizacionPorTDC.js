@@ -145,6 +145,7 @@ export default class AutorizacionPorTDC extends React.Component {
     } else {
       return (   
         <View style={styles.loadingContainer}>
+          <Image style={styles.kds_logo_image} source={require("../../../assets/gifs/bars.gif")}/>
           <Text> Loading... </Text>
         </View>
       );
@@ -156,6 +157,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  kds_logo_image: {
+    height: 190,
+    width: 190
   },
   loadingContainer: {
     flex: 1,
