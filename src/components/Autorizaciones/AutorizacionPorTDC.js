@@ -118,7 +118,7 @@ export default class AutorizacionPorTDC extends React.Component {
     const tipoDeDoc = this.state.BandejaTDC.TIPAUTDSC;
     let IndicadorAusenciaDatos;
     
-    if (loading != true) {
+    if (loading != true) { //
       if (Bandeja.length === 0) {
         IndicadorAusenciaDatos =
         <View style={styles.pushedDown}> 
@@ -145,8 +145,8 @@ export default class AutorizacionPorTDC extends React.Component {
     } else {
       return (   
         <View style={styles.loadingContainer}>
-          <Image style={styles.kds_logo_image} source={require("../../../assets/gifs/bars.gif")}/>
-          <Text> Loading... </Text>
+          <Image style={styles.kds_logo_image} source={require("../../../assets/gifs/bars6.gif")}/>
+          {/* <Text style={{fontSize: 18}}> Loading... </Text> */}
         </View>
       );
     }
@@ -159,8 +159,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   kds_logo_image: {
-    height: 190,
-    width: 190
+    height: 260,
+    width: 260,
   },
   loadingContainer: {
     flex: 1,

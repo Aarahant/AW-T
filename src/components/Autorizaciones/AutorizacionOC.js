@@ -12,7 +12,9 @@ import {
   ToastAndroid,
   Alert,
   Linking,
-  Dimensions
+  Dimensions,
+  Animated,
+  Easing
 } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import axios from 'axios';
@@ -93,6 +95,18 @@ export default class AutorizacionOC extends React.Component {
       
     })
     .catch(error =>  console.log(error));
+  }
+  
+  spin () {
+    this.spinValue.setValue(0)
+    Animated.timing(
+      this.spinValue,
+      {
+        toValue: 1,
+        duration: 4000,
+        easing: Easing.linear
+      }
+    ).start(() => this.spin())
   }
 
   updateTitle() {
@@ -430,6 +444,7 @@ export default class AutorizacionOC extends React.Component {
     } else {
       return (   
         <View style={styles.loadingContainer}>
+          <Image style={styles.kds_logo_image} source={require("../../../assets/gifs/bars2.gif")}/>
           <Text> Loading... </Text>
         </View>
       );
@@ -452,6 +467,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     justifyContent: "center",
     alignItems: "center"
+  },
+  kds_logo_image: {
+    height: 250,
+    width: 250
   },
   header:{
     alignItems: 'center',

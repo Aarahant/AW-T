@@ -157,6 +157,7 @@ export default class BandejaDeAutorizaciones extends React.Component {
     } else {
       return (   
         <View style={styles.loadingContainer}>
+          <Image style={styles.kds_logo_image} source={require("../../../assets/gifs/bars6.gif")}/>
           <Text> Loading... </Text>
         </View>
       );
@@ -174,6 +175,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     justifyContent: "center",
     alignItems: "center"
+  },
+  kds_logo_image: {
+    height: 250,
+    width: 250
   },
   contentContainer: {
     paddingTop: 0,

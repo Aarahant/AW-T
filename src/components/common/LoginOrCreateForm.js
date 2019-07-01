@@ -167,7 +167,7 @@ class LoginOrCreateForm extends Component {
       <View style={{ flex: 1 }}>
         <View style={formContainerStyle}>
           {/* {SystemLogo} */}
-          <Image style={kds_logo_image} source={require("../../../assets/images/logo_animado_v1.gif")}/>
+          <Image style={kds_logo_image} source={require("../../../assets/gifs/KDS_LOGO.gif")}/>
           <View style = {viewFontLogin}>
             <Text style = {fontLogin}> {strings('modules.Login.username')}</Text>
           </View>
