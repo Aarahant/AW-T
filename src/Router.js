@@ -18,7 +18,7 @@ import AutorizacionPorTDC from './components/Autorizaciones/AutorizacionPorTDC';
 import AutorizacionOC from './components/Autorizaciones/AutorizacionOC';
 import Settings from './components/Settings/Settings';
 import Idioma from './components/Settings/Idioma';
-import LoadingScreen from './components/LoadingScreen';
+import LoadingScreen from './components/Common/LoadingScreen';
 import IdiomaInicial from './components/IdiomaInicial';
 
 const RouterComponent = () => {

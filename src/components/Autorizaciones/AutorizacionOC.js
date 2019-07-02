@@ -22,6 +22,7 @@ import { Actions } from 'react-native-router-flux';
 import { strings } from '../../i18n';
 import ProgressBarAnimated from 'react-native-progress-bar-animated';
 import NumberFormat from 'react-number-format';
+import LoadingScreen from '../Common/LoadingScreen';
 
 export default class AutorizacionOC extends React.Component {
   constructor(props) {
@@ -44,7 +45,7 @@ export default class AutorizacionOC extends React.Component {
     this.titleInterval = setInterval(() => this.updateTitle(),1);
     // console.log("############### Han Solo")
     const keys = this.state.parametros; 
-    axios.post('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/rest/restgAutOrdenCompra', keys
+    axios.post('restgAutOrdenCompra', keys
      ).then(response => {
        if (response.data.SUCCESS){
         this.setState({
@@ -73,7 +74,7 @@ export default class AutorizacionOC extends React.Component {
       "ACOCPATDC_P": keys.BANAUTTDC_P,
       "ACOCPADOC_P": keys.BANAUTNDC_P
     }; 
-    axios.post('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/rest/restgRePreOC', pdfParm
+    axios.post('restgRePreOC', pdfParm
     ).then(response => {
       if (response.data.SUCCESS){
         this.setState({
@@ -311,7 +312,7 @@ export default class AutorizacionOC extends React.Component {
     };
     console.log("############# Validacion");
     console.log(validacion);
-    axios.post('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/rest/restpArcOrdenCompra', 
+    axios.post('restpArcOrdenCompra', 
       validacion
     )
     .then(response => {
@@ -443,10 +444,7 @@ export default class AutorizacionOC extends React.Component {
       );
     } else {
       return (   
-        <View style={styles.loadingContainer}>
-          <Image style={styles.kds_logo_image} source={require("../../../assets/gifs/bars2.gif")}/>
-          <Text> Loading... </Text>
-        </View>
+        <LoadingScreen />
       );
     } 
   }
@@ -461,16 +459,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  loadingContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  kds_logo_image: {
-    height: 250,
-    width: 250
   },
   header:{
     alignItems: 'center',

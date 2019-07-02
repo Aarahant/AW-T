@@ -10,6 +10,7 @@ import {
 import axios from 'axios';
 import { Actions } from 'react-native-router-flux';
 import { strings } from '../../i18n';
+import LoadingScreen from '../Common/LoadingScreen';
 
 export default class ProfileDetail extends React.Component {
   constructor(props) {
@@ -32,7 +33,7 @@ export default class ProfileDetail extends React.Component {
   componentDidMount() {
     this.titleInterval = setInterval(() => this.updateTitle(),1);
     // console.log("############### Han Solo")
-    axios.post('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/rest/restgEmpleadosInfo', 
+    axios.post('restgEmpleadosInfo', 
       this.state.empleado_keys
      ).then(response => {
        if (response.data.SUCCESS){
@@ -101,10 +102,7 @@ export default class ProfileDetail extends React.Component {
       );
     } else {
       return (   
-        <View style={styles.loadingContainer}>
-          {/* <Bars size={50} color="#2b5580" /> */}
-          <Text> Loading... </Text>
-        </View>
+        <LoadingScreen/>
       );
     } 
   }
@@ -114,12 +112,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  loadingContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: "center",
-    alignItems: "center"
   },
   header:{
     alignItems: 'center',

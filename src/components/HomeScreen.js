@@ -65,7 +65,7 @@ export default class HomeScreen extends React.Component {
     console.log(global.token);
     console.log("===============STAR WARS CHRISTMAS SPECIAL END============")
     axios
-        .post('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/rest/restgBandAutPend',
+        .post('restgBandAutPend',
         {
           "TOKEN_P": global.token
         }
@@ -89,7 +89,7 @@ export default class HomeScreen extends React.Component {
         );
         
       this.interval = setInterval(() => axios
-        .post('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/rest/restgBandAutPend',
+        .post('restgBandAutPend',
         {
           "TOKEN_P": global.token
         }

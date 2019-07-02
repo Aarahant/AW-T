@@ -14,6 +14,7 @@ import { Actions } from 'react-native-router-flux';
 import axios from 'axios';
 import { strings } from '../../i18n';
 import I18n from 'react-native-i18n';
+import LoadingScreen from '../Common/LoadingScreen';
 
 export default class BandejaDeAutorizaciones extends React.Component {
   constructor(props) {
@@ -28,7 +29,7 @@ export default class BandejaDeAutorizaciones extends React.Component {
   async componentDidMount() {
     this.titleInterval = setInterval(() => this.updateTitle(),1);
     axios
-      .post('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/rest/restgBandejaTipoAut',
+      .post('restgBandejaTipoAut',
       {
         "TOKEN_P": global.token,
         "LOCALE_P": I18n.locale
@@ -59,7 +60,7 @@ export default class BandejaDeAutorizaciones extends React.Component {
   
   updateBin(){
     axios
-      .post('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/rest/restgBandejaTipoAut',
+      .post('restgBandejaTipoAut',
       {
         "TOKEN_P": global.token,
         "LOCALE_P": I18n.locale
@@ -156,10 +157,7 @@ export default class BandejaDeAutorizaciones extends React.Component {
       );
     } else {
       return (   
-        <View style={styles.loadingContainer}>
-          <Image style={styles.kds_logo_image} source={require("../../../assets/gifs/bars6.gif")}/>
-          <Text> Loading... </Text>
-        </View>
+        <LoadingScreen />
       );
     }
   }
@@ -169,16 +167,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  loadingContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  kds_logo_image: {
-    height: 250,
-    width: 250
   },
   contentContainer: {
     paddingTop: 0,

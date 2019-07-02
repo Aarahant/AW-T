@@ -19,7 +19,7 @@ export default class IdiomaInicial extends React.Component {
       // I18n.locale = lang;
       console.log("####################### Lenguaje");
       console.log(lang);
-      axios.post('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/rest/restpActualizarLocale', 
+      axios.post('restpActualizarLocale', 
       {
         "TOKEN_P": global.token,
         "LOCALEID_P": lang

@@ -13,6 +13,7 @@ import { Header} from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import axios from 'axios';
 import { strings } from '../../i18n';
+import LoadingScreen from '../Common/LoadingScreen';
 
 export default class AutorizacionPorTDC extends React.Component {
   constructor(props) {
@@ -35,7 +36,7 @@ export default class AutorizacionPorTDC extends React.Component {
   async componentDidMount() {
     this.titleInterval = setInterval(() => this.updateTitle(),1);
     axios
-      .post('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/rest/restgBandejaListaAut',
+      .post('restgBandejaListaAut',
        this.state.filtros_bandeja
       ).then(response => {
         if (response.data.SUCCESS){
@@ -143,11 +144,8 @@ export default class AutorizacionPorTDC extends React.Component {
         </View>
       );
     } else {
-      return (   
-        <View style={styles.loadingContainer}>
-          <Image style={styles.kds_logo_image} source={require("../../../assets/gifs/bars6.gif")}/>
-          {/* <Text style={{fontSize: 18}}> Loading... </Text> */}
-        </View>
+      return (
+        <LoadingScreen />
       );
     }
   }
@@ -157,16 +155,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  kds_logo_image: {
-    height: 260,
-    width: 260,
-  },
-  loadingContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: "center",
-    alignItems: "center"
   },
   contentContainer: {
     paddingTop: 0,

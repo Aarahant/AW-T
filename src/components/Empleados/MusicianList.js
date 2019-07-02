@@ -15,6 +15,7 @@ import { Actions } from 'react-native-router-flux';
 import axios from 'axios';
 import {  Header} from 'react-native-elements';
 import { strings } from '../../i18n';
+import LoadingScreen from '../Common/LoadingScreen';
 
 export default class MusicianList extends React.Component {
   constructor(props) {
@@ -58,7 +59,7 @@ export default class MusicianList extends React.Component {
     this.arrayholder = [];
     // console.log("#####################rouge one")
     axios
-      .post('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/rest/restgEmpleados',
+      .post('restgEmpleados',
       {
         "TOKEN_P": global.token,
         "MB_CIASID_P": 1,
@@ -256,9 +257,7 @@ export default class MusicianList extends React.Component {
       )     ;
     } else {
       return (   
-        <View style={styles.loadingContainer}>
-          <Text> Loading... </Text>
-        </View>
+        <LoadingScreen/>
       );
     }
   }
@@ -270,12 +269,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',   
-  },
-  loadingContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: "center",
-    alignItems: "center"
   },
   texto:{
     margin: 10,
