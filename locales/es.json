@@ -58,6 +58,22 @@
                 "validations": {
                     "missing_justification": "Por favor justifique su decisión."
                 }
+            },
+            "AutorizacionRav": {
+                "title": "Registro de Avance",
+                "status": "Estatus",
+                "date": "Fecha",
+                "comments": "Comentarios",
+                "report_title":"Reporte",
+                "report_text":"Preliminar de la Orden de Compra",
+                "authorization_levels": "Niveles de Autorización",
+                "material_list": "Detalle del Servicio",
+                "justification":"Justificación",
+                "write_justification":"Escriba la justificación de su decisión",
+                "accept": "Aceptar",
+                "reject": "Rechazar",
+                "number": "Número de documento",
+                "price": "Monto"
             } 
         }
     },
@@ -94,7 +110,17 @@
             "ACMVOICOM":"Justificación",
             "ACMVOIQTA":"Adicional",
             "ACMVOIPORA":"Porcentaje de anticipo",
-            "ACMVOIBAUT":"Observaciones"
+            "ACMVOIBAUT":"Observaciones",
+            "ACMVOIFDOC":"Fecha orden de compra",
+            "ACMVOIFCEP":"Fecha compromiso",
+            "ACMVOIQTO":"Cantidad"
+        },
+        "ACMVOR": {
+            "ACMVORDSC4": "Descripción"
+        },
+        "ACMROI": {
+            "ACMROIFP":"Precio unitario",
+            "ACMROIPAREG":"Porcentage de avance"
         },
         "PMCTCG": {
             "PMCTCGDSC": "Cuenta de Cargo"

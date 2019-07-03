@@ -8,7 +8,6 @@ import {
     StyleSheet,
     StatusBar 
 } from 'react-native';
-import { strings } from './i18n';
 import Login from './components/Login';
 import HomeScreen from './components/HomeScreen';
 import MusicianList from './components/Empleados/MusicianList';
@@ -16,6 +15,8 @@ import ProfileDetail from './components/Empleados/ProfileDetail';
 import BandejaDeAutorizaciones from './components/Autorizaciones/BandejaDeAutorizaciones';
 import AutorizacionPorTDC from './components/Autorizaciones/AutorizacionPorTDC';
 import AutorizacionOC from './components/Autorizaciones/AutorizacionOC';
+import AutorizacionPag from './components/Autorizaciones/AutorizacionPag';
+import AutorizacionRav from './components/Autorizaciones/AutorizacionRav';
 import Settings from './components/Settings/Settings';
 import Idioma from './components/Settings/Idioma';
 import LoadingScreen from './components/Common/LoadingScreen';
@@ -100,7 +101,18 @@ const RouterComponent = () => {
                         key="autorizacion_oc"
                         component={AutorizacionOC}
                     />
-
+                    <Scene
+                        // Detalles de la autorizacion de pago
+                        title=""
+                        key="autorizacion_pag"
+                        component={AutorizacionPag}
+                    />
+                    <Scene
+                        // Detalles de la autorizacion de registro de avance
+                        title=""
+                        key="autorizacion_rav"
+                        component={AutorizacionRav}
+                    />
                     {/* Configuración */}
                     <Scene
                         title=""

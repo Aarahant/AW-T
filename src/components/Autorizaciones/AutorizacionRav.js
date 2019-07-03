@@ -24,7 +24,7 @@ import ProgressBarAnimated from 'react-native-progress-bar-animated';
 import NumberFormat from 'react-number-format';
 import LoadingScreen from '../Common/LoadingScreen';
 
-export default class AutorizacionOC extends React.Component {
+export default class AutorizacionRav extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,15 +44,15 @@ export default class AutorizacionOC extends React.Component {
   componentDidMount() {
     this.titleInterval = setInterval(() => this.updateTitle(),1);
     // console.log("############### Han Solo")
-    const keys = this.state.parametros; 
-    axios.post('restgAutOrdenCompra', keys
+    const keys = this.state.parametros;
+    axios.post('restgAutRegistroAvance', keys
      ).then(response => {
        if (response.data.SUCCESS){
         this.setState({
           aut_data: response.data,
           loading: false
          });
-        //  console.log(this.state.aut_data);
+         this.getPdfLink();
        } else {
          Alert.alert(
            strings('common.session.alert_title'),
@@ -66,14 +66,21 @@ export default class AutorizacionOC extends React.Component {
        }
      })
      .catch(error =>  console.log(error));
-    
+  }
+
+  updateTitle() {
+    Actions.refresh({title: strings("modules.BandejaDeAutorizaciones.AutorizacionRav.title")});
+    clearInterval(this.titleInterval);
+  }
+
+  getPdfLink() {
     const pdfParm = {
       "TOKEN_P": global.token,
       "CNIDMAID_P": "ESP",
       "ACOCPACIA_P": keys.BANAUTCIA_P,
-      "ACOCPATDC_P": keys.BANAUTTDC_P,
-      "ACOCPADOC_P": keys.BANAUTNDC_P
-    }; 
+      "ACOCPATDC_P": this.state.aut_data.CNTDOCID,
+      "ACOCPADOC_P": this.state.aut_data.ACMROIDOC
+    };
     axios.post('restgRePreOC', pdfParm
     ).then(response => {
       if (response.data.SUCCESS){
@@ -93,19 +100,13 @@ export default class AutorizacionOC extends React.Component {
         );
         Actions.auth();
       }
-      
     })
     .catch(error =>  console.log(error));
   }
 
-  updateTitle() {
-    Actions.refresh({title: strings("modules.BandejaDeAutorizaciones.AutorizacionOC.title")});
-    clearInterval(this.titleInterval);
-  }
-
   renderNiveles(data){
     let estatusAutStyle;
-    switch (data.item.ACOCPAAUHE){
+    switch (data.item.ACRAVPANAUHE){
       case 0:
         estatusAutStyle = styles.información;
         break;
@@ -125,8 +126,8 @@ export default class AutorizacionOC extends React.Component {
     if (data.item.pendiente_aut){
       return (
         <View style={styles.Contenedor}>
-          <Text style={styles.postTitle}>{data.item.ACOCPAL2NIVEL} - {data.item.CNUSERDSC}</Text>
-          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.status")}:
+          <Text style={styles.postTitle}>{data.item.ACRAVPANNIV} - {data.item.CNUSERDSC}</Text>
+          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.status")}:
             <Text  style={estatusAutStyle}> {data.item.estatus_aut}</Text>
           </Text>
         </View>
@@ -134,64 +135,64 @@ export default class AutorizacionOC extends React.Component {
     } else {
       return (
         <View style={styles.Contenedor}>
-          <Text style={styles.postTitle}>{data.item.ACOCPAL2NIVEL} - {data.item.CNUSERDSC}</Text>
-          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.status")}: 
+          <Text style={styles.postTitle}>{data.item.ACRAVPANNIV} - {data.item.CNUSERDSC}</Text>
+          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.status")}:
             <Text style={estatusAutStyle}> {data.item.estatus_aut}</Text>
           </Text>
-          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.date")}: 
-            <Text style={styles.información}> {data.item.ACOCPAL2FECOP}</Text>
+          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.date")}:
+            <Text style={styles.información}> {data.item.ACRAVPANFECOP}</Text>
           </Text>
-          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.comments")}: 
-            <Text style={styles.información}> {data.item.ACOCPAL2COM}</Text>
+          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.comments")}:
+            <Text style={styles.información}> {data.item.ACRAVPANCOM}</Text>
           </Text>
         </View>
       );
     }
   }
 
-  renderInsumos(data){
-    return (
-      // <TouchableHighlight style={styles.navCardTouch}>
-      //   <View style={styles.navCard}> 
-          <View style={styles.Contenedor}>
-            <Text style={styles.TituloInsumo}>{data.item.INPRODDSC}</Text>
-            <Text style={styles.TotalInsumo}> 
-              {strings("transactions.ACOCPA.ACOCPAMNTIN")}:
-              <NumberFormat value={parseFloat(data.item.ACOCPAMNTIN)} displayType={'text'} renderText={value => <Text style={styles.TotalInsumoArgent}> {value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>  
-            </Text>
-            <Text style={styles.subTitulo}>
-              {strings("transactions.ACMVOI.ACMVOIDCP3")}:
-              <Text style={styles.información}> {data.item.ACMVOIDCP3}  </Text>  
-              {strings("transactions.ACMVOI.ACMVOIDLP3")}: 
-              <Text style={styles.información}> {data.item.ACMVOIDLP3}</Text>
-             </Text>
-            <Text style={styles.subTitulo}>
-              {strings("transactions.ACOCPA.ACOCPAFOC1")}: 
-              <Text style={styles.información}> {data.item.ACOCPAFOC1}</Text>
-            </Text> 
-            <Text style={styles.subTitulo}>
-              {strings("transactions.PMCTCG.PMCTCGDSC")}: 
-              <Text style={styles.información}> {data.item.PMCTCGDSC}</Text>
-            </Text>
-            <Text style={styles.subTitulo}> 
-              {strings("transactions.ACOCPA.ACOCPAQTY")}:
-              <NumberFormat value={parseFloat(data.item.ACOCPAQTY)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} {data.item.ACOCPAUM} </Text>} thousandSeparator={true} prefix={''}></NumberFormat> 
-              {strings("transactions.ACMVOI.ACMVOIQTA")}:
-              <NumberFormat value={parseFloat(data.item.ACMVOIQTA)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} </Text>} thousandSeparator={true} prefix={''}></NumberFormat> 
-            </Text>
-            <Text style={styles.subTitulo}> 
-              {strings("transactions.ACOCPA.ACOCPAPU")}:
-              <NumberFormat value={parseFloat(data.item.ACOCPAPU)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
-            </Text>
-            <Text style={styles.subTitulo}>
-              {strings("transactions.ACMVOI.ACMVOICOM")}: 
-              <Text style={styles.información}> {data.item.ACMVOICOM}</Text>
-            </Text> 
-          </View>
-      //   </View>
-      // </TouchableHighlight>
-    );
-  }
+  // renderInsumos(data){
+  //   return (
+  //     // <TouchableHighlight style={styles.navCardTouch}>
+  //     //   <View style={styles.navCard}>
+  //         <View style={styles.Contenedor}>
+  //           <Text style={styles.TituloInsumo}>{data.item.INPRODDSC}</Text>
+  //           <Text style={styles.TotalInsumo}>
+  //             {strings("transactions.ACOCPA.ACOCPAMNTIN")}:
+  //             <NumberFormat value={parseFloat(data.item.ACOCPAMNTIN)} displayType={'text'} renderText={value => <Text style={styles.TotalInsumoArgent}> {value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
+  //           </Text>
+  //           <Text style={styles.subTitulo}>
+  //             {strings("transactions.ACMVOI.ACMVOIDCP3")}:
+  //             <Text style={styles.información}> {data.item.ACMVOIDCP3}  </Text>
+  //             {strings("transactions.ACMVOI.ACMVOIDLP3")}:
+  //             <Text style={styles.información}> {data.item.ACMVOIDLP3}</Text>
+  //            </Text>
+  //           <Text style={styles.subTitulo}>
+  //             {strings("transactions.ACOCPA.ACOCPAFOC1")}:
+  //             <Text style={styles.información}> {data.item.ACOCPAFOC1}</Text>
+  //           </Text>
+  //           <Text style={styles.subTitulo}>
+  //             {strings("transactions.PMCTCG.PMCTCGDSC")}:
+  //             <Text style={styles.información}> {data.item.PMCTCGDSC}</Text>
+  //           </Text>
+  //           <Text style={styles.subTitulo}>
+  //             {strings("transactions.ACOCPA.ACOCPAQTY")}:
+  //             <NumberFormat value={parseFloat(data.item.ACOCPAQTY)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} {data.item.ACOCPAUM} </Text>} thousandSeparator={true} prefix={''}></NumberFormat>
+  //             {strings("transactions.ACMVOI.ACMVOIQTA")}:
+  //             <NumberFormat value={parseFloat(data.item.ACMVOIQTA)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} </Text>} thousandSeparator={true} prefix={''}></NumberFormat>
+  //           </Text>
+  //           <Text style={styles.subTitulo}>
+  //             {strings("transactions.ACOCPA.ACOCPAPU")}:
+  //             <NumberFormat value={parseFloat(data.item.ACOCPAPU)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
+  //           </Text>
+  //           <Text style={styles.subTitulo}>
+  //             {strings("transactions.ACMVOI.ACMVOICOM")}:
+  //             <Text style={styles.información}> {data.item.ACMVOICOM}</Text>
+  //           </Text>
+  //         </View>
+  //     //   </View>
+  //     // </TouchableHighlight>
+  //   );
+  // }
 
   aceptarOC(){
     const info = {
@@ -201,7 +202,7 @@ export default class AutorizacionOC extends React.Component {
     }
     if (info.justificacion == ''){
       ToastAndroid.showWithGravityAndOffset(
-        strings("modules.BandejaDeAutorizaciones.AutorizacionOC.validations.missing_justification"),
+        strings("modules.BandejaDeAutorizaciones.AutorizacionRav.validations.missing_justification"),
         ToastAndroid.LONG,
         ToastAndroid.BOTTOM,
         25,
@@ -210,20 +211,20 @@ export default class AutorizacionOC extends React.Component {
     } else{
       if (info.Ban == "S"){
         Alert.alert(
-          strings("modules.BandejaDeAutorizaciones.AutorizacionOC.messages.attention"),
-          strings("modules.BandejaDeAutorizaciones.AutorizacionOC.messages.authorization_s", { info_pago: info.Pago }),
+          strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.attention"),
+          strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.authorization_s", { info_pago: info.Pago }),
           [
-            {text: strings("modules.BandejaDeAutorizaciones.AutorizacionOC.messages.no"), style: 'cancel'},
-            {text: strings("modules.BandejaDeAutorizaciones.AutorizacionOC.messages.yes"), onPress: () => this.impactarOC(1)},
+            {text: strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.no"), style: 'cancel'},
+            {text: strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.yes"), onPress: () => this.impactarOC(1)},
           ]
         );
       } else {
         Alert.alert(
-          strings("modules.BandejaDeAutorizaciones.AutorizacionOC.messages.attention"),
-          strings("modules.BandejaDeAutorizaciones.AutorizacionOC.messages.authorization"),
+          strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.attention"),
+          strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.authorization"),
           [
-            { text: strings("modules.BandejaDeAutorizaciones.AutorizacionOC.messages.no"), style: 'cancel'},
-            { text: strings("modules.BandejaDeAutorizaciones.AutorizacionOC.messages.yes"), onPress: () => this.impactarOC(1)},
+            { text: strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.no"), style: 'cancel'},
+            { text: strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.yes"), onPress: () => this.impactarOC(1)},
           ]
         );
       }
@@ -236,7 +237,7 @@ export default class AutorizacionOC extends React.Component {
     }
     if (info.justificacion == ''){
       ToastAndroid.showWithGravityAndOffset(
-        strings("modules.BandejaDeAutorizaciones.AutorizacionOC.validations.missing_justification"),
+        strings("modules.BandejaDeAutorizaciones.AutorizacionRav.validations.missing_justification"),
         ToastAndroid.LONG,
         ToastAndroid.BOTTOM,
         25,
@@ -244,11 +245,11 @@ export default class AutorizacionOC extends React.Component {
       );
     } else{
       Alert.alert(
-        strings("modules.BandejaDeAutorizaciones.AutorizacionOC.messages.attention"),
-        strings("modules.BandejaDeAutorizaciones.AutorizacionOC.messages.rejection"),
+        strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.attention"),
+        strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.rejection"),
         [
-          {text: strings("modules.BandejaDeAutorizaciones.AutorizacionOC.messages.no"), style: 'cancel'},
-          {text: strings("modules.BandejaDeAutorizaciones.AutorizacionOC.messages.yes"), onPress: () => this.impactarOC(3)},
+          {text: strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.no"), style: 'cancel'},
+          {text: strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.yes"), onPress: () => this.impactarOC(3)},
         ]
       );
     }
@@ -260,7 +261,7 @@ export default class AutorizacionOC extends React.Component {
     }
     if (info.justificacion == ''){
       ToastAndroid.showWithGravityAndOffset(
-        strings("modules.BandejaDeAutorizaciones.AutorizacionOC.validations.missing_justification"),
+        strings("modules.BandejaDeAutorizaciones.AutorizacionRav.validations.missing_justification"),
         ToastAndroid.LONG,
         ToastAndroid.BOTTOM,
         25,
@@ -268,11 +269,11 @@ export default class AutorizacionOC extends React.Component {
       );
     } else{
       Alert.alert(
-        strings("modules.BandejaDeAutorizaciones.AutorizacionOC.messages.attention"),
-        strings("modules.BandejaDeAutorizaciones.AutorizacionOC.messages.cancelation"),
+        strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.attention"),
+        strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.cancelation"),
         [
-          {text: strings("modules.BandejaDeAutorizaciones.AutorizacionOC.messages.no"), style: 'cancel'},
-          {text: strings("modules.BandejaDeAutorizaciones.AutorizacionOC.messages.yes"), onPress: () => this.impactarOC(2)},
+          {text: strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.no"), style: 'cancel'},
+          {text: strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.yes"), onPress: () => this.impactarOC(2)},
         ]
       );
     }
@@ -281,7 +282,7 @@ export default class AutorizacionOC extends React.Component {
   impactarOC(Autorizar){
     // Desglose de significado de valores de Autorizar
     // 1 = Autoriza
-    // 2 = Cancela 
+    // 2 = Cancela
     // 3 = Rechaza
     const datos = this.state.aut_data;
     const parm = this.state.parametros;
@@ -299,7 +300,7 @@ export default class AutorizacionOC extends React.Component {
     };
     console.log("############# Validacion");
     console.log(validacion);
-    axios.post('restpArcOrdenCompra', 
+    axios.post('restpArcOrdenCompra',
       validacion
     )
     .then(response => {
@@ -324,34 +325,32 @@ export default class AutorizacionOC extends React.Component {
     this.setState({ justificacion: text });
   }
 
-  render() { 
+  render() {
     const loading = this.state.loading;
     const datos = this.state.aut_data;
-    const insumos = this.state.aut_data.sdtRestListaInsumosAut;
-    const niveles = this.state.aut_data.sdtRestNivelesAut;
+    const niveles = this.state.aut_data.sdtRestNivelesAutAvance;
     const justificacion = this.state.justificacion;
     const advancePercentage = parseInt(datos.ACMVOIPORA);
 
     if (loading != true) {
-      return (   
+      return (
         <View style={styles.container}>
           <ScrollView style={styles.contentContainer}>
-            <View style={styles.datosContainer}> 
-              <Text style={styles.subtituloChido}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.number")}</Text>
-              <Text style={styles.contenidoNoDoc}>#{datos.ACOCPADOC}</Text>
-              {/* <Text style={styles.postTitle}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.purchase_order_data_title")}</Text> */}
-              <Text style={styles.subtitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.material_procurer")}</Text>
+            <View style={styles.datosContainer}>
+              <Text style={styles.subtituloChido}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.number")}</Text>
+              {/* <Text style={styles.contenidoNoDoc}>#{datos.ACOCPADOC}</Text>
+              <Text style={styles.subtitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.material_procurer")}</Text>
               <Text style={styles.contenido}>{datos.comp}</Text>
               <Text style={styles.subtitulo}>{strings("transactions.CNCDIR.CNCDIRNOM")}</Text>
               <Text style={styles.contenido}>{datos.CNCDIRNOM}</Text>
               <Text style={styles.subtitulo}>{strings("transactions.PMCTPR.PMCTPRDSC")}</Text>
-              <Text style={styles.contenido}>{datos.PMCTPRDSC}</Text> 
+              <Text style={styles.contenido}>{datos.PMCTPRDSC}</Text>
               <Text style={styles.subtitulo}>{strings("transactions.ACOCPA.ACOCPAMNT")}</Text>
               <NumberFormat value={parseFloat(datos.ACOCPAMNT)} displayType={'text'} renderText={value => <Text style={styles.contenidoMonto}>{value} {datos.ACOCPAMON}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
               <Text style={styles.subtitulo}>{strings("transactions.CNTCPG.CNTCPGDSC")}</Text>
-              <Text style={styles.contenido}>{datos.CNTPGODSC}</Text> 
+              <Text style={styles.contenido}>{datos.CNTPGODSC}</Text>
               <Text style={styles.subtitulo}>{strings("transactions.ACMVOI.ACMVOIBAUT")}</Text>
-              <Text style={styles.contenidoLargo}>{datos.ACMVOIOBAUT}</Text> 
+              <Text style={styles.contenidoLargo}>{datos.ACMVOIOBAUT}</Text>
               <Text style={styles.subtitulo}>{strings("transactions.ACOCPA.ACOCPAFOC")}</Text>
               <Text style={styles.contenido}>{datos.ACOCPAFOC}</Text>
               <Text style={styles.subtitulo}>{strings("transactions.ACMVOI.ACMVOIPORA")}</Text>
@@ -362,20 +361,20 @@ export default class AutorizacionOC extends React.Component {
                 value={advancePercentage}
                 backgroundColor="#d5edff"
 
-              />
+              /> */}
             </View>
             <TouchableHighlight onPress={() =>
               Linking.openURL('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/' + this.state.pdfLink)}>
               <ListItem
                 key={"1"}
                 leftAvatar={{source: require( '../../../assets/images/reportePdf.jpg')}}
-                title= {strings("modules.BandejaDeAutorizaciones.AutorizacionOC.report_title")}
-                subtitle={strings("modules.BandejaDeAutorizaciones.AutorizacionOC.report_text")}
+                title= {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.report_title")}
+                subtitle={strings("modules.BandejaDeAutorizaciones.AutorizacionRav.report_text")}
               />
             </TouchableHighlight>
             <View style ={styles.separadorContainer}>
               <Text style = {styles.separador}>
-                {strings("modules.BandejaDeAutorizaciones.AutorizacionOC.authorization_levels")}
+                {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.authorization_levels")}
               </Text>
             </View>
             <FlatList
@@ -385,23 +384,55 @@ export default class AutorizacionOC extends React.Component {
             />
             <View style ={styles.separadorContainer}>
               <Text style = {styles.separador}>
-                {strings("modules.BandejaDeAutorizaciones.AutorizacionOC.material_list")}
+                {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.material_list")}
               </Text>
             </View>
-            <FlatList
+            {/* <FlatList
               data={insumos}
               keyExtractor= {(item, index) => insumos + index.toString()}
               renderItem={this.renderInsumos.bind(this)}
-            />
+            /> */}
+            <View style={styles.Contenedor}>
+              <Text style={styles.TituloInsumo}>{datos.INPRODDSC}</Text>
+              <Text style={styles.TotalInsumo}>
+                {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.price")}:
+                <NumberFormat value={parseFloat(datos.MONTO)} displayType={'text'} renderText={value => <Text style={styles.TotalInsumoArgent}> {value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
+              </Text>
+              <Text style={styles.información}>{datos.ACMVORDSC4}</Text>
+              <Text style={styles.subTitulo}>
+                {strings("transactions.ACMVOI.ACMVOIFDOC")}:
+                <Text style={styles.información}> {datos.ACMVOIFDOC}</Text>
+              </Text>
+              <Text style={styles.subTitulo}>
+                {strings("transactions.ACMVOI.ACMVOIFCEP")}:
+                <Text style={styles.información}> {datos.ACMVOIFCEP}</Text>
+              </Text>
+              <Text style={styles.subTitulo}>
+                {strings("transactions.ACMVOI.ACMVOIQTO")}:
+                <NumberFormat value={parseFloat(datos.ACMVOIQTO)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} {datos.ACMVOIUMT} </Text>} thousandSeparator={true} prefix={''}></NumberFormat>
+              </Text>
+              <Text style={styles.subTitulo}>
+                {strings("transactions.ACMROI.ACMROIFP")}:
+                <NumberFormat value={parseFloat(datos.PRECIO)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
+              </Text>
+              <Text style={styles.subTitulo}>
+                {strings("transactions.ACMROI.ACMROIPAREG")}:
+                <NumberFormat value={parseFloat(datos.ACMROIPAREG)} displayType={'text'} renderText={value => <Text style={styles.información}> {value}% </Text>} thousandSeparator={true} prefix={''}></NumberFormat>
+              </Text>
+              <Text style={styles.subTitulo}>
+                {strings("transactions.ACMVOI.ACMVOICOM")}:
+                <Text style={styles.información}> {datos.ACMVOICOM}</Text>
+              </Text>
+            </View>
             <View style = {styles.pieAutorización}>
               <View style ={styles.header}>
                 <Text style = {styles.titleJustificacion}>
-                  {strings("modules.BandejaDeAutorizaciones.AutorizacionOC.justification")}
+                  {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.justification")}
                 </Text>
               </View>
               <View style={styles.justificación}>
                 <TextInput
-                  placeholder={strings("modules.BandejaDeAutorizaciones.AutorizacionOC.write_justification")}
+                  placeholder={strings("modules.BandejaDeAutorizaciones.AutorizacionRav.write_justification")}
                   value={justificacion}
                   autoCorrect={true}
                   multiline = {true}
@@ -413,27 +444,23 @@ export default class AutorizacionOC extends React.Component {
               </View>
               <View style={styles.containerButton}>
                 <TouchableHighlight style ={styles.ocButton}>
-                  <Button title={strings("modules.BandejaDeAutorizaciones.AutorizacionOC.accept")}  color="rgb(124, 183, 62)" onPress={this.aceptarOC.bind(this)}/>
+                  <Button title={strings("modules.BandejaDeAutorizaciones.AutorizacionRav.accept")}  color="rgb(124, 183, 62)" onPress={this.aceptarOC.bind(this)}/>
                 </TouchableHighlight>
                 <Text>{" "}</Text>
                 <TouchableHighlight style ={styles.ocButton}>
-                  <Button title={strings("modules.BandejaDeAutorizaciones.AutorizacionOC.reject")} color="#rgb(216, 87, 57)" onPress={this.rechazarOC.bind(this)}/>
+                  <Button title={strings("modules.BandejaDeAutorizaciones.AutorizacionRav.reject")} color="#rgb(216, 87, 57)" onPress={this.rechazarOC.bind(this)}/>
                 </TouchableHighlight>
-                <Text>{" "}</Text>
-                <TouchableHighlight style ={styles.ocButton}>
-                  <Button title={strings("modules.BandejaDeAutorizaciones.AutorizacionOC.cancel")} color="rgb(19, 92, 121)" onPress={this.cancelarOC.bind(this)}/>
-                </TouchableHighlight>
-              </View>  
+              </View>
             </View>
-            
+
           </ScrollView>
         </View>
       );
     } else {
-      return (   
+      return (
         <LoadingScreen />
       );
-    } 
+    }
   }
 }
 
@@ -505,7 +532,7 @@ const styles = StyleSheet.create({
   },
   navCard: {
     elevation: 2,
-    backgroundColor: 'white', 
+    backgroundColor: 'white',
   },
   navCardContent: {
     margin: 10,

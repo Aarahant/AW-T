@@ -88,24 +88,46 @@ export default class AutorizacionPorTDC extends React.Component {
           </Text>
         </View>
       </View>
-    if (data.item.BANAUTTDC == 'OMP'){
-      return (
-        <TouchableOpacity
-            onPress={() => Actions.autorizacion_oc(data.item)}
-          >
-          <View style={styles.curvedCard}>
-              {informacion}
-          </View>
-        </TouchableOpacity>
-      );
-    }else {
-      return(
-        <TouchableWithoutFeedback> 
-          <View style={styles.curvedCard}>
-            {informacion} 
-          </View>
-        </TouchableWithoutFeedback>
-      );
+
+    switch (data.item.BANAUTTDC){
+      case 'OMP':
+        return (
+          <TouchableOpacity
+              onPress={() => Actions.autorizacion_oc(data.item)}
+            >
+            <View style={styles.curvedCard}>
+                {informacion}
+            </View>
+          </TouchableOpacity>
+        );
+      case 'PGP':
+        return (
+          <TouchableOpacity
+              onPress={() => Actions.autorizacion_pag(data.item)}
+            >
+            <View style={styles.curvedCard}>
+                {informacion}
+            </View>
+          </TouchableOpacity>
+        );
+      case 'RAV':
+        return (
+          <TouchableOpacity
+              onPress={() => Actions.autorizacion_rav(data.item)}
+            >
+            <View style={styles.curvedCard}>
+                {informacion}
+            </View>
+          </TouchableOpacity>
+        );
+      default:
+        return(
+          <TouchableWithoutFeedback> 
+            <View style={styles.curvedCard}>
+              {informacion} 
+            </View>
+          </TouchableWithoutFeedback>
+        );
     }
   } 
 
