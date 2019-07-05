@@ -59,6 +59,35 @@
                     "missing_justification": "Por favor justifique su decisión."
                 }
             },
+            "AutorizacionPag": {
+                "title": "Autorización de Pago",
+                "PAGOID": "Número de Pago",
+                "IncludesANT": "INCLUYE ANTICIPO",
+                "CNUSERDSC": "Usuario",
+                "CNCDIRNOM": "Proveedor",
+                "CANTIDAD": "Monto",
+                "CNCD03DSC": "Concepto de Apartado",
+                "PAGOFEC": "Fecha de registro",
+                "PAGOFEPR": "Fecha programamda",
+                "Comentarios": "Comentarios",
+                "Autorizar": "Sí",
+                "NoAutorizar": "No",
+                "detail": "Detalle",
+                "messages": {
+                    "attention": "Atención",
+                    "ok": "OK",
+                    "yes": "Sí",
+                    "no": "No"
+                },
+                "validations": {
+                    "missing_justification": "Por favor justifique su decisión."
+                }
+            },
+            "AutorizacionPagCXP": {
+                "title": "Cuentas por Pagar asociadas",
+                "PDF_OC": "Reporte Preeliminar de Orden de Compra",
+                "PDF_XML": "Factura"
+            }
             "AutorizacionRav": {
                 "title": "Registro de Avance",
                 "status": "Estatus",
@@ -67,13 +96,37 @@
                 "report_title":"Reporte",
                 "report_text":"Preliminar de la Orden de Compra",
                 "authorization_levels": "Niveles de Autorización",
-                "material_list": "Detalle del Servicio",
+                "service_detail": "Detalle del Servicio",
                 "justification":"Justificación",
                 "write_justification":"Escriba la justificación de su decisión",
                 "accept": "Aceptar",
                 "reject": "Rechazar",
                 "number": "Número de documento",
-                "price": "Monto"
+                "price": "Monto",
+                "procurer": "Comprador",
+                "advance": "Avance",
+                "amortization": "Amortización",
+                "advance_minus_amortization": "Avance - Amortización",
+                "service_period": "Periodo del servicio",
+                "purchase_order_details": "Resumen de la orden de compra",
+                "total_without_tax": "Total sin impuesto",
+                "advance_without_tax": "Anticipo sin impuesto",
+                "amortized_advance": "Anticipo amortizado",
+                "advance_to_amortize": "Anticipo por amortizar",
+                "authorized_progress_percentage": "Porcentaje de avance con autorización",
+                "authorized_progress_amount": "Monto avance con autorización",
+                "pending_amount": "Monto pendiente",
+                "messages": {
+                    "attention": "Atención",
+                    "authorization": "Se autorizará el avance de servicio ¿Desea continuar con el proceso?",
+                    "rejection": "Se rechazará el avance de servicio. ¿Desea continuar con el proceso?",
+                    "ok": "OK",
+                    "yes": "Sí",
+                    "no": "No"
+                },
+                "validations": {
+                    "missing_justification": "Por favor justifique su decisión."
+                }
             } 
         }
     },
@@ -120,7 +173,9 @@
         },
         "ACMROI": {
             "ACMROIFP":"Precio unitario",
-            "ACMROIPAREG":"Porcentage de avance"
+            "ACMROIPAREG":"Porcentage de avance",
+            "ACMROIFDOC":"Fecha registro",
+            "ACMROIOBST": "Comentario que soporta este avance de registro"
         },
         "PMCTCG": {
             "PMCTCGDSC": "Cuenta de Cargo"

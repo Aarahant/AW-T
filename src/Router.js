@@ -16,7 +16,9 @@ import BandejaDeAutorizaciones from './components/Autorizaciones/BandejaDeAutori
 import AutorizacionPorTDC from './components/Autorizaciones/AutorizacionPorTDC';
 import AutorizacionOC from './components/Autorizaciones/AutorizacionOC';
 import AutorizacionPag from './components/Autorizaciones/AutorizacionPag';
+import AutorizacionPagCXP from './components/Autorizaciones/AutorizacionPagCXP';
 import AutorizacionRav from './components/Autorizaciones/AutorizacionRav';
+import AutorizacionReq from './components/Autorizaciones/AutorizacionReq';
 import Settings from './components/Settings/Settings';
 import Idioma from './components/Settings/Idioma';
 import LoadingScreen from './components/Common/LoadingScreen';
@@ -106,6 +108,18 @@ const RouterComponent = () => {
                         title=""
                         key="autorizacion_pag"
                         component={AutorizacionPag}
+                    />
+                    <Scene
+                        // Detalles de la autorizacion de pago --> Cuentas por pagar asociadas
+                        title=""
+                        key="autorizacion_pag_cxp"
+                        component={AutorizacionPagCXP}
+                    />
+                    <Scene
+                        // Detalles de la autorizacion de requisiciones
+                        title=""
+                        key="autorizacion_req"
+                        component={AutorizacionReq}
                     />
                     <Scene
                         // Detalles de la autorizacion de registro de avance

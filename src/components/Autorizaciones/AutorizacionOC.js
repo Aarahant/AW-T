@@ -16,7 +16,7 @@ import {
   Animated,
   Easing
 } from 'react-native';
-import { ListItem } from 'react-native-elements';
+import { ListItem, Overlay } from 'react-native-elements';
 import axios from 'axios';
 import { Actions } from 'react-native-router-flux';
 import { strings } from '../../i18n';
@@ -37,7 +37,8 @@ export default class AutorizacionOC extends React.Component {
       aut_data: [],
       loading: true,
       justificacion: '',
-      pdfLink: ''
+      pdfLink: '',
+      processingTransaction: false
     };
   }
 
@@ -299,14 +300,16 @@ export default class AutorizacionOC extends React.Component {
     };
     console.log("############# Validacion");
     console.log(validacion);
+    this.setState({ processingTransaction: true });
     axios.post('restpArcOrdenCompra', 
       validacion
     )
     .then(response => {
       if (response.data.SUCCESS){
-        console.log(response.data)
+        this.setState({ processingTransaction: false });
         Actions.pop({ refresh: {key: Math.random()} }); // Sale y actualiza.
       }  else {
+        this.setState({ processingTransaction: false });
         Alert.alert(
           strings("common.session.alert_title"),
           strings("common.session.alert_content"),
@@ -317,7 +320,12 @@ export default class AutorizacionOC extends React.Component {
         );
         Actions.auth();
       }
-    });
+    }).catch(error => this.handleTransactionProcessError(error));
+  }
+
+  handleTransactionProcessError() {
+    this.setState({ processingTransaction: false });
+    ToastAndroid.showWithGravityAndOffset(error,ToastAndroid.LONG,ToastAndroid.BOTTOM,0,50);
   }
 
   onJustificacionChange(text) {
@@ -336,6 +344,16 @@ export default class AutorizacionOC extends React.Component {
       return (   
         <View style={styles.container}>
           <ScrollView style={styles.contentContainer}>
+            <Overlay
+                isVisible={this.state.processingTransaction}
+                windowBackgroundColor="rgba(255, 255, 255, .3)"
+                overlayBackgroundColor="rgba(255, 255, 255, .0)"
+                fullScreen= {true}
+              >
+              <View style={styles.loadingContainer}>
+                <Image style={styles.kds_logo_image} source={require("../../../assets/gifs/bars6.gif")}/>
+              </View>
+            </Overlay>
             <View style={styles.datosContainer}> 
               <Text style={styles.subtituloChido}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.number")}</Text>
               <Text style={styles.contenidoNoDoc}>#{datos.ACOCPADOC}</Text>
@@ -637,5 +655,14 @@ const styles = StyleSheet.create({
     fontFamily: 'sans-serif-condensed',
     fontSize: 17,
     color: 'rgb(216, 87, 57)'
-  }
+  },
+  kds_logo_image: {
+    height: 260,
+    width: 260,
+  }, 
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
 });

@@ -98,7 +98,7 @@ export default class BandejaDeAutorizaciones extends React.Component {
   renderItem(data){
     const pending = data.item.cont_pendientes;
     let color_pend;
-    if (pending < 10) {
+    if (pending < 6) {
       color_pend = 'orange';
     } else {
       color_pend = '#ff4d4d';

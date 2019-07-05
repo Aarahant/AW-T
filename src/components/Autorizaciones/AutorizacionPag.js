@@ -12,6 +12,7 @@ import {
   ToastAndroid,
   Alert
 } from 'react-native';
+import { Overlay } from 'react-native-elements';
 import axios from 'axios';
 import { Actions } from 'react-native-router-flux';
 import { strings } from '../../i18n';
@@ -31,7 +32,7 @@ export default class AutorizacionPag extends React.Component {
       aut_data: [],
       loading: true,
       justificacion: '',
-      pdfLink: ''
+      processingTransaction: false
     };
   }
 
@@ -61,12 +62,86 @@ export default class AutorizacionPag extends React.Component {
   }
 
   updateTitle() {
-    Actions.refresh({title: 'Autorizació de Pago'});
+    Actions.refresh({title: strings("modules.BandejaDeAutorizaciones.AutorizacionPag.title")});
     clearInterval(this.titleInterval);
+  }
+
+  handleTransactionProcessError() {
+    this.setState({ processingTransaction: false });
+    ToastAndroid.showWithGravityAndOffset(error,ToastAndroid.LONG,ToastAndroid.BOTTOM,0,50);
   }
 
   onJustificacionChange(text) {
     this.setState({ justificacion: text });
+  }
+
+  autorizarPag(){
+    Alert.alert(
+      strings("modules.BandejaDeAutorizaciones.AutorizacionPag.messages.attention"),
+      strings('modules.BandejaDeAutorizaciones.AutorizacionPag.messages.confirmAutorizar'),
+      [
+        {text: strings("modules.BandejaDeAutorizaciones.AutorizacionPag.messages.no"), style: 'cancel'},
+        {text: strings("modules.BandejaDeAutorizaciones.AutorizacionPag.messages.yes"), onPress: () => this.impactarAutPag(1)},
+      ]
+    );
+  }
+
+  reachazarPag(){
+    const justificacion = this.state.justificacion
+    if (justificacion != '') {
+      Alert.alert(
+        strings("modules.BandejaDeAutorizaciones.AutorizacionPag.messages.attention"),
+        strings('modules.BandejaDeAutorizaciones.<.messages.confirmRechazar'),
+        [
+          {text: strings("modules.BandejaDeAutorizaciones.AutorizacionPag.messages.no"), style: 'cancel'},
+          {text: strings("modules.BandejaDeAutorizaciones.AutorizacionPag.messages.yes"), onPress: () => this.impactarAutPag(2)},
+        ]
+      );
+    } else {
+      ToastAndroid.showWithGravityAndOffset(
+        strings("modules.BandejaDeAutorizaciones.AutorizacionPag.validations.missing_justification"),
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        25,
+        50,
+      );
+    }
+  }
+
+  impactarAutPag(Autorizar){
+    console.log("################ Autorizar");
+    const datos = this.state.aut_data
+    const parm = {
+      "TOKEN_P": global.token,
+      "CNCIASID_P": datos.CNCIASID,
+      "PAGOID_P": datos.pagoid,
+      "PAGOAUTCOM_P": this.state.justificacion,
+      "CNCMNMID_P": datos.CNCMNMID,
+      "AUTORIZAR_P": Autorizar
+    }
+    console.log(parm);
+
+    this.setState({ processingTransaction: true });
+    axios.post('restpAutPag', parm
+    ).then(response => {
+      console.log("############## Autorizado?")
+      console.log(response)
+      if (response.data.SUCCESS){
+        this.setState({ processingTransaction: false });
+        Actions.pop({ refresh: {key: Math.random()} }); // Sale y actualiza.
+      }  else {
+        this.setState({ processingTransaction: false });
+        Alert.alert(
+          strings("common.session.alert_title"),
+          strings("common.session.alert_content"),
+          [
+            {text: strings('common.session.alert_ok'), onPress: () => Actions.auth()}
+          ],
+          {cancelable: false}
+        );
+        Actions.auth();
+      }
+    }).catch(error => this.handleTransactionProcessError(error));
   }
 
   render() { 
@@ -77,7 +152,7 @@ export default class AutorizacionPag extends React.Component {
     if (datos.PROPAGID > 0){
         ProgPagoID =
             <React.Fragment>
-                <Text style={styles.subtitulo}>Programación de Pago</Text>
+                <Text style={styles.subtitulo}> {strings('modules.BandejaDeAutorizaciones.AutorizacionPag.ProgPag')}</Text>
                 <Text style={styles.contenido}>{datos.PROPAGID}</Text>
             </React.Fragment>
     }
@@ -86,7 +161,7 @@ export default class AutorizacionPag extends React.Component {
     if (datos.PMTipoDoc == 'ANT') {
         anticipo =
             <React.Fragment>
-                <Text style={styles.contenidoAnticipo}>INCLUYE ANTICIPO</Text>
+                <Text style={styles.contenidoAnticipo}> {strings('modules.BandejaDeAutorizaciones.AutorizacionPag.IncludesANT')}</Text>
             </React.Fragment>
     }
 
@@ -94,34 +169,49 @@ export default class AutorizacionPag extends React.Component {
       return (   
         <View style={styles.container}>
           <ScrollView style={styles.contentContainer}>
+            <Overlay
+                isVisible={this.state.processingTransaction}
+                windowBackgroundColor="rgba(255, 255, 255, .3)"
+                overlayBackgroundColor="rgba(255, 255, 255, .0)"
+                fullScreen= {true}
+              >
+              <View style={styles.loadingContainer}>
+                <Image style={styles.kds_logo_image} source={require("../../../assets/gifs/bars6.gif")}/>
+              </View>
+            </Overlay>
             <View style={styles.datosContainer}> 
-              <Text style={styles.subtituloChido}>Número de Pago</Text>
+              <Text style={styles.subtituloChido}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.PAGOID')}</Text>
               <Text style={styles.contenidoNoDoc}>#{datos.pagoid}   {anticipo}</Text>
               {ProgPagoID}
-              <Text style={styles.subtitulo}>Usuario</Text>
+              <Text style={styles.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.CNUSERDSC')}</Text>
               <Text style={styles.contenido}>{datos.CNUSERDSC}</Text>
-              <Text style={styles.subtitulo}>Proveedor</Text>
+              <Text style={styles.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.CNCDIRNOM')}</Text>
               <Text style={styles.contenido}>{datos.CNCDIRNOM}</Text>
-              <Text style={styles.subtitulo}>Monto</Text>
+              <Text style={styles.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.CANTIDAD')}</Text>
               <Text style={styles.contenido}>
                 <NumberFormat value={parseFloat(datos.CANTIDAD)} displayType={'text'} renderText={value => <Text style={styles.contenidoMonto}>{value} {datos.CNCMNMID}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
               </Text> 
-              <Text style={styles.subtitulo}>Concepto de Apartado</Text>
+              <Text style={styles.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.CNCD03DSC')}</Text>
               <Text style={styles.contenido}>{datos.CNCD03DSC}</Text> 
-              <Text style={styles.subtitulo}>Fecha de registro</Text>
+              <Text style={styles.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.PAGOFEC')}</Text>
               <Text style={styles.contenido}>{datos.PAGOFEC}</Text> 
-              <Text style={styles.subtitulo}>Fecha programada</Text>
+              <Text style={styles.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.PAGOFEPR')}</Text>
               <Text style={styles.contenidoLargo}>{datos.PAGOFEPR}</Text>
+              <Text>{" "}</Text>
+              <TouchableHighlight style ={styles.detalleButton}>
+                <Button title={strings('modules.BandejaDeAutorizaciones.AutorizacionPag.detail')} color="rgb(19, 92, 121)" onPress={() => Actions.autorizacion_pag_cxp(datos)}/>
+              </TouchableHighlight>
             </View>
+
             <View style = {styles.pieAutorización}>
               <View style ={styles.header}>
                 <Text style = {styles.titleJustificacion}>
-                  Comentarios
+                  {strings('modules.BandejaDeAutorizaciones.AutorizacionPag.Comentarios')}
                 </Text>
               </View>
               <View style={styles.justificación}>
                 <TextInput
-                //   placeholder={strings("modules.BandejaDeAutorizaciones.AutorizacionOC.write_justification")}
+                //   placeholder={strings("modules.BandejaDeAutorizaciones.AutorizacionPag.write_justification")}
                   value={justificacion}
                   autoCorrect={true}
                   multiline = {true}
@@ -133,15 +223,14 @@ export default class AutorizacionPag extends React.Component {
               </View>
               <View style={styles.containerButton}>
                 <TouchableHighlight style ={styles.pagButton}>
-                  <Button title='Sí' color="rgb(124, 183, 62)" />
+                  <Button title={strings('modules.BandejaDeAutorizaciones.AutorizacionPag.Autorizar')} color="rgb(124, 183, 62)" onPress={this.autorizarPag.bind(this)}/>
                 </TouchableHighlight>
                 <Text>{" "}</Text>
                 <TouchableHighlight style ={styles.pagButton}>
-                  <Button title='No' color="rgb(216, 87, 57)" />
+                  <Button title={strings('modules.BandejaDeAutorizaciones.AutorizacionPag.NoAutorizar')} color="rgb(216, 87, 57)" onPress={this.reachazarPag.bind(this)}/>
                 </TouchableHighlight>
               </View>  
             </View>
-            
           </ScrollView>
         </View>
       );
@@ -159,9 +248,19 @@ const styles = StyleSheet.create({
     width: '30%',
     borderRadius:10
   },
+  detalleButton: {
+    height: 40,
+    width: '30%',
+    borderRadius:10,
+    marginTop: 5
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  contentContainer: {
+    // paddingVertical: 10,
+    height: '100%'
   },
   header:{
     alignItems: 'center',
@@ -264,5 +363,10 @@ const styles = StyleSheet.create({
   subTitulo: {
     fontFamily: 'sans-serif-condensed',
     fontSize: 16
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   }
 });
