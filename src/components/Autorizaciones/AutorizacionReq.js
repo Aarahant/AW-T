@@ -8,21 +8,21 @@ import {
   Image,
   FlatList,
   TextInput,
-  Button,
   ToastAndroid,
   Alert,
   Linking,
   Dimensions
 } from 'react-native';
-import { ListItem, Overlay } from 'react-native-elements';
+import { Button, Overlay, CheckBox, Icon } from 'react-native-elements';
 import axios from 'axios';
 import { Actions } from 'react-native-router-flux';
 import { strings } from '../../i18n';
 import ProgressBarAnimated from 'react-native-progress-bar-animated';
 import NumberFormat from 'react-number-format';
 import LoadingScreen from '../Common/LoadingScreen';
+import { Table, TableWrapper, Row, Col } from 'react-native-table-component';
 
-export default class AutorizacionRav extends React.Component {
+export default class AutorizacionReq extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -35,51 +35,52 @@ export default class AutorizacionRav extends React.Component {
       aut_data: [],
       loading: true,
       justificacion: '',
-      pdfLink: '',
-      processingTransaction: false
+      processingTransaction: false,
+      save_button_is_disabled: true,
+      filling_rejection_justfication: false,
+      aux_ACRCPALIN: 0
     };
   }
 
   componentDidMount() {
     this.titleInterval = setInterval(() => this.updateTitle(),1);
     // console.log("############### Han Solo")
-    const keys = this.state.parametros;
-    axios.post('restgAutRegistroAvance', keys
+    const keys = this.state.parametros;    
+    axios.post('restgAutRequisicion', keys
      ).then(response => {
        if (response.data.SUCCESS){
-        this.setState({
-          aut_data: response.data,
-          loading: false
-        });
-        // Solicitud de link para pdf de orden de compra
-        const pdfParm = {
-          "TOKEN_P": global.token,
-          "CNIDMAID_P": "ESP",
-          "ACOCPACIA_P": keys.BANAUTCIA_P,
-          "ACOCPATDC_P": this.state.aut_data.CNTDOCID,
-          "ACOCPADOC_P": this.state.aut_data.ACMROIDOC
-        };
-        axios.post('restgRePreOC', pdfParm
-        ).then(response => {
-          if (response.data.SUCCESS){
-            this.setState({
-              pdfLink: response.data.Link,
-            });
-            console.log("################ ZELDA");
-            console.log(this.state.pdfLink);
-          } else {
-            Alert.alert(
-              strings('common.session.alert_title'),
-              strings('common.session.alert_content'),
-              [
-                { text: strings('common.session.alert_ok'), onPress: () => Actions.auth() }
-              ],
-              { cancelable: false }
-            );
-            Actions.auth();
-          }
-        })
-        .catch(error =>  console.log(error));
+          this.setState({
+            aut_data: response.data,
+            loading: false,
+            general_budget_head: [strings("modules.BandejaDeAutorizaciones.AutorizacionReq.general_budget_title")],
+            budget_titles: [
+              [strings("modules.BandejaDeAutorizaciones.AutorizacionReq.budgeted_budget")],
+              [strings("modules.BandejaDeAutorizaciones.AutorizacionReq.compromised_budget")],
+              [strings("modules.BandejaDeAutorizaciones.AutorizacionReq.available_budget")]
+            ],
+            general_budget_data: [
+              [<NumberFormat value={parseFloat(response.data.Presupuestado)} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>],
+              [<NumberFormat value={parseFloat(response.data.Comprometido)} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>],
+              [<NumberFormat value={parseFloat(response.data.Disponible)} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>]
+            ],
+            monthly_budget_head: [strings("modules.BandejaDeAutorizaciones.AutorizacionReq.monthly_budget_title")],
+            monthly_budget_data: [
+              [<NumberFormat value={parseFloat(response.data.presupuestadoM)} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>],
+              [<NumberFormat value={parseFloat(response.data.ComprometidoM)} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>],
+              [<NumberFormat value={parseFloat(response.data.DisponibleM)} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>]
+            ],
+            line_data: JSON.parse(JSON.stringify(response.data.sdtRestListaLinRequisicionesAut))
+          });
+          // Adds auhtorized and rejected field to array
+          let clone = JSON.parse(JSON.stringify(this.state.line_data));
+          clone.forEach(function(element) {
+            element.authorized = false;
+            element.rejected = false;
+            element.justification = '';
+          });
+          this.setState({
+            line_data: clone
+          });
        } else {
          Alert.alert(
            strings('common.session.alert_title'),
@@ -96,54 +97,71 @@ export default class AutorizacionRav extends React.Component {
   }
 
   updateTitle() {
-    Actions.refresh({title: strings("modules.BandejaDeAutorizaciones.AutorizacionRav.title")});
+    Actions.refresh({title: strings("modules.BandejaDeAutorizaciones.AutorizacionReq.title")});
     clearInterval(this.titleInterval);
   }
 
-  renderNiveles(data){
-    let estatusAutStyle;
-    switch (data.item.ACRAVPANAUHE){
-      case 0:
-        estatusAutStyle = styles.información;
-        break;
-      case 1:
-        estatusAutStyle = styles.estatuts_autorizo;
-        break;
-      case 2:
-        estatusAutStyle = styles.estatuts_cancelado;
-        break;
-      case 3:
-        estatusAutStyle = styles.estatuts_rechazo;
-        break;
-      default:
-        estatusAutStyle = styles.información;
-        break;
+  updateLineAccept(line_number) {
+    let clone = JSON.parse(JSON.stringify(this.state.line_data));
+    let lines_with_decision = 0;
+    let save_button_should_be_disabled = true;
+    clone.forEach(function(element) {
+      if (element.ACRCPALIN == line_number) {
+        if (element.authorized == false) {
+          element.authorized = true;
+          element.rejected = false;
+          lines_with_decision += 1;
+        } else {
+          element.authorized = false;
+        }
+      } else {
+        if (element.authorized || element.rejected) {
+          lines_with_decision += 1;
+        }
+      }
+    });
+    if (lines_with_decision > 0){ 
+      save_button_should_be_disabled = false;
     }
-    if (data.item.pendiente_aut){
-      return (
-        <View style={styles.Contenedor}>
-          <Text style={styles.postTitle}>{data.item.ACRAVPANNIV} - {data.item.CNUSERDSC}</Text>
-          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.status")}:
-            <Text  style={estatusAutStyle}> {data.item.estatus_aut}</Text>
-          </Text>
-        </View>
-      );
-    } else {
-      return (
-        <View style={styles.Contenedor}>
-          <Text style={styles.postTitle}>{data.item.ACRAVPANNIV} - {data.item.CNUSERDSC}</Text>
-          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.status")}:
-            <Text style={estatusAutStyle}> {data.item.estatus_aut}</Text>
-          </Text>
-          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.date")}:
-            <Text style={styles.información}> {data.item.ACRAVPANFECOP}</Text>
-          </Text>
-          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.comments")}:
-            <Text style={styles.información}> {data.item.ACRAVPANCOM}</Text>
-          </Text>
-        </View>
-      );
+    this.setState({
+      line_data: clone,
+      save_button_is_disabled: save_button_should_be_disabled
+    });
+  }
+  
+  updateLineReject(line_number) {
+    this.setState({
+      filling_rejection_justfication: false
+    });
+    let clone = JSON.parse(JSON.stringify(this.state.line_data));
+    let lines_with_decision = 0;
+    let save_button_should_be_disabled = true;
+    const stored_justification = this.state.justificacion
+    clone.forEach(function(element) {
+      if (element.ACRCPALIN == line_number) {
+        if (element.rejected == false) {
+          element.authorized = false;
+          element.rejected = true;
+          element.justification = stored_justification;
+          lines_with_decision += 1;
+        } else {
+          element.rejected = false;
+          element.justification = '';
+        }
+      } else {
+        if (element.authorized || element.rejected) {
+          lines_with_decision += 1;
+        }
+      }
+    });
+    if (lines_with_decision > 0){ 
+      save_button_should_be_disabled = false;
     }
+    this.setState({
+      line_data: clone,
+      save_button_is_disabled: save_button_should_be_disabled,
+      justificacion: ''
+    });
   }
 
   aceptarRav(){
@@ -152,7 +170,7 @@ export default class AutorizacionRav extends React.Component {
     }
     if (info.justificacion == ''){
       ToastAndroid.showWithGravityAndOffset(
-        strings("modules.BandejaDeAutorizaciones.AutorizacionRav.validations.missing_justification"),
+        strings("modules.BandejaDeAutorizaciones.AutorizacionReq.validations.missing_justification"),
         ToastAndroid.LONG,
         ToastAndroid.BOTTOM,
         0,
@@ -160,11 +178,11 @@ export default class AutorizacionRav extends React.Component {
       );
     } else{
       Alert.alert(
-        strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.attention"),
-        strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.authorization"),
+        strings("modules.BandejaDeAutorizaciones.AutorizacionReq.messages.attention"),
+        strings("modules.BandejaDeAutorizaciones.AutorizacionReq.messages.authorization"),
         [
-          {text: strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.no"), style: 'cancel'},
-          {text: strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.yes"), onPress: () => this.impactarRav(1)},
+          {text: strings("modules.BandejaDeAutorizaciones.AutorizacionReq.messages.no"), style: 'cancel'},
+          {text: strings("modules.BandejaDeAutorizaciones.AutorizacionReq.messages.yes"), onPress: () => this.impactarRav(1)},
         ]
       );
     }
@@ -176,7 +194,7 @@ export default class AutorizacionRav extends React.Component {
     }
     if (info.justificacion == ''){
       ToastAndroid.showWithGravityAndOffset(
-        strings("modules.BandejaDeAutorizaciones.AutorizacionRav.validations.missing_justification"),
+        strings("modules.BandejaDeAutorizaciones.AutorizacionReq.validations.missing_justification"),
         ToastAndroid.LONG,
         ToastAndroid.BOTTOM,
         0,
@@ -184,11 +202,11 @@ export default class AutorizacionRav extends React.Component {
       );
     } else{
       Alert.alert(
-        strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.attention"),
-        strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.rejection"),
+        strings("modules.BandejaDeAutorizaciones.AutorizacionReq.messages.attention"),
+        strings("modules.BandejaDeAutorizaciones.AutorizacionReq.messages.rejection"),
         [
-          {text: strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.no"), style: 'cancel'},
-          {text: strings("modules.BandejaDeAutorizaciones.AutorizacionRav.messages.yes"), onPress: () => this.impactarRav(2)},
+          {text: strings("modules.BandejaDeAutorizaciones.AutorizacionReq.messages.no"), style: 'cancel'},
+          {text: strings("modules.BandejaDeAutorizaciones.AutorizacionReq.messages.yes"), onPress: () => this.impactarRav(2)},
         ]
       );
     }
@@ -208,8 +226,6 @@ export default class AutorizacionRav extends React.Component {
       "Autorizar_P": Autorizar,
       "ACOCPAL2COM_P": this.state.justificacion ,
     };
-    console.log("############# Validacion");
-    console.log(validacion);
     this.setState({ processingTransaction: true });
     axios.post('restpArcRegistroAvance',
       validacion
@@ -244,10 +260,123 @@ export default class AutorizacionRav extends React.Component {
     this.setState({ justificacion: text });
   }
 
+  handle_rejection_click(ACRCPALIN, rejected) {
+    if (rejected) {
+      this.updateLineReject(ACRCPALIN)
+    } else {
+      this.setState({
+        filling_rejection_justfication: true,
+        aux_ACRCPALIN: ACRCPALIN
+      })
+    }
+  }
+
+  renderLineas(data){
+    const line_detail_head = [strings("modules.BandejaDeAutorizaciones.AutorizacionReq.general_budget_title")];
+    const line_detail_titles = [
+      [strings("transactions.ACRCPA.ACRCPAQTYR")],
+      [strings("transactions.ACRCPA.ACRCPAQTYOC")],
+      [strings("transactions.ACRCPA.ACRCPAQTYRC")],
+      [strings("transactions.ACRCPA.ACRCPAQTYP")],
+      [strings("transactions.ACRCPA.ACRCPAULPCM")],
+      [strings("transactions.ACRCPA.ACRCPAVACMEST")],
+      [strings("transactions.ACRCPA.ACRCPACNRQPDIAS")]
+    ];
+    const line_detail_data = [
+      [<NumberFormat value={parseFloat(data.item.ACRCPAQTYR)} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>],
+      [<NumberFormat value={parseFloat(data.item.ACRCPAQTYOC)} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>],
+      [<NumberFormat value={parseFloat(data.item.ACRCPAQTYRC)} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>],
+      [<NumberFormat value={parseFloat(data.item.ACRCPAQTYP)} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>],
+      [<NumberFormat value={parseFloat(data.item.ACRCPAULPCM)} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>],
+      [<NumberFormat value={parseFloat(data.item.ACRCPAVACMEST)} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>],
+      [<NumberFormat value={parseFloat(data.item.ACRCPACNRQPDIAS)} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>],
+    ];
+    let observaciones;
+    if (data.item.ACRCPAOBS != "") {
+      observaciones = <Text style={styles.subTitulo}>
+        {strings("transactions.ACRCPA.ACRCPAOBS")}: 
+        <Text style={styles.información}> {data.item.ACRCPAOBS}</Text>
+      </Text> 
+    }
+
+    let justification;
+    if (data.item.rejected === true) {
+      justification = 
+      <View style={styles.justification_box}>
+        <Text style={styles.subTitulo}>
+          {strings("modules.BandejaDeAutorizaciones.AutorizacionReq.justification")}: 
+          <Text style={styles.información}> {data.item.justification}</Text>
+        </Text>
+      </View> 
+    }
+
+    let authorize;
+    if (data.item.authorized === undefined || data.item.rejected === undefined) {
+      authorized = true
+      rejected = false
+    } else {
+      authorized = data.item.authorized.toString()
+      rejected = data.item.rejected.toString()
+    }
+
+    return (
+      <View style={styles.Contenedor}>
+        <Text style={styles.titulo_linea}>{strings("transactions.ACRCPA.ACRCPALIN")} {data.item.ACRCPALIN}</Text>
+        <Text style={styles.TituloInsumo}>{data.item.INPRODDSC}</Text>
+        <Text style={styles.TotalInsumo}> 
+          {strings("transactions.ACRCPA.ACRCPAQTY")}:
+          <NumberFormat value={parseFloat(data.item.ACRCPAQTY)} displayType={'text'} renderText={value => <Text style={styles.TotalInsumoArgent}> {value} {data.item.ACRCPAUM}</Text>} thousandSeparator={true} prefix={''}></NumberFormat>  
+        </Text>
+        
+        <Text style={styles.subTitulo}>
+          {strings("transactions.ACRCPA.ACRCPAFREQ")}:
+          <Text style={styles.información}> {data.item.ACRCPAFREQ}</Text>  
+        </Text>
+
+        <Text style={styles.subTitulo}>
+        {strings("modules.BandejaDeAutorizaciones.AutorizacionReq.num")}: 
+          <Text style={styles.informaciónRoja}> {data.item.num}</Text>
+        </Text> 
+
+        <View style={table_styles.general_table}>
+          <Table borderStyle={{borderWidth: 0, borderColor: 'transparent'}}>
+            <Row data={this.state.general_budget_head} style={table_styles.table_general_head} textStyle={table_styles.general_title}/>
+            <TableWrapper style={{flexDirection: 'row'}}>
+              <Col data={line_detail_titles} textStyle={table_styles.general_subtitle}/>
+              <Col data={line_detail_data} style={table_styles.general_cell_style} textStyle={table_styles.currency_right}/>
+            </TableWrapper>
+          </Table>
+        </View>
+        {observaciones}
+        <CheckBox
+          title={strings("modules.BandejaDeAutorizaciones.AutorizacionReq.accept")}
+          checked={data.item.authorized}
+          iconType='AntDesign'
+          checkedIcon='check-circle'
+          uncheckedIcon='check-circle'
+          checkedColor='green'
+          onPress={this.updateLineAccept.bind(this,data.item.ACRCPALIN)}
+        />
+
+        <CheckBox
+          title={strings("modules.BandejaDeAutorizaciones.AutorizacionReq.reject")}
+          checked={data.item.rejected}
+          iconType='AntDesign'
+          checkedIcon='cancel'
+          uncheckedIcon='cancel'
+          checkedColor='red'
+          onPress={this.handle_rejection_click.bind(this,data.item.ACRCPALIN,data.item.rejected)} 
+        />
+        {justification}
+      </View>
+    );
+  }
+  // this.updateLineReject.bind(this,data.item.ACRCPALIN)
+
   render() {
     const loading = this.state.loading;
     const datos = this.state.aut_data;
-    const niveles = this.state.aut_data.sdtRestNivelesAutAvance;
+    const lineas = this.state.line_data;
     const justificacion = this.state.justificacion;
     const ACMVOIPORA = parseFloat(datos.ACMVOIPORA);
     const ACMROIPAREG = parseFloat(datos.ACMROIPAREG);
@@ -255,7 +384,20 @@ export default class AutorizacionRav extends React.Component {
     if (loading != true) {
       return (
         <View style={styles.container}>
-          <ScrollView style={styles.contentContainer}>
+            <View style={{position: 'absolute',bottom: 15,right: 15}}>
+              <Icon
+                raised
+                name='save'
+                type='font-awesome'
+                color='#2089dc'
+                reverse={true}
+                reverseColor='white'
+                size={30}
+                disabled={this.state.save_button_is_disabled} 
+                onPress={() => console.log('hello')} />
+            </View>
+          <ScrollView style={styles.ScrollContainer} contentContainerStyle={styles.contentContainer}>
+
             <Overlay
                 isVisible={this.state.processingTransaction}
                 windowBackgroundColor="rgba(255, 255, 255, .3)"
@@ -266,180 +408,75 @@ export default class AutorizacionRav extends React.Component {
                 <Image style={styles.kds_logo_image} source={require("../../../assets/gifs/bars6.gif")}/>
               </View>
             </Overlay>
-            <View style={styles.datosContainer}>
-              <Text style={styles.subtituloChido}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.number")}</Text>
-              <Text style={styles.contenidoNoDoc}>#{datos.ACRAVPANDOC}</Text>
-              <Text style={styles.subtitulo}>{strings("transactions.ACMROI.ACMROIFDOC")}</Text>
-              <Text style={styles.contenido}>{datos.ACMROIFDOC}</Text>
-              <Text style={styles.subtitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.procurer")}</Text>
-              <Text style={styles.contenido}>{datos.comp}</Text>
-              <Text style={styles.subtitulo}>{strings("transactions.PMCTCG.PMCTCGDSC")}</Text>
-              <Text style={styles.contenido}>{datos.PMCTCGDSC}</Text>
-              <Text style={styles.subtitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.advance")}</Text>
-              <NumberFormat value={parseFloat(datos.AvanceMnt)} displayType={'text'} renderText={value => <Text style={styles.contenidoMonto}>{value} {datos.CNCMNMID}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
-              <Text style={styles.subtitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.amortization")}</Text>
-              <NumberFormat value={parseFloat(datos.AmortizacionMnt)} displayType={'text'} renderText={value => <Text style={styles.contenidoMonto}>{value} {datos.CNCMNMID}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
-              <Text style={styles.subtitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.advance_minus_amortization")}</Text>
-              <NumberFormat value={parseFloat(datos.total)} displayType={'text'} renderText={value => <Text style={styles.contenidoMonto}>{value} {datos.CNCMNMID}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
-              <Text style={styles.subtitulo}>{strings("transactions.ACMVOI.ACMVOICOM")}</Text>
-              <Text style={styles.contenidoLargo}>{datos.ACMVOICOM}</Text>
-              <Text style={styles.subtitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.service_period")}</Text>
-              <Text style={styles.contenido}>{datos.ACMROIFIREG} - {datos.ACMROIFFREG}</Text>
-              <Text style={styles.subtitulo}>{strings("transactions.ACMROI.ACMROIOBST")}</Text>
-              <Text style={styles.contenidoLargo}>{datos.ACMROIOBST}</Text>
-            </View>
-            <View style ={styles.separadorContainer}>
-              <Text style = {styles.separador}>
-                {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.purchase_order_details")}
-              </Text>
-            </View>
-            <View style={styles.Contenedor}>
-              <Text style={styles.TituloInsumo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.number")}: 
-                <Text style={styles.contenidoNoDoc}> #{datos.ACMROIDOC}</Text>
-              </Text>
-              <Text style={styles.TotalInsumo}>
-                {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.total_without_tax")}:
-                <NumberFormat value={parseFloat(datos.TotoSinImpuesto)} displayType={'text'} renderText={value => <Text style={styles.TotalInsumoArgent}> {value} {datos.CNCMNMID_F}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
-              </Text>
-              <Text style={styles.subTitulo}>
-                {strings("transactions.PMCTPR.PMCTPRDSC")}:
-                <Text style={styles.información}> {datos.PMCTPRDSC}</Text>
-              </Text>
-              <Text style={styles.subTitulo}>
-                {strings("transactions.ACMVOI.ACMVOIPORA")}:
-                <Text style={styles.información}> {datos.ACMVOIPORA}%</Text>
-              </Text>
-              <ProgressBarAnimated
-                width={Dimensions.get("window").width - 140}
-                height={15}
-                borderRadius={10}
-                value={ACMVOIPORA}
-                backgroundColor="#d5edff"
-              />
-              <Text style={styles.subTitulo}>
-                {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.advance_without_tax")}:
-                <Text style={styles.información}> {datos.AnticipoSinImpuesto}</Text>
-              </Text>
-              <Text style={styles.subTitulo}>
-                {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.amortized_advance")}:
-                <NumberFormat value={parseFloat(datos.AnticipoAmortizado)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
-              </Text>
-              <Text style={styles.subTitulo}>
-                {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.advance_to_amortize")}:
-                <NumberFormat value={parseFloat(datos.AnticipoPorAmortizar)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
-              </Text>
-              <Text style={styles.subTitulo}>
-                {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.authorized_progress_percentage")}:
-                <NumberFormat value={parseFloat(datos.PAvanceConAutorizacion)} displayType={'text'} renderText={value => <Text style={styles.información}> {value}% </Text>} thousandSeparator={true} prefix={''}></NumberFormat>
-              </Text>
-              <ProgressBarAnimated
-                width={Dimensions.get("window").width - 140}
-                height={15}
-                borderRadius={10}
-                value={PAvanceConAutorizacion}
-                backgroundColor="#d5edff"
-              />
-              <Text style={styles.subTitulo}>
-                {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.authorized_progress_amount")}:
-                <NumberFormat value={parseFloat(datos.MAvanceConAutorizacion)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
-              </Text>
-              <Text style={styles.subTitulo}>
-                {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.pending_amount")}:
-                <NumberFormat value={parseFloat(datos.MontoPendiente)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
-              </Text>
-            </View>
-            <TouchableHighlight onPress={() =>
-              Linking.openURL('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/' + this.state.pdfLink)}>
-              <ListItem
-                key={"1"}
-                leftAvatar={{source: require( '../../../assets/images/reportePdf.jpg')}}
-                title= {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.report_title")}
-                subtitle={strings("modules.BandejaDeAutorizaciones.AutorizacionRav.report_text")}
-              />
-            </TouchableHighlight>
-            <View style ={styles.separadorContainer}>
-              <Text style = {styles.separador}>
-                {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.authorization_levels")}
-              </Text>
-            </View>
-            <FlatList
-              data={niveles}
-              keyExtractor= {(item, index) => niveles + index.toString()}
-              renderItem={this.renderNiveles.bind(this)}
-            />
-            <View style ={styles.separadorContainer}>
-              <Text style = {styles.separador}>
-                {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.service_detail")}
-              </Text>
-            </View>
-            <View style={styles.Contenedor}>
-              <Text style={styles.TituloInsumo}>{datos.INPRODDSC}</Text>
-              <Text style={styles.TotalInsumo}>
-                {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.price")}:
-                <NumberFormat value={parseFloat(datos.MONTO)} displayType={'text'} renderText={value => <Text style={styles.TotalInsumoArgent}> {value} {datos.CNCMNMID}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
-              </Text>
-              <Text style={styles.informaciónGrande}>{datos.ACMVORDSC4}</Text>
-              <Text style={styles.subTitulo}>
-                {strings("transactions.ACMVOI.ACMVOIFDOC")}:
-                <Text style={styles.información}> {datos.ACMVOIFDOC}</Text>
-              </Text>
-              <Text style={styles.subTitulo}>
-                {strings("transactions.ACMVOI.ACMVOIFCEP")}:
-                <Text style={styles.información}> {datos.ACMVOIFCEP}</Text>
-              </Text>
-              <Text style={styles.subTitulo}>
-                {strings("transactions.ACMVOI.ACMVOIQTO")}:
-                <NumberFormat value={parseFloat(datos.ACMVOIQTO)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} {datos.ACMVOIUMT} </Text>} thousandSeparator={true} prefix={''}></NumberFormat>
-              </Text>
-              <Text style={styles.subTitulo}>
-                {strings("transactions.ACMROI.ACMROIFP")}:
-                <NumberFormat value={parseFloat(datos.PRECIO)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} {datos.CNCMNMID}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
-              </Text>
-              <Text style={styles.subTitulo}>
-                {strings("transactions.ACMROI.ACMROIPAREG")}:
-                <NumberFormat value={parseFloat(datos.ACMROIPAREG)} displayType={'text'} renderText={value => <Text style={styles.información}> {value}% </Text>} thousandSeparator={true} prefix={''}></NumberFormat>
-              </Text>
-              <ProgressBarAnimated
-                width={Dimensions.get("window").width - 140}
-                height={15}
-                borderRadius={10}
-                value={ACMROIPAREG}
-                backgroundColor="#d5edff"
-              />
-              <Text style={styles.subTitulo}>
-                {strings("transactions.ACMVOI.ACMVOICOM")}:
-                <Text style={styles.información}> {datos.ACMVOICOM}</Text>
-              </Text>
-            </View>
-            <View style = {styles.pieAutorización}>
+
+            <Overlay
+              isVisible={this.state.filling_rejection_justfication}
+              windowBackgroundColor="rgba(0, 0, 0, .3)"
+              overlayBackgroundColor="rgba(255, 255, 255, 1)"
+              height={250}
+            >
               <View style ={styles.header}>
-                <Text style = {styles.titleJustificacion}>
-                  {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.justification")}
+                <Text style = {styles.justification_title_style}>
+                  {strings("modules.BandejaDeAutorizaciones.AutorizacionReq.justification")}
                 </Text>
               </View>
               <View style={styles.justificación}>
                 <TextInput
-                  placeholder={strings("modules.BandejaDeAutorizaciones.AutorizacionRav.write_justification")}
+                  placeholder={strings("modules.BandejaDeAutorizaciones.AutorizacionReq.write_justification")}
                   value={justificacion}
                   autoCorrect={true}
                   multiline = {true}
-                  numberOfLines={1}
+                  numberOfLines={7}
                   maxLength={250}
                   onChangeText={this.onJustificacionChange.bind(this)}
-                  style={styles.textInputStyle}
+                  style={styles.justification_input_style}
                 />
               </View>
               <View style={styles.containerButton}>
-                <TouchableHighlight style ={styles.ocButton}>
-                  <Button title={strings("modules.BandejaDeAutorizaciones.AutorizacionRav.accept")}  color="rgb(124, 183, 62)" onPress={this.aceptarRav.bind(this)}/>
-                </TouchableHighlight>
+                <Button title={strings("modules.BandejaDeAutorizaciones.AutorizacionReq.accept")}  onPress={() => this.updateLineReject(this.state.aux_ACRCPALIN)} />
                 <Text>{" "}</Text>
-                <TouchableHighlight style ={styles.ocButton}>
-                  <Button title={strings("modules.BandejaDeAutorizaciones.AutorizacionRav.reject")} color="#rgb(216, 87, 57)" onPress={this.rechazarRav.bind(this)}/>
-                </TouchableHighlight>
+                <Button title={strings("modules.BandejaDeAutorizaciones.AutorizacionReq.reject")} type="outline" onPress={() => this.setState({filling_rejection_justfication: false})}/>
               </View>
-            </View>
+            </Overlay>
 
+            <View style={styles.datosContainer}>
+              <Text style={styles.subtituloChido}>{strings("modules.BandejaDeAutorizaciones.AutorizacionReq.number")}</Text>
+              <Text style={styles.contenidoNoDoc}>#{datos.ACRCPADOC}</Text>
+              <Text style={styles.subtitulo}>{strings("transactions.PMCTCG.PMCTCGDSC")}</Text>
+              <Text style={styles.contenido}>{datos.PMCTCGDSC}</Text>
+
+              <Text style={styles.subtitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionReq.budget_title")}</Text>
+              <View style={table_styles.general_table}>
+                <Table borderStyle={{borderWidth: 0, borderColor: 'transparent'}}>
+                  <Row data={this.state.general_budget_head} style={table_styles.table_general_head} textStyle={table_styles.general_title}/>
+                  <TableWrapper style={{flexDirection: 'row'}}>
+                    <Col data={this.state.budget_titles} textStyle={table_styles.general_subtitle}/>
+                    <Col data={this.state.general_budget_data} style={table_styles.general_cell_style} textStyle={table_styles.currency_right}/>
+                  </TableWrapper>
+                </Table>
+              </View>
+
+              <View style={table_styles.general_table}>              
+                <Table borderStyle={{borderWidth: 0, borderColor: 'transparent'}}>
+                  <Row data={this.state.monthly_budget_head} style={table_styles.table_general_head} textStyle={table_styles.general_title}/>
+                  <TableWrapper style={{flexDirection: 'row'}}>
+                    <Col data={this.state.budget_titles} textStyle={table_styles.general_subtitle}/>
+                    <Col data={this.state.monthly_budget_data} style={table_styles.general_cell_style} textStyle={table_styles.currency_right}/>
+                  </TableWrapper>
+                </Table>
+              </View>
+
+            </View>
+            <View style ={styles.separadorContainer}>
+              <Text style = {styles.separador}>
+                {strings("modules.BandejaDeAutorizaciones.AutorizacionReq.lines")}
+              </Text>
+            </View>
+            <FlatList
+              data={lineas}
+              keyExtractor= {(item, index) => "lineas" + index.toString()}
+              renderItem={this.renderLineas.bind(this)}
+            />
           </ScrollView>
         </View>
       );
@@ -507,8 +544,12 @@ const styles = StyleSheet.create({
       borderWidth: 4,
   },
   contentContainer: {
-    // paddingVertical: 10,
-    height: '100%'
+    flexGrow: 1,
+    flexDirection: "column",
+    justifyContent: "space-between"
+  },
+  ScrollContainer:{
+    height: '100%',
   },
   innerContentPadding: {
     margin: 10
@@ -578,14 +619,14 @@ const styles = StyleSheet.create({
   },
   datosContainer: {
     paddingVertical: 10,
-    paddingHorizontal: 25
+    paddingHorizontal: 25,
+    flex: 1,
+    justifyContent: 'flex-start'
   },
   pieAutorización: {
     flex: 1,
-    // marginTop: 60,
-    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     backgroundColor: 'rgb(13, 114, 109)'
   },
   titleJustificacion: {
@@ -637,6 +678,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#b7b6b6'
   },
+  informaciónRoja: {
+    fontFamily: 'sans-serif-condensed',
+    fontSize: 16,
+    color: 'red'
+  },
   informaciónGrande: {
     fontFamily: 'sans-serif-condensed',
     fontSize: 18,
@@ -666,4 +712,54 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
+  titulo_linea: {
+    fontSize: 16,
+    color: "rgb(38, 51, 140)"
+  },
+  justification_title_style: {
+    color: "black",
+    fontSize: 20,
+  },
+  justification_input_style: {
+    borderWidth: 1,
+    borderColor: "lightgrey",
+    margin: 6,
+    textAlignVertical: 'top'
+  },
+  justification_box: {
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: 'pink',
+    padding: 15
+  }
+});
+
+const table_styles = StyleSheet.create({
+  currency_right: {
+    textAlign: "right",
+    fontFamily: 'sans-serif-condensed',
+    color: 'rgb(0, 143, 41)',
+    fontSize: 16,
+    margin: 4
+  },
+  general_cell_style: {
+  },
+  general_table: { 
+    marginVertical: 3
+  },
+  table_general_head: {
+    backgroundColor: "#f6f8fa"
+  },
+  general_title:{
+    fontFamily: 'sans-serif-condensed',
+    color: 'black',
+    fontSize: 16,
+    margin: 4
+  },
+  general_subtitle:{
+    fontFamily: 'sans-serif-condensed',
+    color: 'grey',
+    fontSize: 16,
+    margin: 4
+  }
 });

@@ -86,8 +86,18 @@
             "AutorizacionPagCXP": {
                 "title": "Cuentas por Pagar asociadas",
                 "PDF_OC": "Reporte Preeliminar de Orden de Compra",
-                "PDF_XML": "Factura"
-            }
+                "PDF_XML": "Factura",
+                "CXP": "Cuentas por Pagar",
+                "CNTDOCDSC": "Tipo",
+                "PMCTPRDSC": "Proyecto",
+                "PMNumDocOC": "Número de Orden de Compra",
+                "PMFolioFac": "Folio de Factura",
+                "PMFechFac": "Fecha de Factura",
+                "PMFechVen": "Fecha de Vencimiento",
+                "Pago": "Monto Original",
+                "Cantidad": "Saldo Pendiente",
+                "ACMVOIPORA": "Porcentaje de anticipo"
+            },
             "AutorizacionRav": {
                 "title": "Registro de Avance",
                 "status": "Estatus",
@@ -127,7 +137,40 @@
                 "validations": {
                     "missing_justification": "Por favor justifique su decisión."
                 }
-            } 
+            },
+            "AutorizacionReq": {
+                "title": "Autorización de requisición",
+                "status": "Estatus",
+                "date": "Fecha",
+                "comments": "Comentarios",
+                "report_title":"Reporte",
+                "report_text":"Preliminar de la Orden de Compra",
+                "authorization_levels": "Niveles de Autorización",
+                "lines": "Líneas",
+                "justification":"Justificación",
+                "write_justification":"Escriba la justificación de su decisión",
+                "accept": "Aceptar",
+                "reject": "Rechazar",
+                "number": "Número de documento",
+                "budget_title": "Presupuesto",
+                "general_budget_title": "General",
+                "monthly_budget_title": "Mensual",
+                "budgeted_budget": "Presupuestado",
+                "compromised_budget": "Comprometido",
+                "available_budget": "Disponible",
+                "num": "Dias sin atender",
+                "messages": {
+                    "attention": "Atención",
+                    "authorization": "Se autorizará el avance de servicio ¿Desea continuar con el proceso?",
+                    "rejection": "Se rechazará el avance de servicio. ¿Desea continuar con el proceso?",
+                    "ok": "OK",
+                    "yes": "Sí",
+                    "no": "No"
+                },
+                "validations": {
+                    "missing_justification": "Por favor justifique su decisión."
+                }
+            }  
         }
     },
     "transactions": {
@@ -176,6 +219,19 @@
             "ACMROIPAREG":"Porcentage de avance",
             "ACMROIFDOC":"Fecha registro",
             "ACMROIOBST": "Comentario que soporta este avance de registro"
+        },
+        "ACRCPA": {
+            "ACRCPALIN": "Línea",
+            "ACRCPAQTY": "Cantidad solicitada",
+            "ACRCPAFREQ": "Fecha de requisición",
+            "ACRCPAOBS": "Observaciones",
+            "ACRCPAQTYR": "Cantidad requerida",
+            "ACRCPAQTYOC": "Cantidad orden de compra",
+            "ACRCPAQTYRC": "Cantidad recibida",
+            "ACRCPAQTYP": "Cantidad presuspuesto",
+            "ACRCPAULPCM": "Ultimo precio de compra",
+            "ACRCPAVACMEST": "Valor de compra estimado",
+            "ACRCPACNRQPDIAS": "Cantidad requerida en ultimas dos semanas"
         },
         "PMCTCG": {
             "PMCTCGDSC": "Cuenta de Cargo"

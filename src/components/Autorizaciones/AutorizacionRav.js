@@ -255,7 +255,7 @@ export default class AutorizacionRav extends React.Component {
     if (loading != true) {
       return (
         <View style={styles.container}>
-          <ScrollView style={styles.contentContainer}>
+          <ScrollView style={styles.ScrollContainer} contentContainerStyle={styles.contentContainer}>
             <Overlay
                 isVisible={this.state.processingTransaction}
                 windowBackgroundColor="rgba(255, 255, 255, .3)"
@@ -507,8 +507,12 @@ const styles = StyleSheet.create({
       borderWidth: 4,
   },
   contentContainer: {
-    // paddingVertical: 10,
-    height: '100%'
+    flexGrow: 1,
+    flexDirection: "column",
+    justifyContent: "space-between"
+  },
+  ScrollContainer:{
+    height: '100%',
   },
   innerContentPadding: {
     margin: 10
@@ -578,14 +582,14 @@ const styles = StyleSheet.create({
   },
   datosContainer: {
     paddingVertical: 10,
-    paddingHorizontal: 25
+    paddingHorizontal: 25,
+    flex: 1,
+    justifyContent: 'flex-start'
   },
   pieAutorización: {
     flex: 1,
-    // marginTop: 60,
-    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     backgroundColor: 'rgb(13, 114, 109)'
   },
   titleJustificacion: {

@@ -120,6 +120,16 @@ export default class AutorizacionPorTDC extends React.Component {
             </View>
           </TouchableOpacity>
         );
+      case 'REQ':
+        return (
+          <TouchableOpacity
+              onPress={() => Actions.autorizacion_req(data.item)}
+            >
+            <View style={styles.curvedCard}>
+                {informacion}
+            </View>
+          </TouchableOpacity>
+        );
       default:
         return(
           <TouchableWithoutFeedback> 

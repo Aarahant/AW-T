@@ -168,7 +168,7 @@ export default class AutorizacionPag extends React.Component {
     if (loading != true) {
       return (   
         <View style={styles.container}>
-          <ScrollView style={styles.contentContainer}>
+          <ScrollView style={styles.ScrollContainer} contentContainerStyle={styles.contentContainer}>
             <Overlay
                 isVisible={this.state.processingTransaction}
                 windowBackgroundColor="rgba(255, 255, 255, .3)"
@@ -257,27 +257,67 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    justifyContent: "space-around"
   },
   contentContainer: {
-    // paddingVertical: 10,
-    height: '100%'
+    flexGrow: 1,
+    flexDirection: "column",
+    justifyContent: "space-between"
+  },
+  ScrollContainer:{
+    height: '100%',
   },
   header:{
     alignItems: 'center',
     justifyContent: 'center',
   },
+  datosContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 25,
+    flex: 1,
+    justifyContent: 'flex-start'
+  },
+  pieAutorización: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgb(13, 114, 109)'
+  },
+  titleJustificacion: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontWeight: 'bold',
+    fontSize: 18,
+    marginTop: 20,
+    marginBottom: 6,
+    color: 'white'
+  },
+  containerButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 15,
+    marginTop: 5
+  },
+  textInputStyle: {
+    padding: 4,
+    fontSize: 16,
+    flex: 1,
+    backgroundColor: 'rgb(103, 173, 179)',
+    marginHorizontal: 5
+  },
+  subTitulo: {
+    fontFamily: 'sans-serif-condensed',
+    fontSize: 16
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
   justificación: {
     flexDirection: 'row',
     justifyContent: 'center'
   },
-//   at:{
-//     alignItems: 'center',
-//     textAlign: 'center',
-//     justifyContent: 'center',
-//     color: 'rgb(232,102,23)',
-//     fontWeight: 'bold',
-//     fontSize: 22,
-//   },
   separador: {
     alignItems: 'flex-start',
     fontSize: 24,
@@ -285,9 +325,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     paddingHorizontal: 15
     // color: 'white'
-  },
-  contentContainer: {
-    height: '100%'
   },
   subtitulo: {
     color: 'black',
@@ -326,47 +363,5 @@ const styles = StyleSheet.create({
     fontFamily: 'sans-serif-condensed',
     color: 'rgb(0, 143, 41)',
     fontSize: 18
-  },
-  datosContainer: {
-    paddingVertical: 10,
-    paddingHorizontal: 25
-  },
-  pieAutorización: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgb(13, 114, 109)'
-  },
-  titleJustificacion: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontWeight: 'bold',
-    fontSize: 18,
-    marginTop: 20,
-    marginBottom: 6,
-    color: 'white'
-  },
-  containerButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 15,
-    marginTop: 5
-  },
-  textInputStyle: {
-    padding: 4,
-    fontSize: 16,
-    flex: 1,
-    backgroundColor: 'rgb(103, 173, 179)',
-    marginHorizontal: 5
-  },
-  subTitulo: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 16
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
   }
 });

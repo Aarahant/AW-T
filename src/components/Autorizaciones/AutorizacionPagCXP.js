@@ -5,16 +5,10 @@ import {
   View,
   Text,
   TouchableHighlight,
-  Image,
   FlatList,
-  TextInput,
-  Button,
-  ToastAndroid,
   Alert,
   Linking,
-  Dimensions,
-  Animated,
-  Easing
+  Dimensions
 } from 'react-native';
 import { ListItem, Overlay } from 'react-native-elements';
 import axios from 'axios';
@@ -67,7 +61,7 @@ export default class AutorizacionPagCXP extends React.Component {
   }
 
   updateTitle() {
-    Actions.refresh({title: strings('modules.Autorizaciones.AutorizacionPagCXP.title')});
+    Actions.refresh({title: strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.title')});
     clearInterval(this.titleInterval);
   }
 
@@ -82,7 +76,7 @@ export default class AutorizacionPagCXP extends React.Component {
             <ListItem
               key={"1"}
               leftAvatar={{source: require( '../../../assets/images/reportePdf.jpg')}}
-              title= {strings('modules.Autorizaciones.AutorizacionPagCXP.PDF_OC')}
+              title= {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.PDF_OC')}
             //   subtitle={strings("modules.BandejaDeAutorizaciones.AutorizacionPag.report_text")}
             />
           </TouchableHighlight>
@@ -95,7 +89,7 @@ export default class AutorizacionPagCXP extends React.Component {
             <ListItem
               key={"2"}
               leftAvatar={{source: require( '../../../assets/images/reportePdf.jpg')}}
-              title= {strings('modules.Autorizaciones.AutorizacionPagCXP.PDF_XML')}
+              title= {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.PDF_XML')}
             //   subtitle={strings("modules.BandejaDeAutorizaciones.AutorizacionPag.report_text")}
             />
           </TouchableHighlight>
@@ -109,39 +103,39 @@ export default class AutorizacionPagCXP extends React.Component {
               <NumberFormat value={parseFloat(data.item.ACOCPAMNTIN)} displayType={'text'} renderText={value => <Text style={styles.TotalArgent}> {value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>  
             </Text> */}
             <Text style={styles.subTitulo}>
-              {strings('modules.Autorizaciones.AutorizacionPagCXP.CNTDOCDSC')} Tipo: 
+              {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.CNTDOCDSC')}: 
               <Text style={styles.información}> {data.item.CNTDOCDSC}</Text>
             </Text> 
             <Text style={styles.subTitulo}>
-              {strings('modules.Autorizaciones.AutorizacionPagCXP.PMCTPRDSC')} Proyecto: 
+              {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.PMCTPRDSC')}: 
               <Text style={styles.información}> {data.item.PMCTPRDSC}</Text>
             </Text> 
             <Text style={styles.subTitulo}>
-              {strings('modules.Autorizaciones.AutorizacionPagCXP.PMNumDocOC')} Número de Orden de Compra: 
+              {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.PMNumDocOC')}: 
               <Text style={styles.NumOC}> {data.item.PMNumDocOC}</Text>
             </Text> 
             <Text style={styles.subTitulo}>
-              {strings('modules.Autorizaciones.AutorizacionPagCXP.PMFolioFac')} Folio de Factura: 
+              {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.PMFolioFac')}: 
               <Text style={styles.información}> {data.item.PMFolioFac}</Text>
             </Text> 
             <Text style={styles.subTitulo}>
-              {strings('modules.Autorizaciones.AutorizacionPagCXP.PMFechFac')} Fecha de Factura: 
+              {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.PMFechFac')}: 
               <Text style={styles.información}> {data.item.PMFechFac}</Text>
             </Text> 
             <Text style={styles.subTitulo}>
-              {strings('modules.Autorizaciones.AutorizacionPagCXP.PMFechVen')} Fecha de Vencimiento: 
+              {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.PMFechVen')}: 
               <Text style={styles.información}> {data.item.PMFechVen}</Text>
             </Text> 
             <Text style={styles.subTitulo}>
-              {strings('modules.Autorizaciones.AutorizacionPagCXP.Pago')} Monto Original: 
+              {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.Pago')}: 
               <NumberFormat value={parseFloat( data.item.Pago )} displayType={'text'} renderText={value => <Text style={ styles.contenidoMonto }> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
             </Text> 
             <Text style={styles.subTitulo}>
-              {strings('modules.Autorizaciones.AutorizacionPagCXP.Cantidad')} Saldo Pendiente: 
+              {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.Cantidad')}: 
               <NumberFormat value={parseFloat( data.item.Cantidad )} displayType={'text'} renderText={value => <Text style={ styles.TotalArgent }> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
             </Text> 
             <Text style={styles.subTitulo}>
-              {strings('modules.Autorizaciones.AutorizacionPagCXP.ACMVOIPORA')} Porcentaje de anticipo: 
+              {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.ACMVOIPORA')}: 
               <Text style={styles.información}> {data.item.ACMVOIPORA}%</Text>
             </Text>
             <ProgressBarAnimated
@@ -151,7 +145,7 @@ export default class AutorizacionPagCXP extends React.Component {
                 backgroundColor="#d5edff"
               />
             {PDF_OC}
-            {/* {PDF_XML}   */}
+            {PDF_XML}  
           </View>
     );
   }
@@ -165,12 +159,11 @@ export default class AutorizacionPagCXP extends React.Component {
       return (   
         <View style={styles.container}>
           <ScrollView style={styles.contentContainer}>
-            <View style ={styles.separadorContainer}>
+            {/* <View style ={styles.separadorContainer}>
               <Text style = {styles.separador}>
-                {strings('modules.Autorizaciones.AutorizacionPagCXP.CXP')}
-                Cuentas por Pagar
+                {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.CXP')}
               </Text>
-            </View>
+            </View> */}
             <FlatList
               data={CXP}
               keyExtractor= {(item, index) => CXP + index.toString()}
