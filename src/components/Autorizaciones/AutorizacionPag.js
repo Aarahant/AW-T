@@ -18,6 +18,8 @@ import { Actions } from 'react-native-router-flux';
 import { strings } from '../../i18n';
 import NumberFormat from 'react-number-format';
 import LoadingScreen from '../Common/LoadingScreen';
+import light from '../Common/mode';
+import dark from '../Common/DarkMode';
 
 export default class AutorizacionPag extends React.Component {
   constructor(props) {
@@ -145,6 +147,18 @@ export default class AutorizacionPag extends React.Component {
   }
 
   render() { 
+    let estilos;
+    switch (global.style){
+    case 'light':
+      estilos = light;
+      break;
+    case 'dark':
+      estilos = dark;
+      break;
+    default:
+      estilos = light;
+      break; 
+    }
     const loading = this.state.loading;
     const datos = this.state.aut_data;
     const justificacion = this.state.justificacion;
@@ -152,7 +166,7 @@ export default class AutorizacionPag extends React.Component {
     if (datos.PROPAGID > 0){
         ProgPagoID =
             <React.Fragment>
-                <Text style={styles.subtitulo}> {strings('modules.BandejaDeAutorizaciones.AutorizacionPag.ProgPag')}</Text>
+                <Text style={estilos.subtitulo}> {strings('modules.BandejaDeAutorizaciones.AutorizacionPag.ProgPag')}</Text>
                 <Text style={styles.contenido}>{datos.PROPAGID}</Text>
             </React.Fragment>
     }
@@ -167,49 +181,49 @@ export default class AutorizacionPag extends React.Component {
 
     if (loading != true) {
       return (   
-        <View style={styles.container}>
-          <ScrollView style={styles.ScrollContainer} contentContainerStyle={styles.contentContainer}>
+        <View style={estilos.container}>
+          <ScrollView style={estilos.ScrollContainer} contentContainerStyle={estilos.contentContainer}>
             <Overlay
                 isVisible={this.state.processingTransaction}
                 windowBackgroundColor="rgba(255, 255, 255, .3)"
                 overlayBackgroundColor="rgba(255, 255, 255, .0)"
                 fullScreen= {true}
               >
-              <View style={styles.loadingContainer}>
-                <Image style={styles.kds_logo_image} source={require("../../../assets/gifs/bars6.gif")}/>
+              <View style={estilos.loadingContainer}>
+                <Image style={estilos.kds_logo_image} source={require("../../../assets/gifs/bars6.gif")}/>
               </View>
             </Overlay>
-            <View style={styles.datosContainer}> 
-              <Text style={styles.subtituloChido}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.PAGOID')}</Text>
-              <Text style={styles.contenidoNoDoc}>#{datos.pagoid}   {anticipo}</Text>
+            <View style={estilos.datosContainer}> 
+              <Text style={estilos.subtituloChido}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.PAGOID')}</Text>
+              <Text style={estilos.contenidoNoDoc}>#{datos.pagoid}   {anticipo}</Text>
               {ProgPagoID}
-              <Text style={styles.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.CNUSERDSC')}</Text>
-              <Text style={styles.contenido}>{datos.CNUSERDSC}</Text>
-              <Text style={styles.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.CNCDIRNOM')}</Text>
-              <Text style={styles.contenido}>{datos.CNCDIRNOM}</Text>
-              <Text style={styles.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.CANTIDAD')}</Text>
-              <Text style={styles.contenido}>
+              <Text style={estilos.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.CNUSERDSC')}</Text>
+              <Text style={estilos.contenido}>{datos.CNUSERDSC}</Text>
+              <Text style={estilos.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.CNCDIRNOM')}</Text>
+              <Text style={estilos.contenido}>{datos.CNCDIRNOM}</Text>
+              <Text style={estilos.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.CANTIDAD')}</Text>
+              <Text style={estilos.contenido}>
                 <NumberFormat value={parseFloat(datos.CANTIDAD)} displayType={'text'} renderText={value => <Text style={styles.contenidoMonto}>{value} {datos.CNCMNMID}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
               </Text> 
-              <Text style={styles.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.CNCD03DSC')}</Text>
-              <Text style={styles.contenido}>{datos.CNCD03DSC}</Text> 
-              <Text style={styles.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.PAGOFEC')}</Text>
-              <Text style={styles.contenido}>{datos.PAGOFEC}</Text> 
-              <Text style={styles.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.PAGOFEPR')}</Text>
-              <Text style={styles.contenidoLargo}>{datos.PAGOFEPR}</Text>
+              <Text style={estilos.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.CNCD03DSC')}</Text>
+              <Text style={estilos.contenido}>{datos.CNCD03DSC}</Text> 
+              <Text style={estilos.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.PAGOFEC')}</Text>
+              <Text style={estilos.contenido}>{datos.PAGOFEC}</Text> 
+              <Text style={estilos.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.PAGOFEPR')}</Text>
+              <Text style={estilos.contenidoLargo}>{datos.PAGOFEPR}</Text>
               <Text>{" "}</Text>
               <TouchableHighlight style ={styles.detalleButton}>
                 <Button title={strings('modules.BandejaDeAutorizaciones.AutorizacionPag.detail')} color="rgb(19, 92, 121)" onPress={() => Actions.autorizacion_pag_cxp(datos)}/>
               </TouchableHighlight>
             </View>
 
-            <View style = {styles.pieAutorización}>
-              <View style ={styles.header}>
-                <Text style = {styles.titleJustificacion}>
+            <View style = {estilos.pieAutorización}>
+              <View style ={estilos.header}>
+                <Text style = {estilos.titleJustificacion}>
                   {strings('modules.BandejaDeAutorizaciones.AutorizacionPag.Comentarios')}
                 </Text>
               </View>
-              <View style={styles.justificación}>
+              <View style={estilos.justificación}>
                 <TextInput
                 //   placeholder={strings("modules.BandejaDeAutorizaciones.AutorizacionPag.write_justification")}
                   value={justificacion}
@@ -218,10 +232,10 @@ export default class AutorizacionPag extends React.Component {
                   numberOfLines={1}
                   maxLength={250}
                   onChangeText={this.onJustificacionChange.bind(this)}
-                  style={styles.textInputStyle}
+                  style={estilos.textInputStyle}
                 />
               </View>
-              <View style={styles.containerButton}>
+              <View style={estilos.containerButton}>
                 <TouchableHighlight style ={styles.pagButton}>
                   <Button title={strings('modules.BandejaDeAutorizaciones.AutorizacionPag.Autorizar')} color="rgb(124, 183, 62)" onPress={this.autorizarPag.bind(this)}/>
                 </TouchableHighlight>
@@ -254,114 +268,10 @@ const styles = StyleSheet.create({
     borderRadius:10,
     marginTop: 5
   },
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: "space-around"
-  },
-  contentContainer: {
-    flexGrow: 1,
-    flexDirection: "column",
-    justifyContent: "space-between"
-  },
-  ScrollContainer:{
-    height: '100%',
-  },
-  header:{
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  datosContainer: {
-    paddingVertical: 10,
-    paddingHorizontal: 25,
-    flex: 1,
-    justifyContent: 'flex-start'
-  },
-  pieAutorización: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgb(13, 114, 109)'
-  },
-  titleJustificacion: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontWeight: 'bold',
-    fontSize: 18,
-    marginTop: 20,
-    marginBottom: 6,
-    color: 'white'
-  },
-  containerButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 15,
-    marginTop: 5
-  },
-  textInputStyle: {
-    padding: 4,
-    fontSize: 16,
-    flex: 1,
-    backgroundColor: 'rgb(103, 173, 179)',
-    marginHorizontal: 5
-  },
-  subTitulo: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 16
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  justificación: {
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
-  separador: {
-    alignItems: 'flex-start',
-    fontSize: 24,
-    marginTop: 12,
-    marginBottom: 12,
-    paddingHorizontal: 15
-    // color: 'white'
-  },
-  subtitulo: {
-    color: 'black',
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 18,
-    marginTop: 10
-  },
-  subtituloChido: {
-    color: 'black',
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 19
-  },
-  contenido: {
-    fontFamily: 'sans-serif-condensed',
-    color: 'grey',
-    fontSize: 18
-  },
   contenidoAnticipo: {
     fontFamily: 'sans-serif-condensed',
     fontWeight: 'bold',
     color: 'grey',
-    fontSize: 18
-  },
-  contenidoLargo: {
-    fontFamily: 'sans-serif-condensed',
-    color: 'grey',
-    fontSize: 18,
-    textAlign: 'justify'
-  },
-  contenidoNoDoc: {
-    fontFamily: 'Roboto',
-    color: 'rgb(38, 51, 140)',
-    fontSize: 20
-  },
-  contenidoMonto: {
-    fontFamily: 'sans-serif-condensed',
-    color: 'rgb(0, 143, 41)',
     fontSize: 18
   }
 });

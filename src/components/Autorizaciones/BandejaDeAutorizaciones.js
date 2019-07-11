@@ -15,6 +15,7 @@ import axios from 'axios';
 import { strings } from '../../i18n';
 import I18n from 'react-native-i18n';
 import LoadingScreen from '../Common/LoadingScreen';
+import estilos from '../Common/mode';
 
 export default class BandejaDeAutorizaciones extends React.Component {
   constructor(props) {
@@ -145,7 +146,7 @@ export default class BandejaDeAutorizaciones extends React.Component {
 
     if (loading != true) {
       return (   
-        <View style={styles.container}>
+        <View style={estilos.container}>
           <ScrollView contentContainerStyle={styles.contentContainer}>
             <FlatList
               data={Bandeja}
@@ -164,10 +165,6 @@ export default class BandejaDeAutorizaciones extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
   contentContainer: {
     paddingTop: 0,
     height: '100%'

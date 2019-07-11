@@ -17,6 +17,8 @@ import { strings } from '../../i18n';
 import ProgressBarAnimated from 'react-native-progress-bar-animated';
 import NumberFormat from 'react-number-format';
 import LoadingScreen from '../Common/LoadingScreen';
+import light from '../Common/mode';
+import dark from '../Common/DarkMode';
 
 export default class AutorizacionPagCXP extends React.Component {
   constructor(props) {
@@ -64,8 +66,20 @@ export default class AutorizacionPagCXP extends React.Component {
     Actions.refresh({title: strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.title')});
     clearInterval(this.titleInterval);
   }
+  
+  estilo(){
+    switch (global.style){
+      case 'light':
+        return(light);
+      case 'dark':
+        return(dark);
+      default:
+        return(light);
+    }
+  }
 
   renderCXP(data){
+    let estilos = this.estilo()
     //   console.log("######################## pdf")
     //   console.log(data)
     let PDF_OC;
@@ -128,11 +142,11 @@ export default class AutorizacionPagCXP extends React.Component {
             </Text> 
             <Text style={styles.subTitulo}>
               {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.Pago')}: 
-              <NumberFormat value={parseFloat( data.item.Pago )} displayType={'text'} renderText={value => <Text style={ styles.contenidoMonto }> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
+              <NumberFormat value={parseFloat( data.item.Pago )} displayType={'text'} renderText={value => <Text style={ estilos.contenidoMonto }> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
             </Text> 
             <Text style={styles.subTitulo}>
               {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.Cantidad')}: 
-              <NumberFormat value={parseFloat( data.item.Cantidad )} displayType={'text'} renderText={value => <Text style={ styles.TotalArgent }> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
+              <NumberFormat value={parseFloat( data.item.Cantidad )} displayType={'text'} renderText={value => <Text style={ estilos.contenidoMonto }> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
             </Text> 
             <Text style={styles.subTitulo}>
               {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.ACMVOIPORA')}: 
@@ -150,20 +164,15 @@ export default class AutorizacionPagCXP extends React.Component {
     );
   }
 
-
   render() { 
+    let estilos = this.estilo()
     const loading = this.state.loading;
     const CXP = this.state.cxp_data.sdtRestCXPAsoc;
 
     if (loading != true) {
       return (   
-        <View style={styles.container}>
-          <ScrollView style={styles.contentContainer}>
-            {/* <View style ={styles.separadorContainer}>
-              <Text style = {styles.separador}>
-                {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.CXP')}
-              </Text>
-            </View> */}
+        <View style={estilos.container}>
+          <ScrollView style={estilos.ScrollContainer}>
             <FlatList
               data={CXP}
               keyExtractor= {(item, index) => CXP + index.toString()}
@@ -187,159 +196,6 @@ const styles = StyleSheet.create({
     width: '30%',
     borderRadius:10
   },
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  header:{
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  justificación: {
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
-  at:{
-    alignItems: 'center',
-    textAlign: 'center',
-    justifyContent: 'center',
-    color: 'rgb(232,102,23)',
-    fontWeight: 'bold',
-    fontSize: 22,
-  },
-  separador: {
-    alignItems: 'flex-start',
-    // justifyContent: 'center',
-    // fontWeight: 'bold',
-    fontSize: 24,
-    marginTop: 12,
-    marginBottom: 12,
-    paddingHorizontal: 15
-    // color: 'white'
-  },
-  separadorContainer:{
-    alignItems: 'flex-start',
-    // justifyContent: 'center',
-    backgroundColor: '#f2f2f2'
-  },
-  profilepicWrap:{
-      width: 180,
-      height: 180,
-      borderRadius: 100,
-      borderColor: 'rgb(30,43,63)',
-      borderWidth: 16,
-  },
-  profilepic:{
-      flex: 1,
-      width: null,
-      borderRadius: 75,
-      borderColor: 'rgb(10,23,43)',
-      borderWidth: 4,
-  },
-  contentContainer: {
-    // paddingVertical: 10,
-    height: '100%'
-  },
-  innerContentPadding: {
-    margin: 10
-  },
-  navCardTouch: {
-    marginVertical: 4,
-    marginHorizontal: 2,
-  },
-  navCard: {
-    elevation: 2,
-    backgroundColor: 'white', 
-  },
-  navCardContent: {
-    margin: 10,
-  },
-  descriptionArea: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 20
-  },
-  descriptionText: {
-    color: 'grey',
-    fontStyle: 'italic',
-    textAlign: 'center',
-    fontSize: 16
-  },
-  postTitle: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    color: 'rgb(66, 66, 66)'
-  },
-  postContent: {
-    fontSize: 14,
-    color: 'rgb(86, 86, 86)'
-  },
-  subtitulo: {
-    color: 'black',
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 18,
-    marginTop: 10
-  },
-  subtituloChido: {
-    color: 'black',
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 19
-  },
-  contenido: {
-    fontFamily: 'sans-serif-condensed',
-    color: 'grey',
-    fontSize: 18
-  },
-  contenidoLargo: {
-    fontFamily: 'sans-serif-condensed',
-    color: 'grey',
-    fontSize: 18,
-    textAlign: 'justify'
-  },
-  contenidoNoDoc: {
-    fontFamily: 'Roboto',
-    color: 'rgb(38, 51, 140)',
-    fontSize: 20
-  },
-  contenidoMonto: {
-    fontFamily: 'sans-serif-condensed',
-    color: 'rgb(0, 143, 41)',
-    fontSize: 18
-  },
-  datosContainer: {
-    paddingVertical: 10,
-    paddingHorizontal: 25
-  },
-  pieAutorización: {
-    flex: 1,
-    // marginTop: 60,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgb(13, 114, 109)'
-  },
-  titleJustificacion: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontWeight: 'bold',
-    fontSize: 18,
-    marginTop: 20,
-    marginBottom: 6,
-    color: 'white'
-  },
-  containerButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 15,
-    marginTop: 5
-  },
-  textInputStyle: {
-    padding: 4,
-    fontSize: 16,
-    flex: 1,
-    backgroundColor: 'rgb(103, 173, 179)',
-    marginHorizontal: 5
-  },
   Contenedor: {
     margin: 15
   },
@@ -347,11 +203,6 @@ const styles = StyleSheet.create({
     fontFamily: 'sans-serif-condensed',
     fontSize: 20,
     color: 'black'
-  },
-  TotalArgent: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 18,
-    color: 'rgb(0, 143, 41)'
   },
   subTitulo: {
     fontFamily: 'sans-serif-condensed',
@@ -366,29 +217,5 @@ const styles = StyleSheet.create({
     fontFamily: 'sans-serif-condensed',
     fontSize: 19,
     color: 'rgb(38, 51, 140)',
-  },
-  estatuts_autorizo: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 17,
-    color: 'rgb(124, 183, 62)'
-  },
-  estatuts_cancelado: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 17,
-    color: 'rgb(19, 92, 121)'
-  },
-  estatuts_rechazo: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 17,
-    color: 'rgb(216, 87, 57)'
-  },
-  kds_logo_image: {
-    height: 260,
-    width: 260,
-  }, 
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  },
+  }
 });

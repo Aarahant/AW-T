@@ -14,6 +14,7 @@ import { Actions } from 'react-native-router-flux';
 import axios from 'axios';
 import { strings } from '../../i18n';
 import LoadingScreen from '../Common/LoadingScreen';
+import estilos from '../Common/mode';
 
 export default class AutorizacionPorTDC extends React.Component {
   constructor(props) {
@@ -162,9 +163,9 @@ export default class AutorizacionPorTDC extends React.Component {
         </View>
       }
       return (   
-        <View style={styles.container}>   
+        <View style={estilos.container}>   
           {IndicadorAusenciaDatos}
-          <View style={styles.container}>
+          <View style={estilos.container}>
             <ScrollView contentContainerStyle={styles.contentContainer}>
               <FlatList
                 data={Bandeja}
@@ -191,25 +192,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 0,
     height: '100%'
-  },
-  navCardTouch: {
-    marginVertical: 4,
-    marginHorizontal: 8,
-  },
-  navCard: {
-    elevation: 3,
-    backgroundColor: 'white', 
-  },
-  navCardContent: {
-    margin: 5,
-  },
-  emailItem:{
-    borderBottomWidth: 0.5,
-    borderColor: 'rgba(0,0,0,0.3)',
-    padding: 10
-  },
-  emailSubject: {
-    color: 'rgba(0,0,0,0.5)'
   },
   curvedCard:{
     padding: 20,
@@ -240,14 +222,6 @@ const styles = StyleSheet.create({
   curvedCardSubtitleHighlighted: {
     fontSize: 18,
     color: "black"
-  },
-  mainTitleContainer:{
-    alignItems: "center",
-    justifyContent: 'center'
-  },
-  mainTitle:{
-    fontSize: 20,
-    color: "black",
   },
   center: {
     flex: 1,

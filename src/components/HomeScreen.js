@@ -23,7 +23,8 @@ import {
 import { Actions } from 'react-native-router-flux';
 import axios from 'axios';
 import { strings } from '../i18n';
-import I18n from 'react-native-i18n';
+import light from './Common/mode';
+import dark from './Common/DarkMode';
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
@@ -120,6 +121,19 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
+    let estilos;
+    switch (global.style){
+    case 'light':
+      estilos = light;
+      break;
+    case 'dark':
+      estilos = dark;
+      break;
+    default:
+      estilos = light;
+      break; 
+    }
+
     var randomImages = [
       require('../../assets/images/sys_kds.png'),
       require('../../assets/images/kds_movil_logo.png')
@@ -177,7 +191,6 @@ export default class HomeScreen extends React.Component {
             
             <View style={styles.texto}>
                 <Text style={styles.name}>KDS AW&T</Text>
-                {/* <Text style={styles.pos}>{profile_data.profile_instrument}</Text> */}
             </View >   
             
             {/* <TouchableOpacity onPress={() => {Actions.user_profile()}}>
@@ -220,27 +233,11 @@ export default class HomeScreen extends React.Component {
             </ScrollView>
       </View>    
     ); 
-
-    
-    let AutCardStyle;
-    switch (global.language){
-      case 'en-US':
-        AutCardStyle = styles.cardAutLvl1;
-        break;
-      case 'es-MX':
-        AutCardStyle = styles.cardAutLvl2;
-        break;
-      default:
-        AutCardStyle = styles.cardAutLvl2;
-        break;
-    }
     
     return ( 
-      // <View style={styles.overAllContainer}>
         <DrawerLayoutAndroid
           ref = "mainDrawer"
           drawerWidth={300}
-        // drawerPosition={DrawerLayoutAndroid.positions.Left} 
         renderNavigationView={() => navigationView}>
           <Header
             backgroundColor= '#1aa6a8' //'#003366'
@@ -251,7 +248,7 @@ export default class HomeScreen extends React.Component {
               borderWidth: 0
             }}
           />
-            <View style={styles.container}>
+            <View style={estilos.container}>
               <ScrollView>
                 <View style = {{flexDirection: 'row', flex: 1, paddingTop: 5}}>
                   <View style={styles.columna}>
@@ -300,57 +297,11 @@ export default class HomeScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  buttonContainerStyle: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-    marginTop: 270
-  },
-  listHeader: {
-    flex: 1,
-    height: 30,
-    backgroundColor: '#c9d6e8',
-    justifyContent: 'center',
-  },
-  listHeaderText: {
-    marginLeft: 20,
-    fontWeight: 'bold',
-    fontSize: 16,
-    color: 'white'
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  contentContainer: {
-    paddingTop: 0,
-    height: '100%'
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
-  },
-  navigationFilename: {
-    marginTop: 5,
-  },
   imgCard: {
     backgroundColor: 'white', 
     height: 120,
     width: 120,
     alignSelf: 'center'
-  },
-  cardAutLvl1: {
-    width: '95%',
-    height: 200
-  },
-  cardAutLvl2: {
-    width: '95%',
-    height: 220
   },
   columna: {
     flex: 0,
@@ -359,135 +310,66 @@ const styles = StyleSheet.create({
     // alignSelf: 'flex-end',
     justifyContent: 'flex-start'
   },
-  paddedContainer: {
-    flex: 1,
-    marginVertical: 5,
-    marginHorizontal: 10,
+  header:{
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  navCardTouch: {
-    marginVertical: 3
+  profilepicWrap:{
+    marginTop:1,
+      width: 180,
+      height: 180,
+      borderRadius: 100,
+      borderColor: 'rgba(135,206,235, 0.4)',
+      borderWidth: 8,
   },
-  navCard: {
-    elevation: 3,
-    backgroundColor: 'white', 
+  name:{
+      fontSize: 16,
+      color: 'black',
+      fontWeight: 'bold',
+      textAlign:'center',
   },
-  navCardTitle: {
-    fontWeight: 'bold',
-    marginHorizontal: 15,
-    fontSize: 16,
-    marginTop: 15
+  texto:{
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    margin:5
   },
-  navCardDescription: {
-    marginTop: 3,
-    fontSize: 16,
-    marginHorizontal: 15,
-    marginBottom:15
-  },
-  titleText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white',
-},
-headerBackground:{
-  width: null,
-  alignSelf: 'stretch',
-  
-},
-header:{
-  alignItems: 'center',
-  justifyContent: 'center',
-},
-profilepicWrap:{
-  marginTop:1,
-    width: 180,
-    height: 180,
-    borderRadius: 100,
-    borderColor: 'rgba(135,206,235, 0.4)',
-    borderWidth: 8,
-},
-profilepic:{
-    flex: 1,
-    alignSelf: 'center',
-    alignItems:'center',
-    borderRadius: 75,
-    borderColor: '#fff',
-    borderWidth: 4,
-},
-name:{
-    fontSize: 16,
+  menuOption: {
+    paddingVertical:10,
+    marginHorizontal: 20,
     color: 'black',
-    fontWeight: 'bold',
-    textAlign:'center',
-    
-},
-nameDos:{
-  fontSize: 16,
-    color: '#fff',
-    fontWeight: 'bold',
-    textAlign:'center',
-    margin:5,
-},
-pos:{
-    fontSize: 14,
-    color: '#0394c0',
-    fontWeight: '100',
-    fontStyle: 'italic',
-    
-
-    },
-texto:{
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  margin:5
-},
-barra:{
-flexDirection: 'row',
-},
-menuOption: {
-  paddingVertical:10,
-  marginHorizontal: 20,
-  color: 'black',
-  fontSize: 16,
-  width: 260,
-  borderTopWidth: 1,
-  borderColor: 'rgb(244,244,244)' 
-},
-menuOptionFinal:{
-  padding: 10,
-  marginHorizontal: 20,
-  color: 'black',
-  fontSize: 16,
-  width: 260,
-  borderWidth: 1,
-  borderBottomWidth: 1,
-  borderColor: 'rgb(224,224,224)'
-},
-curvedCardLeft:{
-  // padding: 20,
-  borderRadius: 10,
-  backgroundColor: 'white',
-  elevation: 6,
-  marginTop: 0,
-  marginBottom: 10,
-  marginLeft: 8,
-  marginRight: 5
-},
-curvedCardRight:{
-  // padding: 20,
-  borderRadius: 10,
-  backgroundColor: 'white',
-  elevation: 6,
-  marginTop: 0,
-  marginBottom: 10,
-  marginLeft: 5,
-  marginRight: 10
-},
-curvedCardHeader:{
-  fontSize: 26,
-  color: "black"
-},
-// ,
-// overAllContainer: {
-//   marginTop: 80
-// }
+    fontSize: 16,
+    width: 260,
+    borderTopWidth: 1,
+    borderColor: 'rgb(244,244,244)' 
+  },
+  menuOptionFinal:{
+    padding: 10,
+    marginHorizontal: 20,
+    color: 'black',
+    fontSize: 16,
+    width: 260,
+    borderWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: 'rgb(224,224,224)'
+  },
+  curvedCardLeft:{
+    // padding: 20,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    elevation: 6,
+    marginTop: 0,
+    marginBottom: 10,
+    marginLeft: 8,
+    marginRight: 5
+  },
+  curvedCardRight:{
+    // padding: 20,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    elevation: 6,
+    marginTop: 0,
+    marginBottom: 10,
+    marginLeft: 5,
+    marginRight: 10
+  }
 });

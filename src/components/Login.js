@@ -15,6 +15,8 @@ import axios from 'axios';
 import { strings } from '../i18n';
 import I18n from 'react-native-i18n';
 import AsyncStorage from '@react-native-community/async-storage';
+import light from './Common/mode';
+import dark from './Common/DarkMode';
 
 
 class Login extends Component {
@@ -30,17 +32,19 @@ class Login extends Component {
   }  
   
   componentDidMount() {
-    this.getUserId();
+    this.getAsync();
   }
 
-  getUserId = async () => {
+  getAsync = async () => {
+    let userId = await AsyncStorage.getItem("A_CNUSERID")
+    this.setState({
+      username: userId
+    });
     try {
-      let userId = await AsyncStorage.getItem("A_CNUSERID")
-      this.setState({
-        username: userId
-      });
-      console.log("############## A_CNUSERID")
-      console.log(this.state.username)
+      let mode = await AsyncStorage.getItem("A_MODE")
+      global.style = mode
+      console.log('################## The Force Unleashed');
+      console.log(global.style);
     } catch(e) {
       console.log("####### FALLASSSSSSSS")
       // read error
@@ -130,6 +134,19 @@ class Login extends Component {
   }
 
   render() {
+    let estilos;
+    switch (global.style){
+    case 'light':
+      estilos = light;
+      break;
+    case 'dark':
+      estilos = dark;
+      break;
+    default:
+      estilos = light;
+      break; 
+    }
+3
     const {
       formContainerStyle,
       fieldStyle,
@@ -154,7 +171,7 @@ class Login extends Component {
               fullScreen= {true}
             >
               <View style={styles.loadingContainer}>
-                <Image style={styles.kds_logo_image} source={require("../../assets/gifs/bars6.gif")}/>
+                <Image style={estilos.kds_logo_image} source={require("../../assets/gifs/bars6.gif")}/>
               </View>
             </Overlay>
             <View style={{ flex: 1 }}>
@@ -286,10 +303,6 @@ const styles = StyleSheet.create({
       width: '100%',
       margin: 20
   },
-  kds_logo_image: {
-    height: 260,
-    width: 260,
-  }, 
   loadingContainer: {
     flex: 1,
     justifyContent: "center",

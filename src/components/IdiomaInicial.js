@@ -11,6 +11,7 @@ import {
 import { Actions } from 'react-native-router-flux';
 import axios from 'axios';
 import I18n from 'react-native-i18n';
+import estilos from './Common/mode';
 
 
 export default class IdiomaInicial extends React.Component {
@@ -57,7 +58,7 @@ export default class IdiomaInicial extends React.Component {
       //     leftComponent={{ icon: 'menu', color: '#fff', onPress:() => this.refs['mainDrawer'].openDrawer() }}
       //     centerComponent={{ text: strings('modules.HomeScreen.title'), style: { color: '#fff' } }}
       // />
-      <View style={styles.container}>
+      <View style={estilos.container}>
         <ScrollView contentContainerStyle={styles.contentContainer}>
           <TouchableOpacity
           style={styles.emailItem}
@@ -86,10 +87,6 @@ export default class IdiomaInicial extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-    },
     contentContainer: {
       paddingTop: 0,
       height: '100%'

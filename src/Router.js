@@ -21,6 +21,7 @@ import AutorizacionRav from './components/Autorizaciones/AutorizacionRav';
 import AutorizacionReq from './components/Autorizaciones/AutorizacionReq';
 import Settings from './components/Settings/Settings';
 import Idioma from './components/Settings/Idioma';
+import Pantalla from './components/Settings/Pantalla';
 import LoadingScreen from './components/Common/LoadingScreen';
 import IdiomaInicial from './components/IdiomaInicial';
 
@@ -137,6 +138,11 @@ const RouterComponent = () => {
                         title=""
                         key="idiomas"
                         component={Idioma}
+                    />
+                    <Scene
+                        title=""
+                        key="pantalla"
+                        component={Pantalla}
                     />
                 </Stack>
             </Stack>

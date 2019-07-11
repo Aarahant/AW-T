@@ -17,6 +17,12 @@
             "language": "Idioma",
             "Idioma": {
                 "title": "Idioma"
+            },
+            "Screen": "Pantalla",
+            "Pantalla": {
+                "title": "Pantalla",
+                "light": "Modo claro",
+                "dark": "Modo oscuro"
             }
         },
         "BandejaDeAutorizaciones": {
@@ -159,10 +165,10 @@
                 "compromised_budget": "Comprometido",
                 "available_budget": "Disponible",
                 "num": "Dias sin atender",
+                "close": "Cerrar",
                 "messages": {
                     "attention": "Atención",
-                    "authorization": "Se autorizará el avance de servicio ¿Desea continuar con el proceso?",
-                    "rejection": "Se rechazará el avance de servicio. ¿Desea continuar con el proceso?",
+                    "authorization": "Se impactara la requisición ¿Desea continuar con el proceso?",
                     "ok": "OK",
                     "yes": "Sí",
                     "no": "No"

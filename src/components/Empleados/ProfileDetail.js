@@ -11,6 +11,7 @@ import axios from 'axios';
 import { Actions } from 'react-native-router-flux';
 import { strings } from '../../i18n';
 import LoadingScreen from '../Common/LoadingScreen';
+import estilos from '../Common/mode';
 
 export default class ProfileDetail extends React.Component {
   constructor(props) {
@@ -71,7 +72,7 @@ export default class ProfileDetail extends React.Component {
     
     if (loading_empleado_data != true) {
       return (   
-        <View style={styles.container}>
+        <View style={estilos.container}>
           <ScrollView style={styles.contentContainer}>
             <View style={styles.innerContentPadding}>
               <ScrollView>
@@ -109,10 +110,6 @@ export default class ProfileDetail extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
   header:{
     alignItems: 'center',
     justifyContent: 'center',

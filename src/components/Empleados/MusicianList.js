@@ -16,6 +16,7 @@ import axios from 'axios';
 import {  Header} from 'react-native-elements';
 import { strings } from '../../i18n';
 import LoadingScreen from '../Common/LoadingScreen';
+import estilos from '../Common/mode';
 
 export default class MusicianList extends React.Component {
   constructor(props) {
@@ -230,13 +231,13 @@ export default class MusicianList extends React.Component {
         drawerWidth={300}
        // drawerPosition={DrawerLayoutAndroid.positions.Left} 
         renderNavigationView={() => navigationView}>
-        <View style={styles.container}>   
+        <View style={estilos.container}>   
           <Header
               backgroundColor='#003366'
               leftComponent={{ icon: "search", color: '#fff', onPress:() => this.refs['mainDrawer'].openDrawer() }}
               centerComponent={{ text: 'Lista de Personal', style: { color: '#fff' } }}
           />
-        <View style={styles.container}>
+        <View style={estilos.container}>
           {/* <SearchInput 
             onChangeText={(term) => { this.searchUpdated(term) }} 
             style={styles.searchInput}  
@@ -266,10 +267,6 @@ export default class MusicianList extends React.Component {
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',   
-  },
   texto:{
     margin: 10,
     padding: 10,

@@ -4,12 +4,12 @@ import {
   StyleSheet,
   View,
   Text,
-  FlatList,
   TouchableOpacity
 } from 'react-native'; 
 import { Actions } from 'react-native-router-flux';
-// import axios from 'axios';
 import { strings } from '../../i18n';
+import light from '../Common/mode';
+import dark from '../Common/DarkMode';
 
 
 export default class Settings extends React.Component {
@@ -24,43 +24,43 @@ export default class Settings extends React.Component {
   }
 
   render() { 
+    let estilos;
+    switch (global.style){
+    case 'light':
+      estilos = light;
+      break;
+    case 'dark':
+      estilos = dark;
+      break;
+    default:
+      estilos = light;
+      break; 
+    }
     return ( 
-    <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.contentContainer}>
+    <View style={estilos.container}>
+      <ScrollView style={estilos.ScrollContainer}>
         <TouchableOpacity
-            style={styles.emailItem}
+            style={estilos.emailItem}
             onPress={() => Actions.idiomas()}
             >
                 <View style={{flexDirection: 'row'}}>
                 <View style={{flex:1, margin:5}}>
-                    <Text> {strings('modules.Settings.language')} </Text>
+                    <Text style={estilos.contenido}> {strings('modules.Settings.language')} </Text>
                 </View>
                 </View>
         </TouchableOpacity>
-        </ScrollView>
+        <TouchableOpacity
+            style={estilos.emailItem}
+            onPress={() => Actions.pantalla()}
+            >
+                <View style={{flexDirection: 'row'}}>
+                <View style={{flex:1, margin:5}}>
+                    <Text style={estilos.contenido}> {strings('modules.Settings.Screen')} </Text>
+                </View>
+                </View>
+        </TouchableOpacity>
+      </ScrollView>
     </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-    },
-    loadingContainer: {
-      flex: 1,
-      backgroundColor: '#fff',
-      justifyContent: "center",
-      alignItems: "center"
-    },
-    contentContainer: {
-      paddingTop: 0,
-      height: '100%'
-    },
-    emailItem:{
-      borderBottomWidth: 0.5,
-      borderColor: 'rgba(0,0,0,0.3)',
-      padding: 10
-    }
-  });

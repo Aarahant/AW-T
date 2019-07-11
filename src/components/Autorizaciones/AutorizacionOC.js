@@ -13,8 +13,6 @@ import {
   Alert,
   Linking,
   Dimensions,
-  Animated,
-  Easing
 } from 'react-native';
 import { ListItem, Overlay } from 'react-native-elements';
 import axios from 'axios';
@@ -23,6 +21,8 @@ import { strings } from '../../i18n';
 import ProgressBarAnimated from 'react-native-progress-bar-animated';
 import NumberFormat from 'react-number-format';
 import LoadingScreen from '../Common/LoadingScreen';
+import light from "../Common/mode";
+import dark from "../Common/DarkMode";
 
 export default class AutorizacionOC extends React.Component {
   constructor(props) {
@@ -38,13 +38,13 @@ export default class AutorizacionOC extends React.Component {
       loading: true,
       justificacion: '',
       pdfLink: '',
-      processingTransaction: false
+      processingTransaction: false,
+      estilo: global.style
     };
   }
 
   componentDidMount() {
     this.titleInterval = setInterval(() => this.updateTitle(),1);
-    // console.log("############### Han Solo")
     const keys = this.state.parametros; 
     axios.post('restgAutOrdenCompra', keys
      ).then(response => {
@@ -53,7 +53,6 @@ export default class AutorizacionOC extends React.Component {
           aut_data: response.data,
           loading: false
          });
-        //  console.log(this.state.aut_data);
        } else {
          Alert.alert(
            strings('common.session.alert_title'),
@@ -105,10 +104,23 @@ export default class AutorizacionOC extends React.Component {
   }
 
   renderNiveles(data){
+    let estilos;
+    switch (this.state.estilo){
+      case 'light':
+        estilos = light;
+        break;
+      case 'dark':
+        estilos = dark;
+        break;
+      default:
+        estilos = light;
+        break; 
+    }
+
     let estatusAutStyle;
     switch (data.item.ACOCPAAUHE){
       case 0:
-        estatusAutStyle = styles.información;
+        estatusAutStyle = estilos.información;
         break;
       case 1:
         estatusAutStyle = styles.estatuts_autorizo;
@@ -120,14 +132,14 @@ export default class AutorizacionOC extends React.Component {
         estatusAutStyle = styles.estatuts_rechazo;
         break;
       default:
-        estatusAutStyle = styles.información;
+        estatusAutStyle = estilos.información;
         break;
     }
     if (data.item.pendiente_aut){
       return (
         <View style={styles.Contenedor}>
           <Text style={styles.postTitle}>{data.item.ACOCPAL2NIVEL} - {data.item.CNUSERDSC}</Text>
-          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.status")}:
+          <Text style={estilos.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.status")}:
             <Text  style={estatusAutStyle}> {data.item.estatus_aut}</Text>
           </Text>
         </View>
@@ -136,14 +148,14 @@ export default class AutorizacionOC extends React.Component {
       return (
         <View style={styles.Contenedor}>
           <Text style={styles.postTitle}>{data.item.ACOCPAL2NIVEL} - {data.item.CNUSERDSC}</Text>
-          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.status")}: 
+          <Text style={estilos.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.status")}: 
             <Text style={estatusAutStyle}> {data.item.estatus_aut}</Text>
           </Text>
-          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.date")}: 
-            <Text style={styles.información}> {data.item.ACOCPAL2FECOP}</Text>
+          <Text style={estilos.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.date")}: 
+            <Text style={estilos.información}> {data.item.ACOCPAL2FECOP}</Text>
           </Text>
-          <Text style={styles.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.comments")}: 
-            <Text style={styles.información}> {data.item.ACOCPAL2COM}</Text>
+          <Text style={estilos.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.comments")}: 
+            <Text style={estilos.información}> {data.item.ACOCPAL2COM}</Text>
           </Text>
         </View>
       );
@@ -151,46 +163,54 @@ export default class AutorizacionOC extends React.Component {
   }
 
   renderInsumos(data){
+    let estilos;
+    switch (this.state.estilo){
+      case 'light':
+        estilos = light;
+        break;
+      case 'dark':
+        estilos = dark;
+        break;
+      default:
+        estilos = light;
+        break; 
+    }
     return (
-      // <TouchableHighlight style={styles.navCardTouch}>
-      //   <View style={styles.navCard}> 
           <View style={styles.Contenedor}>
             <Text style={styles.TituloInsumo}>{data.item.INPRODDSC}</Text>
             <Text style={styles.TotalInsumo}> 
               {strings("transactions.ACOCPA.ACOCPAMNTIN")}:
-              <NumberFormat value={parseFloat(data.item.ACOCPAMNTIN)} displayType={'text'} renderText={value => <Text style={styles.TotalInsumoArgent}> {value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>  
+              <NumberFormat value={parseFloat(data.item.ACOCPAMNTIN)} displayType={'text'} renderText={value => <Text style={estilos.TotalInsumoArgent}> {value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>  
             </Text>
-            <Text style={styles.subTitulo}>
+            <Text style={estilos.subTitulo}>
               {strings("transactions.ACMVOI.ACMVOIDCP3")}:
-              <Text style={styles.información}> {data.item.ACMVOIDCP3}  </Text>  
+              <Text style={estilos.información}> {data.item.ACMVOIDCP3}  </Text>  
               {strings("transactions.ACMVOI.ACMVOIDLP3")}: 
-              <Text style={styles.información}> {data.item.ACMVOIDLP3}</Text>
+              <Text style={estilos.información}> {data.item.ACMVOIDLP3}</Text>
              </Text>
-            <Text style={styles.subTitulo}>
+            <Text style={estilos.subTitulo}>
               {strings("transactions.ACOCPA.ACOCPAFOC1")}: 
-              <Text style={styles.información}> {data.item.ACOCPAFOC1}</Text>
+              <Text style={estilos.información}> {data.item.ACOCPAFOC1}</Text>
             </Text> 
-            <Text style={styles.subTitulo}>
+            <Text style={estilos.subTitulo}>
               {strings("transactions.PMCTCG.PMCTCGDSC")}: 
-              <Text style={styles.información}> {data.item.PMCTCGDSC}</Text>
+              <Text style={estilos.información}> {data.item.PMCTCGDSC}</Text>
             </Text>
-            <Text style={styles.subTitulo}> 
+            <Text style={estilos.subTitulo}> 
               {strings("transactions.ACOCPA.ACOCPAQTY")}:
-              <NumberFormat value={parseFloat(data.item.ACOCPAQTY)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} {data.item.ACOCPAUM} </Text>} thousandSeparator={true} prefix={''}></NumberFormat> 
+              <NumberFormat value={parseFloat(data.item.ACOCPAQTY)} displayType={'text'} renderText={value => <Text style={estilos.información}> {value} {data.item.ACOCPAUM} </Text>} thousandSeparator={true} prefix={''}></NumberFormat> 
               {strings("transactions.ACMVOI.ACMVOIQTA")}:
-              <NumberFormat value={parseFloat(data.item.ACMVOIQTA)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} </Text>} thousandSeparator={true} prefix={''}></NumberFormat> 
+              <NumberFormat value={parseFloat(data.item.ACMVOIQTA)} displayType={'text'} renderText={value => <Text style={estilos.información}> {value} </Text>} thousandSeparator={true} prefix={''}></NumberFormat> 
             </Text>
-            <Text style={styles.subTitulo}> 
+            <Text style={estilos.subTitulo}> 
               {strings("transactions.ACOCPA.ACOCPAPU")}:
-              <NumberFormat value={parseFloat(data.item.ACOCPAPU)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
+              <NumberFormat value={parseFloat(data.item.ACOCPAPU)} displayType={'text'} renderText={value => <Text style={estilos.información}> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
             </Text>
-            <Text style={styles.subTitulo}>
+            <Text style={estilos.subTitulo}>
               {strings("transactions.ACMVOI.ACMVOICOM")}: 
-              <Text style={styles.información}> {data.item.ACMVOICOM}</Text>
+              <Text style={estilos.información}> {data.item.ACMVOICOM}</Text>
             </Text> 
           </View>
-      //   </View>
-      // </TouchableHighlight>
     );
   }
 
@@ -339,41 +359,54 @@ export default class AutorizacionOC extends React.Component {
     const niveles = this.state.aut_data.sdtRestNivelesAut;
     const justificacion = this.state.justificacion;
     const advancePercentage = parseInt(datos.ACMVOIPORA);
+    
+    let estilos;
+    switch (this.state.estilo){
+      case 'light':
+        estilos = light;
+        break;
+      case 'dark':
+        estilos = dark;
+        break;
+      default:
+        estilos = light;
+        break; 
+    }
 
     if (loading != true) {
       return (   
-        <View style={styles.container}>
-        <ScrollView style={styles.ScrollContainer} contentContainerStyle={styles.contentContainer}>
+        <View style={estilos.container}>
+        <ScrollView style={estilos.ScrollContainer} contentContainerStyle={estilos.contentContainer}>
             <Overlay
                 isVisible={this.state.processingTransaction}
                 windowBackgroundColor="rgba(255, 255, 255, .3)"
                 overlayBackgroundColor="rgba(255, 255, 255, .0)"
                 fullScreen= {true}
               >
-              <View style={styles.loadingContainer}>
-                <Image style={styles.kds_logo_image} source={require("../../../assets/gifs/bars6.gif")}/>
+              <View style={estilos.loadingContainer}>
+                <Image style={estilos.kds_logo_image} source={require("../../../assets/gifs/bars6.gif")}/>
               </View>
             </Overlay>
-            <View style={styles.datosContainer}> 
-              <Text style={styles.subtituloChido}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.number")}</Text>
-              <Text style={styles.contenidoNoDoc}>#{datos.ACOCPADOC}</Text>
+            <View style={estilos.datosContainer}> 
+              <Text style={estilos.subtituloChido}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.number")}</Text>
+              <Text style={estilos.contenidoNoDoc}>#{datos.ACOCPADOC}</Text>
               {/* <Text style={styles.postTitle}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.purchase_order_data_title")}</Text> */}
-              <Text style={styles.subtitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.material_procurer")}</Text>
-              <Text style={styles.contenido}>{datos.comp}</Text>
-              <Text style={styles.subtitulo}>{strings("transactions.CNCDIR.CNCDIRNOM")}</Text>
-              <Text style={styles.contenido}>{datos.CNCDIRNOM}</Text>
-              <Text style={styles.subtitulo}>{strings("transactions.PMCTPR.PMCTPRDSC")}</Text>
-              <Text style={styles.contenido}>{datos.PMCTPRDSC}</Text> 
-              <Text style={styles.subtitulo}>{strings("transactions.ACOCPA.ACOCPAMNT")}</Text>
-              <NumberFormat value={parseFloat(datos.ACOCPAMNT)} displayType={'text'} renderText={value => <Text style={styles.contenidoMonto}>{value} {datos.ACOCPAMON}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
-              <Text style={styles.subtitulo}>{strings("transactions.CNTCPG.CNTCPGDSC")}</Text>
-              <Text style={styles.contenido}>{datos.CNTPGODSC}</Text> 
-              <Text style={styles.subtitulo}>{strings("transactions.ACMVOI.ACMVOIBAUT")}</Text>
-              <Text style={styles.contenidoLargo}>{datos.ACMVOIOBAUT}</Text> 
-              <Text style={styles.subtitulo}>{strings("transactions.ACOCPA.ACOCPAFOC")}</Text>
-              <Text style={styles.contenido}>{datos.ACOCPAFOC}</Text>
-              <Text style={styles.subtitulo}>{strings("transactions.ACMVOI.ACMVOIPORA")}</Text>
-              <Text style={styles.contenido}>{datos.ACMVOIPORA}%</Text>
+              <Text style={estilos.subtitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.material_procurer")}</Text>
+              <Text style={estilos.contenido}>{datos.comp}</Text>
+              <Text style={estilos.subtitulo}>{strings("transactions.CNCDIR.CNCDIRNOM")}</Text>
+              <Text style={estilos.contenido}>{datos.CNCDIRNOM}</Text>
+              <Text style={estilos.subtitulo}>{strings("transactions.PMCTPR.PMCTPRDSC")}</Text>
+              <Text style={estilos.contenido}>{datos.PMCTPRDSC}</Text> 
+              <Text style={estilos.subtitulo}>{strings("transactions.ACOCPA.ACOCPAMNT")}</Text>
+              <NumberFormat value={parseFloat(datos.ACOCPAMNT)} displayType={'text'} renderText={value => <Text style={estilos.contenidoMonto}>{value} {datos.ACOCPAMON}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
+              <Text style={estilos.subtitulo}>{strings("transactions.CNTCPG.CNTCPGDSC")}</Text>
+              <Text style={estilos.contenido}>{datos.CNTPGODSC}</Text> 
+              <Text style={estilos.subtitulo}>{strings("transactions.ACMVOI.ACMVOIBAUT")}</Text>
+              <Text style={estilos.contenidoLargo}>{datos.ACMVOIOBAUT}</Text> 
+              <Text style={estilos.subtitulo}>{strings("transactions.ACOCPA.ACOCPAFOC")}</Text>
+              <Text style={estilos.contenido}>{datos.ACOCPAFOC}</Text>
+              <Text style={estilos.subtitulo}>{strings("transactions.ACMVOI.ACMVOIPORA")}</Text>
+              <Text style={estilos.contenido}>{datos.ACMVOIPORA}%</Text>
               <ProgressBarAnimated
                 width={Dimensions.get("window").width - 50}
                 borderRadius={10}
@@ -411,13 +444,13 @@ export default class AutorizacionOC extends React.Component {
               keyExtractor= {(item, index) => insumos + index.toString()}
               renderItem={this.renderInsumos.bind(this)}
             />
-            <View style = {styles.pieAutorización}>
-              <View style ={styles.header}>
-                <Text style = {styles.titleJustificacion}>
+            <View style = {estilos.pieAutorización}>
+              <View style ={estilos.header}>
+                <Text style = {estilos.titleJustificacion}>
                   {strings("modules.BandejaDeAutorizaciones.AutorizacionOC.justification")}
                 </Text>
               </View>
-              <View style={styles.justificación}>
+              <View style={estilos.justificación}>
                 <TextInput
                   placeholder={strings("modules.BandejaDeAutorizaciones.AutorizacionOC.write_justification")}
                   value={justificacion}
@@ -426,10 +459,10 @@ export default class AutorizacionOC extends React.Component {
                   numberOfLines={1}
                   maxLength={250}
                   onChangeText={this.onJustificacionChange.bind(this)}
-                  style={styles.textInputStyle}
+                  style={estilos.textInputStyle}
                 />
               </View>
-              <View style={styles.containerButton}>
+              <View style={estilos.containerButton}>
                 <TouchableHighlight style ={styles.ocButton}>
                   <Button title={strings("modules.BandejaDeAutorizaciones.AutorizacionOC.accept")}  color="rgb(124, 183, 62)" onPress={this.aceptarOC.bind(this)}/>
                 </TouchableHighlight>
@@ -461,30 +494,8 @@ const styles = StyleSheet.create({
     width: '30%',
     borderRadius:10
   },
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  header:{
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  justificación: {
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
-  at:{
-    alignItems: 'center',
-    textAlign: 'center',
-    justifyContent: 'center',
-    color: 'rgb(232,102,23)',
-    fontWeight: 'bold',
-    fontSize: 22,
-  },
   separador: {
     alignItems: 'flex-start',
-    // justifyContent: 'center',
-    // fontWeight: 'bold',
     fontSize: 24,
     marginTop: 12,
     marginBottom: 12,
@@ -493,33 +504,7 @@ const styles = StyleSheet.create({
   },
   separadorContainer:{
     alignItems: 'flex-start',
-    // justifyContent: 'center',
     backgroundColor: '#f2f2f2'
-  },
-  profilepicWrap:{
-      width: 180,
-      height: 180,
-      borderRadius: 100,
-      borderColor: 'rgb(30,43,63)',
-      borderWidth: 16,
-  },
-  profilepic:{
-      flex: 1,
-      width: null,
-      borderRadius: 75,
-      borderColor: 'rgb(10,23,43)',
-      borderWidth: 4,
-  },
-  contentContainer: {
-    flexGrow: 1,
-    flexDirection: "column",
-    justifyContent: "space-between"
-  },
-  ScrollContainer:{
-    height: '100%',
-  },
-  innerContentPadding: {
-    margin: 10
   },
   navCardTouch: {
     marginVertical: 4,
@@ -529,20 +514,6 @@ const styles = StyleSheet.create({
     elevation: 2,
     backgroundColor: 'white', 
   },
-  navCardContent: {
-    margin: 10,
-  },
-  descriptionArea: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 20
-  },
-  descriptionText: {
-    color: 'grey',
-    fontStyle: 'italic',
-    textAlign: 'center',
-    fontSize: 16
-  },
   postTitle: {
     fontWeight: 'bold',
     fontSize: 16,
@@ -551,72 +522,6 @@ const styles = StyleSheet.create({
   postContent: {
     fontSize: 14,
     color: 'rgb(86, 86, 86)'
-  },
-  subtitulo: {
-    color: 'black',
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 18,
-    marginTop: 10
-  },
-  subtituloChido: {
-    color: 'black',
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 19
-  },
-  contenido: {
-    fontFamily: 'sans-serif-condensed',
-    color: 'grey',
-    fontSize: 18
-  },
-  contenidoLargo: {
-    fontFamily: 'sans-serif-condensed',
-    color: 'grey',
-    fontSize: 18,
-    textAlign: 'justify'
-  },
-  contenidoNoDoc: {
-    fontFamily: 'Roboto',
-    color: 'rgb(38, 51, 140)',
-    fontSize: 20
-  },
-  contenidoMonto: {
-    fontFamily: 'sans-serif-condensed',
-    color: 'rgb(0, 143, 41)',
-    fontSize: 18
-  },
-  datosContainer: {
-    paddingVertical: 10,
-    paddingHorizontal: 25,
-    flex: 1,
-    justifyContent: 'flex-start'
-  },
-  pieAutorización: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgb(13, 114, 109)'
-  },
-  titleJustificacion: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontWeight: 'bold',
-    fontSize: 18,
-    marginTop: 20,
-    marginBottom: 6,
-    color: 'white'
-  },
-  containerButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 15,
-    marginTop: 5
-  },
-  textInputStyle: {
-    padding: 4,
-    fontSize: 16,
-    flex: 1,
-    backgroundColor: 'rgb(103, 173, 179)',
-    marginHorizontal: 5
   },
   Contenedor: {
     margin: 15
@@ -629,21 +534,6 @@ const styles = StyleSheet.create({
   TotalInsumo: {
     fontFamily: 'sans-serif-condensed',
     fontSize: 19
-  },
-  TotalInsumoArgent: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 19,
-    color: 'rgb(0, 143, 41)'
-    // color: '#a5c97f'
-  },
-  subTitulo: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 16
-  },
-  información: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 16,
-    color: '#b7b6b6'
   },
   estatuts_autorizo: {
     fontFamily: 'sans-serif-condensed',
@@ -659,14 +549,5 @@ const styles = StyleSheet.create({
     fontFamily: 'sans-serif-condensed',
     fontSize: 17,
     color: 'rgb(216, 87, 57)'
-  },
-  kds_logo_image: {
-    height: 260,
-    width: 260,
-  }, 
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  },
+  }
 });

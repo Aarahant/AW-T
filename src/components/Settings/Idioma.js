@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   ScrollView,
-  StyleSheet,
   View,
   TouchableOpacity,
   Text,
@@ -11,14 +10,13 @@ import { Actions } from 'react-native-router-flux';
 import axios from 'axios';
 import I18n from 'react-native-i18n';
 import { strings } from '../../i18n';
+import light from '../Common/mode';
+import dark from '../Common/DarkMode';
 
 
 export default class Idioma extends React.Component {
 
   cambiar_lenguaje(lang){
-    // I18n.locale = lang;
-    // console.log("####################### Lenguaje");
-    // console.log(lang);
     axios.post('restpActualizarLocale', 
     {
       "TOKEN_P": global.token,
@@ -56,51 +54,47 @@ export default class Idioma extends React.Component {
   }
 
   render() { 
+    let estilos;
+    switch (global.style){
+    case 'light':
+      estilos = light;
+      break;
+    case 'dark':
+      estilos = dark;
+      break;
+    default:
+      estilos = light;
+      break; 
+    }
     var flags = [
       require('../../../assets/images/mexico.png'),
       require('../../../assets/images/usa.png')
     ];
     return ( 
-        <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.contentContainer}>
-        <TouchableOpacity
-        style={styles.emailItem}
-        onPress={() => this.cambiar_lenguaje('en-US') }>
-            <View style={{flexDirection: 'row'}}>
-            <Image source={flags[1]} style={{width: 52, height: 30}}/>
-            <View style={{flex:1, margin:5}}>
-                <Text> English (USA) </Text>
-            </View>
-            </View>
-        </TouchableOpacity>
-        <TouchableOpacity 
-        style={styles.emailItem}
-        onPress={() => this.cambiar_lenguaje('es-MX') }>
-            <View style={{flexDirection: 'row'}}>
-            <Image source={flags[0]} style={{width: 52, height: 30}}/>
-            <View style={{flex:1, margin:5}}>
-                <Text> Español (MX) </Text>
-            </View>
-            </View>
-        </TouchableOpacity>
+      <View style={estilos.container}>
+        <ScrollView style={estilos.ScrollContainer}>
+          <TouchableOpacity
+          style={estilos.emailItem}
+          onPress={() => this.cambiar_lenguaje('en-US') }>
+              <View style={{flexDirection: 'row'}}>
+              <Image source={flags[1]} style={{width: 52, height: 30}}/>
+              <View style={{flex:1, margin:5}}>
+                  <Text style={estilos.contenido}> English (USA) </Text>
+              </View>
+              </View>
+          </TouchableOpacity>
+          <TouchableOpacity 
+          style={estilos.emailItem}
+          onPress={() => this.cambiar_lenguaje('es-MX') }>
+              <View style={{flexDirection: 'row'}}>
+              <Image source={flags[0]} style={{width: 52, height: 30}}/>
+              <View style={{flex:1, margin:5}}>
+                  <Text style={estilos.contenido}> Español (MX) </Text>
+              </View>
+              </View>
+          </TouchableOpacity>
         </ScrollView>
-    </View>
+      </View>
     );
   }                                                                                     
 }
-
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-    },
-    contentContainer: {
-      paddingTop: 0,
-      height: '100%'
-    },
-    emailItem:{
-      borderBottomWidth: 0.5,
-      borderColor: 'rgba(0,0,0,0.3)',
-      padding: 10
-    }
-  });
