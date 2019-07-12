@@ -5,6 +5,7 @@ import {
   View,
   Text,
   TouchableHighlight,
+  TouchableOpacity,
   Image,
   FlatList,
   TextInput,
@@ -103,20 +104,19 @@ export default class AutorizacionOC extends React.Component {
     clearInterval(this.titleInterval);
   }
 
-  renderNiveles(data){
-    let estilos;
-    switch (this.state.estilo){
+  estilo(){
+    switch (global.style){
       case 'light':
-        estilos = light;
-        break;
+        return(light);
       case 'dark':
-        estilos = dark;
-        break;
+        return(dark);
       default:
-        estilos = light;
-        break; 
+        return(light);
     }
+  }
 
+  renderNiveles(data){
+    let estilos = this.estilo()
     let estatusAutStyle;
     switch (data.item.ACOCPAAUHE){
       case 0:
@@ -138,7 +138,7 @@ export default class AutorizacionOC extends React.Component {
     if (data.item.pendiente_aut){
       return (
         <View style={styles.Contenedor}>
-          <Text style={styles.postTitle}>{data.item.ACOCPAL2NIVEL} - {data.item.CNUSERDSC}</Text>
+          <Text style={estilos.postTitle}>{data.item.ACOCPAL2NIVEL} - {data.item.CNUSERDSC}</Text>
           <Text style={estilos.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.status")}:
             <Text  style={estatusAutStyle}> {data.item.estatus_aut}</Text>
           </Text>
@@ -147,7 +147,7 @@ export default class AutorizacionOC extends React.Component {
     } else {
       return (
         <View style={styles.Contenedor}>
-          <Text style={styles.postTitle}>{data.item.ACOCPAL2NIVEL} - {data.item.CNUSERDSC}</Text>
+          <Text style={estilos.postTitle}>{data.item.ACOCPAL2NIVEL} - {data.item.CNUSERDSC}</Text>
           <Text style={estilos.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.status")}: 
             <Text style={estatusAutStyle}> {data.item.estatus_aut}</Text>
           </Text>
@@ -163,22 +163,11 @@ export default class AutorizacionOC extends React.Component {
   }
 
   renderInsumos(data){
-    let estilos;
-    switch (this.state.estilo){
-      case 'light':
-        estilos = light;
-        break;
-      case 'dark':
-        estilos = dark;
-        break;
-      default:
-        estilos = light;
-        break; 
-    }
+    let estilos = this.estilo()
     return (
           <View style={styles.Contenedor}>
-            <Text style={styles.TituloInsumo}>{data.item.INPRODDSC}</Text>
-            <Text style={styles.TotalInsumo}> 
+            <Text style={estilos.Titulo}>{data.item.INPRODDSC}</Text>
+            <Text style={estilos.TotalInsumo}> 
               {strings("transactions.ACOCPA.ACOCPAMNTIN")}:
               <NumberFormat value={parseFloat(data.item.ACOCPAMNTIN)} displayType={'text'} renderText={value => <Text style={estilos.TotalInsumoArgent}> {value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>  
             </Text>
@@ -360,18 +349,7 @@ export default class AutorizacionOC extends React.Component {
     const justificacion = this.state.justificacion;
     const advancePercentage = parseInt(datos.ACMVOIPORA);
     
-    let estilos;
-    switch (this.state.estilo){
-      case 'light':
-        estilos = light;
-        break;
-      case 'dark':
-        estilos = dark;
-        break;
-      default:
-        estilos = light;
-        break; 
-    }
+    let estilos = this.estilo()
 
     if (loading != true) {
       return (   
@@ -388,7 +366,7 @@ export default class AutorizacionOC extends React.Component {
               </View>
             </Overlay>
             <View style={estilos.datosContainer}> 
-              <Text style={estilos.subtituloChido}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.number")}</Text>
+              <Text style={estilos.subtituloGrande}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.number")}</Text>
               <Text style={estilos.contenidoNoDoc}>#{datos.ACOCPADOC}</Text>
               {/* <Text style={styles.postTitle}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.purchase_order_data_title")}</Text> */}
               <Text style={estilos.subtitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionOC.material_procurer")}</Text>
@@ -415,17 +393,21 @@ export default class AutorizacionOC extends React.Component {
 
               />
             </View>
-            <TouchableHighlight onPress={() =>
-              Linking.openURL('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/' + this.state.pdfLink)}>
+            <View>
               <ListItem
-                key={"1"}
+                onPress={() =>
+                Linking.openURL('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/' + this.state.pdfLink)}
+                // key={"1"}
+                containerStyle={estilos.PressListItem}
                 leftAvatar={{source: require( '../../../assets/images/reportePdf.jpg')}}
                 title= {strings("modules.BandejaDeAutorizaciones.AutorizacionOC.report_title")}
                 subtitle={strings("modules.BandejaDeAutorizaciones.AutorizacionOC.report_text")}
+                titleStyle={estilos.titleListItem}
+                subtitleStyle={estilos.subtitleListItem}
               />
-            </TouchableHighlight>
-            <View style ={styles.separadorContainer}>
-              <Text style = {styles.separador}>
+            </View>
+            <View style ={estilos.separadorContainer}>
+              <Text style = {estilos.separador}>
                 {strings("modules.BandejaDeAutorizaciones.AutorizacionOC.authorization_levels")}
               </Text>
             </View>
@@ -434,8 +416,8 @@ export default class AutorizacionOC extends React.Component {
               keyExtractor= {(item, index) => niveles + index.toString()}
               renderItem={this.renderNiveles.bind(this)}
             />
-            <View style ={styles.separadorContainer}>
-              <Text style = {styles.separador}>
+            <View style ={estilos.separadorContainer}>
+              <Text style = {estilos.separador}>
                 {strings("modules.BandejaDeAutorizaciones.AutorizacionOC.material_list")}
               </Text>
             </View>
@@ -493,35 +475,6 @@ const styles = StyleSheet.create({
     height: 40,
     width: '30%',
     borderRadius:10
-  },
-  separador: {
-    alignItems: 'flex-start',
-    fontSize: 24,
-    marginTop: 12,
-    marginBottom: 12,
-    paddingHorizontal: 15
-    // color: 'white'
-  },
-  separadorContainer:{
-    alignItems: 'flex-start',
-    backgroundColor: '#f2f2f2'
-  },
-  navCardTouch: {
-    marginVertical: 4,
-    marginHorizontal: 2,
-  },
-  navCard: {
-    elevation: 2,
-    backgroundColor: 'white', 
-  },
-  postTitle: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    color: 'rgb(66, 66, 66)'
-  },
-  postContent: {
-    fontSize: 14,
-    color: 'rgb(86, 86, 86)'
   },
   Contenedor: {
     margin: 15

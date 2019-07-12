@@ -83,7 +83,9 @@
                     "attention": "Atención",
                     "ok": "OK",
                     "yes": "Sí",
-                    "no": "No"
+                    "no": "No",
+                    "confirmAutorizar": "Se autorizará el pago ¿Desea continuar con el proceso?",
+                    "confirmRechazar": "Se rechazará el pago. ¿Desea continuar con el proceso?"  
                 },
                 "validations": {
                     "missing_justification": "Por favor justifique su decisión."
@@ -176,27 +178,35 @@
                 "validations": {
                     "missing_justification": "Por favor justifique su decisión."
                 }
+            },
+            "AutorizacionRet": {
+                "title": "Liberación de requisiciones",
+                "status": "Estatus",
+                "date": "Fecha",
+                "authorization_levels": "Niveles de Autorización",
+                "lines": "Líneas",
+                "justification":"Justificación",
+                "write_observations":"Opcional: Escriba las observaciones que considere...",
+                "accept": "Aceptar",
+                "reject": "Rechazar",
+                "number": "Número de documento",
+                "buyer": "Comprador",
+                "close": "Cerrar",
+                "observations": "Observaciones",
+                "messages": {
+                    "attention": "Atención",
+                    "authorization": "Se impactara la requisición ¿Desea continuar con el proceso?",
+                    "ok": "OK",
+                    "yes": "Sí",
+                    "no": "No"
+                },
+                "validations": {
+                    "missing_justification": "Por favor justifique su decisión."
+                }
             }  
         }
     },
     "transactions": {
-        "CNCIAS": {
-            "CNCIASDSC": "Compañía"
-        },
-        "BANAUT": {
-            "BANAUTNDC": "Número de documento",
-            "BANAUTTDC": "Tipo de documento",
-            "BANAUTFEC": "Fecha"
-        },
-        "TIPAUT": {
-            "TIPAUTDSC": "Tipo de autorización"
-        },
-        "CNCDIR": {
-            "CNCDIRNOM": "Proveedor"
-        },
-        "PMCTPR": {
-            "PMCTPRDSC":  "Proyecto"
-        },
         "ACOCPA": {
             "ACOCPAQTY": "Cantidad",
             "ACOCPAUM": "Unidad",
@@ -226,6 +236,12 @@
             "ACMROIFDOC":"Fecha registro",
             "ACMROIOBST": "Comentario que soporta este avance de registro"
         },
+        "ACRCOI": {
+            "ACRCOILIN": "Línea",
+            "ACRCOIDSC4": "Observaciones",
+            "ACRCOIQTO": "Cantidad solicitada",
+            "ACRCOIFDO2": "Fecha" 
+        },
         "ACRCPA": {
             "ACRCPALIN": "Línea",
             "ACRCPAQTY": "Cantidad solicitada",
@@ -239,11 +255,34 @@
             "ACRCPAVACMEST": "Valor de compra estimado",
             "ACRCPACNRQPDIAS": "Cantidad requerida en ultimas dos semanas"
         },
-        "PMCTCG": {
-            "PMCTCGDSC": "Cuenta de Cargo"
+        "BANAUT": {
+            "BANAUTNDC": "Número de documento",
+            "BANAUTTDC": "Tipo de documento",
+            "BANAUTFEC": "Fecha"
+        },
+        "CNCIAS": {
+            "CNCIASDSC": "Compañía"
+        },
+        "CNCDIR": {
+            "CNCDIRNOM": "Proveedor"
         },
         "CNTCPG": {
             "CNTCPGDSC": "Condiciones de Pago"
+        },
+        "PMCTPR": {
+            "PMCTPRDSC":  "Proyecto"
+        },
+        "PMCTCG": {
+            "PMCTCGDSC": "Cuenta de Cargo"
+        },
+        "TIPAUT": {
+            "TIPAUTDSC": "Tipo de autorización"
+        },
+        "RETREQ": {
+            "RETREQLIN": "Línea",
+            "RETREQPRE": "Presupuesto",
+            "RETREQREQ": "Requsitado",
+            "RETREQMT": "Motivo"
         }
     },
     "common": {

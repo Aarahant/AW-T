@@ -93,7 +93,7 @@ export default class AutorizacionPag extends React.Component {
     if (justificacion != '') {
       Alert.alert(
         strings("modules.BandejaDeAutorizaciones.AutorizacionPag.messages.attention"),
-        strings('modules.BandejaDeAutorizaciones.<.messages.confirmRechazar'),
+        strings('modules.BandejaDeAutorizaciones.AutorizacionPag.messages.confirmRechazar'),
         [
           {text: strings("modules.BandejaDeAutorizaciones.AutorizacionPag.messages.no"), style: 'cancel'},
           {text: strings("modules.BandejaDeAutorizaciones.AutorizacionPag.messages.yes"), onPress: () => this.impactarAutPag(2)},
@@ -146,19 +146,19 @@ export default class AutorizacionPag extends React.Component {
     }).catch(error => this.handleTransactionProcessError(error));
   }
 
-  render() { 
-    let estilos;
+  estilo(){
     switch (global.style){
-    case 'light':
-      estilos = light;
-      break;
-    case 'dark':
-      estilos = dark;
-      break;
-    default:
-      estilos = light;
-      break; 
+      case 'light':
+        return(light);
+      case 'dark':
+        return(dark);
+      default:
+        return(light);
     }
+  }
+
+  render() { 
+    let estilos = this.estilo()
     const loading = this.state.loading;
     const datos = this.state.aut_data;
     const justificacion = this.state.justificacion;
@@ -167,7 +167,7 @@ export default class AutorizacionPag extends React.Component {
         ProgPagoID =
             <React.Fragment>
                 <Text style={estilos.subtitulo}> {strings('modules.BandejaDeAutorizaciones.AutorizacionPag.ProgPag')}</Text>
-                <Text style={styles.contenido}>{datos.PROPAGID}</Text>
+                <Text style={estilos.contenido}>{datos.PROPAGID}</Text>
             </React.Fragment>
     }
 
@@ -175,7 +175,7 @@ export default class AutorizacionPag extends React.Component {
     if (datos.PMTipoDoc == 'ANT') {
         anticipo =
             <React.Fragment>
-                <Text style={styles.contenidoAnticipo}> {strings('modules.BandejaDeAutorizaciones.AutorizacionPag.IncludesANT')}</Text>
+                <Text style={estilos.contenidoBold}> {strings('modules.BandejaDeAutorizaciones.AutorizacionPag.IncludesANT')}</Text>
             </React.Fragment>
     }
 
@@ -194,7 +194,7 @@ export default class AutorizacionPag extends React.Component {
               </View>
             </Overlay>
             <View style={estilos.datosContainer}> 
-              <Text style={estilos.subtituloChido}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.PAGOID')}</Text>
+              <Text style={estilos.subtituloGrande}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.PAGOID')}</Text>
               <Text style={estilos.contenidoNoDoc}>#{datos.pagoid}   {anticipo}</Text>
               {ProgPagoID}
               <Text style={estilos.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.CNUSERDSC')}</Text>
@@ -203,7 +203,7 @@ export default class AutorizacionPag extends React.Component {
               <Text style={estilos.contenido}>{datos.CNCDIRNOM}</Text>
               <Text style={estilos.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.CANTIDAD')}</Text>
               <Text style={estilos.contenido}>
-                <NumberFormat value={parseFloat(datos.CANTIDAD)} displayType={'text'} renderText={value => <Text style={styles.contenidoMonto}>{value} {datos.CNCMNMID}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
+                <NumberFormat value={parseFloat(datos.CANTIDAD)} displayType={'text'} renderText={value => <Text style={estilos.contenidoMonto}>{value} {datos.CNCMNMID}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
               </Text> 
               <Text style={estilos.subtitulo}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPag.CNCD03DSC')}</Text>
               <Text style={estilos.contenido}>{datos.CNCD03DSC}</Text> 
@@ -267,11 +267,5 @@ const styles = StyleSheet.create({
     width: '30%',
     borderRadius:10,
     marginTop: 5
-  },
-  contenidoAnticipo: {
-    fontFamily: 'sans-serif-condensed',
-    fontWeight: 'bold',
-    color: 'grey',
-    fontSize: 18
   }
 });

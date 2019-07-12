@@ -181,56 +181,47 @@ export default class HomeScreen extends React.Component {
 
        
     var navigationView = (
-      <View >
-           <ScrollView>
+      <View style={estilos.drawer}>
+        <View>
+          <ScrollView>
             <View style ={styles.header}>
                 <View >
                     <Image style={styles.profilepicWrap} source={randomImages[0]}/>
                 </View> 
             </View>
             
-            <View style={styles.texto}>
-                <Text style={styles.name}>KDS AW&T</Text>
+            <View style={estilos.texto}>
+                <Text style={estilos.name}>KDS AW&T</Text>
             </View >   
-            
-            {/* <TouchableOpacity onPress={() => {Actions.user_profile()}}>
-              <View>
-                <Text style={styles.menuOption}>Mi perfil</Text>
-              </View>
-            </TouchableOpacity> */}
 
             <TouchableOpacity onPress={() => {Actions.musician_list()}}>
               <View>
-                <Text style={styles.menuOption}>{strings('modules.HomeScreen.employees')}</Text>
+                <Text style={estilos.menuOption}>{strings('modules.HomeScreen.employees')}</Text>
               </View>
             </TouchableOpacity>
             
             <TouchableOpacity onPress={() => {Actions.bandeja_de_autorizaciones()}}>
               <View>
-                <Text style={styles.menuOption}>{strings('modules.HomeScreen.authorization_bin')}</Text>
+                <Text style={estilos.menuOption}>{strings('modules.HomeScreen.authorization_bin')}</Text>
               </View>
               {AutPend}
             </TouchableOpacity>
             
             <TouchableOpacity onPress={() => {Actions.settings()}}>
               <View>
-                <Text style={styles.menuOption}>{strings('modules.HomeScreen.settings')}</Text>
-              </View>
-            </TouchableOpacity>
-            {/* <TouchableOpacity onPress={this.seleccionar_idioma.bind(this)}>
-              <View>
-                <Text style={styles.menuOptionFinal}>{strings('modules.HomeScreen.language')}</Text>
-              </View>
-            </TouchableOpacity> */}
-
-
-            <TouchableOpacity onPress={this.handleRequest.bind(this)}>
-              <View>
-                <Text style={styles.menuOptionFinal}>{strings('modules.HomeScreen.log_out')}</Text>
+                <Text style={estilos.menuOption}>{strings('modules.HomeScreen.settings')}</Text>
               </View>
             </TouchableOpacity>
 
-            </ScrollView>
+          </ScrollView>
+        </View>
+        <View>
+          <TouchableOpacity onPress={this.handleRequest.bind(this)}>
+            <View>
+              <Text style={estilos.menuOptionFinal}>{strings('modules.HomeScreen.log_out')}</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>    
     ); 
     
@@ -255,9 +246,10 @@ export default class HomeScreen extends React.Component {
                     <TouchableOpacity onPress={() => {Actions.bandeja_de_autorizaciones()}}>  
                       <Card
                         title= {strings('modules.HomeScreen.authorization_bin')}
-                        containerStyle = {styles.curvedCardLeft}
+                        titleStyle={estilos.cardTitleStyle}
+                        containerStyle = {estilos.curvedCardLeft}
                         image={require('../../assets/images/autorizaciones_300.png')}
-                        imageStyle = {styles.imgCard}
+                        imageStyle = {estilos.imgCard}
                       > 
                       {AutBadge}
                       </Card>
@@ -265,10 +257,11 @@ export default class HomeScreen extends React.Component {
 
                     <TouchableOpacity onPress={() => {Actions.bandeja_de_autorizaciones()}}>  
                       <Card
-                        containerStyle = {styles.curvedCardLeft}
+                        containerStyle = {estilos.curvedCardLeft}
                         title='Autorizaciones left'
+                        titleStyle={estilos.cardTitleStyle}
                         image={require('../../assets/images/autorizaciones_300.png')}
-                        imageStyle = {styles.imgCard}
+                        imageStyle = {estilos.imgCard}
                       > 
                       {AutBadge}
                       </Card>
@@ -278,10 +271,11 @@ export default class HomeScreen extends React.Component {
                   <View style={styles.columna}> 
                     <TouchableOpacity onPress={() => {Actions.bandeja_de_autorizaciones()}}>  
                       <Card
-                        containerStyle = {styles.curvedCardRight}
+                        containerStyle = {estilos.curvedCardRight}
                         title='Autorizaciones right'
+                        titleStyle={estilos.cardTitleStyle}
                         image={require('../../assets/images/autorizaciones_300.png')}
-                        imageStyle = {styles.imgCard}
+                        imageStyle = {estilos.imgCard}
                       > 
                       {AutBadge}
                     </Card>
@@ -297,12 +291,6 @@ export default class HomeScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  imgCard: {
-    backgroundColor: 'white', 
-    height: 120,
-    width: 120,
-    alignSelf: 'center'
-  },
   columna: {
     flex: 0,
     width: "50%",
@@ -321,55 +309,5 @@ const styles = StyleSheet.create({
       borderRadius: 100,
       borderColor: 'rgba(135,206,235, 0.4)',
       borderWidth: 8,
-  },
-  name:{
-      fontSize: 16,
-      color: 'black',
-      fontWeight: 'bold',
-      textAlign:'center',
-  },
-  texto:{
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    margin:5
-  },
-  menuOption: {
-    paddingVertical:10,
-    marginHorizontal: 20,
-    color: 'black',
-    fontSize: 16,
-    width: 260,
-    borderTopWidth: 1,
-    borderColor: 'rgb(244,244,244)' 
-  },
-  menuOptionFinal:{
-    padding: 10,
-    marginHorizontal: 20,
-    color: 'black',
-    fontSize: 16,
-    width: 260,
-    borderWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: 'rgb(224,224,224)'
-  },
-  curvedCardLeft:{
-    // padding: 20,
-    borderRadius: 10,
-    backgroundColor: 'white',
-    elevation: 6,
-    marginTop: 0,
-    marginBottom: 10,
-    marginLeft: 8,
-    marginRight: 5
-  },
-  curvedCardRight:{
-    // padding: 20,
-    borderRadius: 10,
-    backgroundColor: 'white',
-    elevation: 6,
-    marginTop: 0,
-    marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 10
   }
 });

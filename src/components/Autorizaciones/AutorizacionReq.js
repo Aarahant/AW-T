@@ -21,7 +21,8 @@ import ProgressBarAnimated from 'react-native-progress-bar-animated';
 import NumberFormat from 'react-number-format';
 import LoadingScreen from '../Common/LoadingScreen';
 import { Table, TableWrapper, Row, Col } from 'react-native-table-component';
-import estilos from '../Common/mode';
+import light from '../Common/mode';
+import dark from '../Common/DarkMode';
 
 export default class AutorizacionReq extends React.Component {
   constructor(props) {
@@ -49,7 +50,26 @@ export default class AutorizacionReq extends React.Component {
     const keys = this.state.parametros;    
     axios.post('restgAutRequisicion', keys
      ).then(response => {
-       if (response.data.SUCCESS){
+        if (response.data.SUCCESS){
+          let req_data = response.data;
+          let gen_compromised_color = 'green';
+          let gen_available_color = 'green';
+          let mon_compromised_color = 'green';
+          let mon_available_color = 'green';
+
+          if (req_data.Comprometido > req_data.Presupuestado) {
+            gen_compromised_color = 'orange';
+          }
+          if (req_data.Disponible < 0) {
+            gen_available_color = 'red';
+          }
+          if (req_data.ComprometidoM > req_data.presupuestadoM) {
+            mon_compromised_color = 'orange';
+          }
+          if (req_data.DisponibleM < 0) {
+            mon_available_color = 'red';
+          }
+          
           this.setState({
             aut_data: response.data,
             loading: false,
@@ -60,15 +80,15 @@ export default class AutorizacionReq extends React.Component {
               [strings("modules.BandejaDeAutorizaciones.AutorizacionReq.available_budget")]
             ],
             general_budget_data: [
-              [<NumberFormat value={parseFloat(response.data.Presupuestado)} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>],
-              [<NumberFormat value={parseFloat(response.data.Comprometido)} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>],
-              [<NumberFormat value={parseFloat(response.data.Disponible)} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>]
+              [<NumberFormat value={parseFloat(response.data.Presupuestado)} decimalScale={2} fixedDecimalScale={true} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>],
+              [<NumberFormat value={parseFloat(response.data.Comprometido)} decimalScale={2} fixedDecimalScale={true} displayType={'text'} renderText={value => <Text style={styles.currency_right}><Text style={{color: gen_compromised_color}}>{value}</Text></Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>],
+              [<NumberFormat value={parseFloat(response.data.Disponible)} decimalScale={2} fixedDecimalScale={true} displayType={'text'} renderText={value => <Text style={styles.currency_right}><Text style={{color: gen_available_color}}>{value}</Text></Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>]
             ],
             monthly_budget_head: [strings("modules.BandejaDeAutorizaciones.AutorizacionReq.monthly_budget_title")],
             monthly_budget_data: [
-              [<NumberFormat value={parseFloat(response.data.presupuestadoM)} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>],
-              [<NumberFormat value={parseFloat(response.data.ComprometidoM)} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>],
-              [<NumberFormat value={parseFloat(response.data.DisponibleM)} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>]
+              [<NumberFormat value={parseFloat(response.data.presupuestadoM)} decimalScale={2} fixedDecimalScale={true} displayType={'text'} renderText={value => <Text style={styles.currency_right}>{value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>],
+              [<NumberFormat value={parseFloat(response.data.ComprometidoM)} decimalScale={2} fixedDecimalScale={true} displayType={'text'} renderText={value => <Text style={styles.currency_right}><Text style={{color: mon_compromised_color}}>{value}</Text></Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>],
+              [<NumberFormat value={parseFloat(response.data.DisponibleM)} decimalScale={2} fixedDecimalScale={true} displayType={'text'} renderText={value => <Text style={styles.currency_right}><Text style={{color: mon_available_color}}>{value}</Text></Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>]
             ],
             line_data: JSON.parse(JSON.stringify(response.data.sdtRestListaLinRequisicionesAut))
           });
@@ -104,6 +124,7 @@ export default class AutorizacionReq extends React.Component {
 
   updateLineAccept(line_number) {
     let clone = JSON.parse(JSON.stringify(this.state.line_data));
+    // let clone = {...this.state.line_data};
     let lines_with_decision = 0;
     let save_button_should_be_disabled = true;
     clone.forEach(function(element) {
@@ -128,6 +149,7 @@ export default class AutorizacionReq extends React.Component {
       line_data: clone,
       save_button_is_disabled: save_button_should_be_disabled
     });
+    // this.forceUpdate();
   }
   
   updateLineReject(line_number) {
@@ -144,6 +166,7 @@ export default class AutorizacionReq extends React.Component {
         filling_rejection_justfication: false
       });
       let clone = JSON.parse(JSON.stringify(this.state.line_data));
+      // let clone = {...this.state.line_data};
       let lines_with_decision = 0;
       let save_button_should_be_disabled = true;
       const stored_justification = this.state.justificacion
@@ -171,6 +194,7 @@ export default class AutorizacionReq extends React.Component {
         line_data: clone,
         save_button_is_disabled: save_button_should_be_disabled
       });
+      // this.forceUpdate()
     }
   }
 
@@ -263,7 +287,19 @@ export default class AutorizacionReq extends React.Component {
     }
   }
 
+  estilo(){
+    switch (global.style){
+      case 'light':
+        return(light);
+      case 'dark':
+        return(dark);
+      default:
+        return(light);
+    }
+  }
+
   renderLineas(data){
+    let estilos = this.estilo()
     const line_detail_head = [strings("modules.BandejaDeAutorizaciones.AutorizacionReq.general_budget_title")];
     const line_detail_titles = [
       [strings("transactions.ACRCPA.ACRCPAQTYR")],
@@ -287,7 +323,7 @@ export default class AutorizacionReq extends React.Component {
     if (data.item.ACRCPAOBS != "") {
       observaciones = <Text style={estilos.subTitulo}>
         {strings("transactions.ACRCPA.ACRCPAOBS")}: 
-        <Text style={styles.información}> {data.item.ACRCPAOBS}</Text>
+        <Text style={estilos.información}> {data.item.ACRCPAOBS}</Text>
       </Text> 
     }
 
@@ -297,7 +333,7 @@ export default class AutorizacionReq extends React.Component {
       <View style={styles.justification_box}>
         <Text style={estilos.subTitulo}>
           {strings("modules.BandejaDeAutorizaciones.AutorizacionReq.justification")}: 
-          <Text style={styles.información}> {data.item.justification}</Text>
+          <Text style={estilos.información}> {data.item.justification}</Text>
         </Text>
       </View> 
     }
@@ -313,16 +349,16 @@ export default class AutorizacionReq extends React.Component {
 
     return (
       <View style={styles.Contenedor}>
-        <Text style={styles.titulo_linea}>{strings("transactions.ACRCPA.ACRCPALIN")} {data.item.ACRCPALIN}</Text>
-        <Text style={styles.TituloInsumo}>{data.item.INPRODDSC}</Text>
-        <Text style={styles.TotalInsumo}> 
+        <Text style={estilos.titulo_linea}>{strings("transactions.ACRCPA.ACRCPALIN")} {data.item.ACRCPALIN}</Text>
+        <Text style={estilos.Titulo}>{data.item.INPRODDSC}</Text>
+        <Text style={estilos.TotalInsumo}> 
           {strings("transactions.ACRCPA.ACRCPAQTY")}:
           <NumberFormat value={parseFloat(data.item.ACRCPAQTY)} displayType={'text'} renderText={value => <Text style={estilos.TotalInsumoArgent}> {value} {data.item.ACRCPAUM}</Text>} thousandSeparator={true} prefix={''}></NumberFormat>  
         </Text>
         
         <Text style={estilos.subTitulo}>
           {strings("transactions.ACRCPA.ACRCPAFREQ")}:
-          <Text style={styles.información}> {data.item.ACRCPAFREQ}</Text>  
+          <Text style={estilos.información}> {data.item.ACRCPAFREQ}</Text>  
         </Text>
 
         <Text style={estilos.subTitulo}>
@@ -330,12 +366,12 @@ export default class AutorizacionReq extends React.Component {
           <Text style={styles.informaciónRoja}> {data.item.num}</Text>
         </Text> 
 
-        <View style={table_styles.general_table}>
+        <View style={estilos.general_table}>
           <Table borderStyle={{borderWidth: 0, borderColor: 'transparent'}}>
-            <Row data={this.state.general_budget_head} style={table_styles.table_general_head} textStyle={table_styles.general_title}/>
+            <Row data={this.state.general_budget_head} style={estilos.table_general_head} textStyle={estilos.general_title}/>
             <TableWrapper style={{flexDirection: 'row'}}>
-              <Col data={line_detail_titles} textStyle={table_styles.general_subtitle}/>
-              <Col data={line_detail_data} style={table_styles.general_cell_style} textStyle={table_styles.currency_right}/>
+              <Col data={line_detail_titles} textStyle={estilos.general_subtitle}/>
+              <Col data={line_detail_data} style={estilos.general_cell_style} textStyle={table_styles.currency_right}/>
             </TableWrapper>
           </Table>
         </View>
@@ -366,6 +402,7 @@ export default class AutorizacionReq extends React.Component {
   // this.updateLineReject.bind(this,data.item.ACRCPALIN)
 
   render() {
+    let estilos = this.estilo()
     const loading = this.state.loading;
     const datos = this.state.aut_data;
     const lineas = this.state.line_data;
@@ -410,7 +447,7 @@ export default class AutorizacionReq extends React.Component {
               height={250}
             >
               <View style ={estilos.header}>
-                <Text style = {styles.justification_title_style}>
+                <Text style = {estilos.justification_title_style}>
                   {strings("modules.BandejaDeAutorizaciones.AutorizacionReq.justification")}
                 </Text>
               </View>
@@ -423,7 +460,7 @@ export default class AutorizacionReq extends React.Component {
                   numberOfLines={7}
                   maxLength={250}
                   onChangeText={this.onJustificacionChange.bind(this)}
-                  style={styles.justification_input_style}
+                  style={estilos.justification_input_style}
                 />
               </View>
               <View style={styles.containerButton}>
@@ -433,36 +470,36 @@ export default class AutorizacionReq extends React.Component {
               </View>
             </Overlay>
 
-            <View style={styles.datosContainer}>
-              <Text style={estilos.subtituloChido}>{strings("modules.BandejaDeAutorizaciones.AutorizacionReq.number")}</Text>
+            <View style={estilos.datosContainer}>
+              <Text style={estilos.subtituloGrande}>{strings("modules.BandejaDeAutorizaciones.AutorizacionReq.number")}</Text>
               <Text style={estilos.contenidoNoDoc}>#{datos.ACRCPADOC}</Text>
               <Text style={estilos.subtitulo}>{strings("transactions.PMCTCG.PMCTCGDSC")}</Text>
               <Text style={estilos.contenido}>{datos.PMCTCGDSC}</Text>
 
               <Text style={estilos.subtitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionReq.budget_title")}</Text>
-              <View style={table_styles.general_table}>
+              <View style={estilos.general_table}>
                 <Table borderStyle={{borderWidth: 0, borderColor: 'transparent'}}>
-                  <Row data={this.state.general_budget_head} style={table_styles.table_general_head} textStyle={table_styles.general_title}/>
+                  <Row data={this.state.general_budget_head} style={estilos.table_general_head} textStyle={estilos.general_title}/>
                   <TableWrapper style={{flexDirection: 'row'}}>
-                    <Col data={this.state.budget_titles} textStyle={table_styles.general_subtitle}/>
-                    <Col data={this.state.general_budget_data} style={table_styles.general_cell_style} textStyle={table_styles.currency_right}/>
+                    <Col data={this.state.budget_titles} textStyle={estilos.general_subtitle}/>
+                    <Col data={this.state.general_budget_data} style={estilos.general_cell_style} textStyle={table_styles.currency_right}/>
                   </TableWrapper>
                 </Table>
               </View>
 
-              <View style={table_styles.general_table}>              
+              <View style={estilos.general_table}>              
                 <Table borderStyle={{borderWidth: 0, borderColor: 'transparent'}}>
-                  <Row data={this.state.monthly_budget_head} style={table_styles.table_general_head} textStyle={table_styles.general_title}/>
+                  <Row data={this.state.monthly_budget_head} style={estilos.table_general_head} textStyle={estilos.general_title}/>
                   <TableWrapper style={{flexDirection: 'row'}}>
-                    <Col data={this.state.budget_titles} textStyle={table_styles.general_subtitle}/>
-                    <Col data={this.state.monthly_budget_data} style={table_styles.general_cell_style} textStyle={table_styles.currency_right}/>
+                    <Col data={this.state.budget_titles} textStyle={estilos.general_subtitle}/>
+                    <Col data={this.state.monthly_budget_data} style={estilos.general_cell_style} textStyle={table_styles.currency_right}/>
                   </TableWrapper>
                 </Table>
               </View>
 
             </View>
-            <View style ={styles.separadorContainer}>
-              <Text style = {styles.separador}>
+            <View style ={estilos.separadorContainer}>
+              <Text style = {estilos.separador}>
                 {strings("modules.BandejaDeAutorizaciones.AutorizacionReq.lines")}
               </Text>
             </View>
@@ -483,23 +520,6 @@ export default class AutorizacionReq extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  separador: {
-    alignItems: 'flex-start',
-    fontSize: 24,
-    marginTop: 12,
-    marginBottom: 12,
-    paddingHorizontal: 15
-  },
-  separadorContainer:{
-    alignItems: 'flex-start',
-    backgroundColor: '#f2f2f2'
-  },
-  datosContainer: {
-    paddingVertical: 10,
-    paddingHorizontal: 25,
-    flex: 1,
-    justifyContent: 'flex-start'
-  },
   containerButton: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -509,38 +529,10 @@ const styles = StyleSheet.create({
   Contenedor: {
     margin: 15
   },
-  TituloInsumo: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 20,
-    color: 'black'
-  },
-  TotalInsumo: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 19
-  },
-  información: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 16,
-    color: '#b7b6b6'
-  },
   informaciónRoja: {
     fontFamily: 'sans-serif-condensed',
     fontSize: 16,
     color: 'red'
-  },
-  titulo_linea: {
-    fontSize: 16,
-    color: "rgb(38, 51, 140)"
-  },
-  justification_title_style: {
-    color: "black",
-    fontSize: 20,
-  },
-  justification_input_style: {
-    borderWidth: 1,
-    borderColor: "lightgrey",
-    margin: 6,
-    textAlignVertical: 'top'
   },
   justification_box: {
     borderWidth: 1,
@@ -555,26 +547,6 @@ const table_styles = StyleSheet.create({
     textAlign: "right",
     fontFamily: 'sans-serif-condensed',
     color: 'rgb(0, 143, 41)',
-    fontSize: 16,
-    margin: 4
-  },
-  general_cell_style: {
-  },
-  general_table: { 
-    marginVertical: 3
-  },
-  table_general_head: {
-    backgroundColor: "#f6f8fa"
-  },
-  general_title:{
-    fontFamily: 'sans-serif-condensed',
-    color: 'black',
-    fontSize: 16,
-    margin: 4
-  },
-  general_subtitle:{
-    fontFamily: 'sans-serif-condensed',
-    color: 'grey',
     fontSize: 16,
     margin: 4
   }

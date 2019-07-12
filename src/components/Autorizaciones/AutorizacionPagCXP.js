@@ -85,72 +85,66 @@ export default class AutorizacionPagCXP extends React.Component {
     let PDF_OC;
     if (data.item.PDF_OC_SHOW){
         PDF_OC =
-          <TouchableHighlight onPress={() =>
-            Linking.openURL(data.item.PDF_OC_URL)}>
-            <ListItem
-              key={"1"}
-              leftAvatar={{source: require( '../../../assets/images/reportePdf.jpg')}}
-              title= {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.PDF_OC')}
-            //   subtitle={strings("modules.BandejaDeAutorizaciones.AutorizacionPag.report_text")}
-            />
-          </TouchableHighlight>
+          <ListItem
+            onPress={() =>
+            Linking.openURL(data.item.PDF_OC_URL)}
+            containerStyle={estilos.PressListItem}
+            leftAvatar={{source: require( '../../../assets/images/reportePdf.jpg')}}
+            title= {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.PDF_OC')}
+            titleStyle={estilos.titleListItem}
+          />
     }
     let PDF_XML;
     if (data.item.PDF_XML_SHOW){
         PDF_XML =
-          <TouchableHighlight onPress={() =>
-            Linking.openURL(data.item.PDF_XML_URL)}>
-            <ListItem
-              key={"2"}
-              leftAvatar={{source: require( '../../../assets/images/reportePdf.jpg')}}
-              title= {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.PDF_XML')}
-            //   subtitle={strings("modules.BandejaDeAutorizaciones.AutorizacionPag.report_text")}
-            />
-          </TouchableHighlight>
+          <ListItem
+            onPress={() =>
+            Linking.openURL(data.item.PDF_XML_URL)}
+            containerStyle={estilos.PressListItem}
+            leftAvatar={{source: require( '../../../assets/images/reportePdf.jpg')}}
+            title= {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.PDF_XML')}
+            titleStyle={estilos.titleListItem}
+          />
     }
     const PercentAnt = parseInt(data.item.ACMVOIPORA);
     return (
           <View style={styles.Contenedor}>
-            <Text style={styles.Titulo}>#{data.item.PMNumDoc}</Text>
-            {/* <Text style={styles.Total}> 
-              {strings("transactions.ACOCPA.ACOCPAMNTIN")}:
-              <NumberFormat value={parseFloat(data.item.ACOCPAMNTIN)} displayType={'text'} renderText={value => <Text style={styles.TotalArgent}> {value}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>  
-            </Text> */}
-            <Text style={styles.subTitulo}>
+            <Text style={estilos.Titulo}>#{data.item.PMNumDoc}</Text>
+            <Text style={estilos.subtituloGrande}>
               {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.CNTDOCDSC')}: 
-              <Text style={styles.información}> {data.item.CNTDOCDSC}</Text>
+              <Text style={estilos.informaciónGrande}> {data.item.CNTDOCDSC}</Text>
             </Text> 
-            <Text style={styles.subTitulo}>
+            <Text style={estilos.subtituloGrande}>
               {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.PMCTPRDSC')}: 
-              <Text style={styles.información}> {data.item.PMCTPRDSC}</Text>
+              <Text style={estilos.informaciónGrande}> {data.item.PMCTPRDSC}</Text>
             </Text> 
-            <Text style={styles.subTitulo}>
+            <Text style={estilos.subtituloGrande}>
               {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.PMNumDocOC')}: 
-              <Text style={styles.NumOC}> {data.item.PMNumDocOC}</Text>
+              <Text style={estilos.NumOC}> {data.item.PMNumDocOC}</Text>
             </Text> 
-            <Text style={styles.subTitulo}>
+            <Text style={estilos.subtituloGrande}>
               {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.PMFolioFac')}: 
-              <Text style={styles.información}> {data.item.PMFolioFac}</Text>
+              <Text style={estilos.informaciónGrande}> {data.item.PMFolioFac}</Text>
             </Text> 
-            <Text style={styles.subTitulo}>
+            <Text style={estilos.subtituloGrande}>
               {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.PMFechFac')}: 
-              <Text style={styles.información}> {data.item.PMFechFac}</Text>
+              <Text style={estilos.informaciónGrande}> {data.item.PMFechFac}</Text>
             </Text> 
-            <Text style={styles.subTitulo}>
+            <Text style={estilos.subtituloGrande}>
               {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.PMFechVen')}: 
-              <Text style={styles.información}> {data.item.PMFechVen}</Text>
+              <Text style={estilos.informaciónGrande}> {data.item.PMFechVen}</Text>
             </Text> 
-            <Text style={styles.subTitulo}>
+            <Text style={estilos.subtituloGrande}>
               {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.Pago')}: 
               <NumberFormat value={parseFloat( data.item.Pago )} displayType={'text'} renderText={value => <Text style={ estilos.contenidoMonto }> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
             </Text> 
-            <Text style={styles.subTitulo}>
+            <Text style={estilos.subtituloGrande}>
               {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.Cantidad')}: 
               <NumberFormat value={parseFloat( data.item.Cantidad )} displayType={'text'} renderText={value => <Text style={ estilos.contenidoMonto }> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
             </Text> 
-            <Text style={styles.subTitulo}>
+            <Text style={estilos.subtituloGrande}>
               {strings('modules.BandejaDeAutorizaciones.AutorizacionPagCXP.ACMVOIPORA')}: 
-              <Text style={styles.información}> {data.item.ACMVOIPORA}%</Text>
+              <Text style={estilos.informaciónGrande}> {data.item.ACMVOIPORA}%</Text>
             </Text>
             <ProgressBarAnimated
                 width={Dimensions.get("window").width - 50}
@@ -191,31 +185,7 @@ export default class AutorizacionPagCXP extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  ocButton: {
-    height: 40,
-    width: '30%',
-    borderRadius:10
-  },
   Contenedor: {
     margin: 15
-  },
-  Titulo: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 20,
-    color: 'black'
-  },
-  subTitulo: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 19
-  },
-  información: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 18,
-    color: '#b7b6b6'
-  },
-  NumOC: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 19,
-    color: 'rgb(38, 51, 140)',
   }
 });

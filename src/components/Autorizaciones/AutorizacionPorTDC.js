@@ -14,7 +14,8 @@ import { Actions } from 'react-native-router-flux';
 import axios from 'axios';
 import { strings } from '../../i18n';
 import LoadingScreen from '../Common/LoadingScreen';
-import estilos from '../Common/mode';
+import light from '../Common/mode';
+import dark from '../Common/DarkMode';
 
 export default class AutorizacionPorTDC extends React.Component {
   constructor(props) {
@@ -67,46 +68,59 @@ export default class AutorizacionPorTDC extends React.Component {
     Actions.refresh({title: strings("modules.BandejaDeAutorizaciones.AutorizacionPorTDC.title")});
     clearInterval(this.titleInterval);
   }
+  
+  estilo(){
+    switch (global.style){
+      case 'light':
+        return(light);
+      case 'dark':
+        return(dark);
+      default:
+        return(light);
+    }
+  }
 
   renderItem(data){
+    let estilos = this.estilo()
     let informacion;
-    let dayColor = "red";
+    let dayColor;
+    estilos === light ? dayColor = "red" : dayColor = "rgb(255, 69, 69)"
     informacion = 
       <View>
         <View>
-          <Text style={styles.curvedCardHeader}>{data.item.CNCIASDSC} - 
-            <Text style={styles.curvedCardHeaderHighlighted}> {data.item.BANAUTNDC}</Text>
+          <Text style={estilos.curvedCardHeader}>{data.item.CNCIASDSC} - 
+            <Text style={estilos.curvedCardHeaderHighlighted}> {data.item.BANAUTNDC}</Text>
           </Text>
-          <Text style={styles.curvedCardSubtitleHighlighted}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPorTDC.days_without_attending')}: 
+          <Text style={estilos.curvedCardSubtitleHighlighted}>{strings('modules.BandejaDeAutorizaciones.AutorizacionPorTDC.days_without_attending')}: 
             <Text style={{color: dayColor}}> {data.item.dias_sin_atender}</Text>
           </Text> 
-          <Text style={styles.curvedCardSubtitle}>{strings('transactions.CNCDIR.CNCDIRNOM')}</Text>
-          <Text style={styles.curvedCardContent}>{data.item.CNCDIRNOM}</Text>
-          <Text style={styles.curvedCardSubtitle}>{strings('transactions.PMCTPR.PMCTPRDSC')}</Text>
-          <Text style={styles.curvedCardContent}>{data.item.PMCTPRDSC}</Text>
-          <Text style={styles.curvedCardSubtitle}>{strings('transactions.BANAUT.BANAUTFEC')}:
-            <Text style={styles.curvedCardContent}> {data.item.BANAUTFEC}</Text>
+          <Text style={estilos.curvedCardSubtitle}>{strings('transactions.CNCDIR.CNCDIRNOM')}:</Text>
+          <Text style={estilos.curvedCardContent}>{data.item.CNCDIRNOM}</Text>
+          <Text style={estilos.curvedCardSubtitle}>{strings('transactions.PMCTPR.PMCTPRDSC')}:</Text>
+          <Text style={estilos.curvedCardContent}>{data.item.PMCTPRDSC}</Text>
+          <Text style={estilos.curvedCardSubtitle}>{strings('transactions.BANAUT.BANAUTFEC')}:
+            <Text style={estilos.curvedCardContent}> {data.item.BANAUTFEC}</Text>
           </Text>
         </View>
       </View>
 
-    switch (data.item.BANAUTTDC){
+    switch (data.item.BANAUTTIP){
       case 'OMP':
         return (
           <TouchableOpacity
               onPress={() => Actions.autorizacion_oc(data.item)}
             >
-            <View style={styles.curvedCard}>
+            <View style={estilos.curvedCard}>
                 {informacion}
             </View>
           </TouchableOpacity>
         );
-      case 'PGP':
+      case 'PAG':
         return (
           <TouchableOpacity
               onPress={() => Actions.autorizacion_pag(data.item)}
             >
-            <View style={styles.curvedCard}>
+            <View style={estilos.curvedCard}>
                 {informacion}
             </View>
           </TouchableOpacity>
@@ -116,7 +130,7 @@ export default class AutorizacionPorTDC extends React.Component {
           <TouchableOpacity
               onPress={() => Actions.autorizacion_rav(data.item)}
             >
-            <View style={styles.curvedCard}>
+            <View style={estilos.curvedCard}>
                 {informacion}
             </View>
           </TouchableOpacity>
@@ -126,7 +140,17 @@ export default class AutorizacionPorTDC extends React.Component {
           <TouchableOpacity
               onPress={() => Actions.autorizacion_req(data.item)}
             >
-            <View style={styles.curvedCard}>
+            <View style={estilos.curvedCard}>
+                {informacion}
+            </View>
+          </TouchableOpacity>
+        );
+      case 'RET':
+        return (
+          <TouchableOpacity
+              onPress={() => Actions.autorizacion_ret(data.item)}
+            >
+            <View style={estilos.curvedCard}>
                 {informacion}
             </View>
           </TouchableOpacity>
@@ -134,7 +158,7 @@ export default class AutorizacionPorTDC extends React.Component {
       default:
         return(
           <TouchableWithoutFeedback> 
-            <View style={styles.curvedCard}>
+            <View style={estilos.curvedCard}>
               {informacion} 
             </View>
           </TouchableWithoutFeedback>
@@ -147,6 +171,7 @@ export default class AutorizacionPorTDC extends React.Component {
   }
 
   render() { 
+    let estilos = this.estilo()
     const loading = this.state.loading;
     const Bandeja = this.state.BandejaTDC.sdtRestBandejaAut;
     const tipoDeDoc = this.state.BandejaTDC.TIPAUTDSC;
@@ -156,17 +181,15 @@ export default class AutorizacionPorTDC extends React.Component {
       if (Bandeja.length === 0) {
         IndicadorAusenciaDatos =
         <View style={styles.pushedDown}> 
-          {/* <View style={styles.center}> */}
-            <Text style={{width: 250, textAlign: "center", fontSize: 20}}>{strings("modules.BandejaDeAutorizaciones.BandejaDeAutorizaciones.non_pending")}</Text>
-            <Image style={{width: 150, height: 150}} source={require("../../../assets/images/caja_vacia.png")}></Image>
-          {/* </View> */}
+          <Text style={estilos.non_pending}>{strings("modules.BandejaDeAutorizaciones.BandejaDeAutorizaciones.non_pending")}</Text>
+          <Image style={{width: 150, height: 150}} source={require("../../../assets/images/caja_vacia.png")}></Image>
         </View>
       }
       return (   
         <View style={estilos.container}>   
           {IndicadorAusenciaDatos}
           <View style={estilos.container}>
-            <ScrollView contentContainerStyle={styles.contentContainer}>
+            <ScrollView contentContainerStyle={estilos.ScrollContainer}>
               <FlatList
                 data={Bandeja}
                 keyExtractor= {(item, index) => index.toString() + item.BANAUTNDC.toString() }
@@ -185,50 +208,6 @@ export default class AutorizacionPorTDC extends React.Component {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  contentContainer: {
-    paddingTop: 0,
-    height: '100%'
-  },
-  curvedCard:{
-    padding: 20,
-    borderRadius: 10,
-    backgroundColor: 'white',
-    elevation: 10,
-    marginTop: 5,
-    marginBottom: 15,
-    marginLeft: 15,
-    marginRight: 15
-  },
-  curvedCardHeader:{
-    fontSize: 26,
-    color: "black"
-  },
-  curvedCardHeaderHighlighted: {
-    fontSize: 26,
-    color: "rgb(38, 51, 140)"
-  },
-  curvedCardSubtitle: {
-    fontSize: 16,
-    color: "grey"
-  },
-  curvedCardContent: {
-    fontSize: 16,
-    color: "#B7B6B6"
-  },
-  curvedCardSubtitleHighlighted: {
-    fontSize: 18,
-    color: "black"
-  },
-  center: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
   pushedDown:{
     marginTop: 100,
     flex: 1,

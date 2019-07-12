@@ -52,20 +52,20 @@ export default class Idioma extends React.Component {
     Actions.refresh({title: strings("modules.Settings.Idioma.title")});
     clearInterval(this.titleInterval);
   }
+  
+  estilo(){
+    switch (global.style){
+      case 'light':
+        return(light);
+      case 'dark':
+        return(dark);
+      default:
+        return(light);
+    }
+  }
 
   render() { 
-    let estilos;
-    switch (global.style){
-    case 'light':
-      estilos = light;
-      break;
-    case 'dark':
-      estilos = dark;
-      break;
-    default:
-      estilos = light;
-      break; 
-    }
+    let estilos = this.estilo()
     var flags = [
       require('../../../assets/images/mexico.png'),
       require('../../../assets/images/usa.png')

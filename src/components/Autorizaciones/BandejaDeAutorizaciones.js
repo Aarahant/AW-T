@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   ScrollView,
-  StyleSheet,
   View,
   Text,
   FlatList,
@@ -15,7 +14,8 @@ import axios from 'axios';
 import { strings } from '../../i18n';
 import I18n from 'react-native-i18n';
 import LoadingScreen from '../Common/LoadingScreen';
-import estilos from '../Common/mode';
+import light from '../Common/mode';
+import dark from '../Common/DarkMode';
 
 export default class BandejaDeAutorizaciones extends React.Component {
   constructor(props) {
@@ -95,8 +95,20 @@ export default class BandejaDeAutorizaciones extends React.Component {
   componentWillUnmount() {
     clearInterval(this.interval);
   }
+  
+  estilo(){
+    switch (global.style){
+      case 'light':
+        return(light);
+      case 'dark':
+        return(dark);
+      default:
+        return(light);
+    }
+  }
 
   renderItem(data){
+    let estilos = this.estilo()
     const pending = data.item.cont_pendientes;
     let color_pend;
     if (pending < 6) {
@@ -123,12 +135,12 @@ export default class BandejaDeAutorizaciones extends React.Component {
     
     return (
       <TouchableOpacity
-        style={styles.emailItem}
+        style={estilos.emailItem}
         onPress={() => Actions.autorizacion_por_tdc(data.item)}
       >
        <View style={{flexDirection: 'row'}}>
           <View style={{flex:1, margin:5}}>
-            <Text >{data.item.TIPAUTDSC}</Text>
+            <Text style={estilos.contenido}>{data.item.TIPAUTDSC}</Text>
           </View>
           {aut_count}
         </View>
@@ -141,13 +153,14 @@ export default class BandejaDeAutorizaciones extends React.Component {
   }
 
   render() { 
+    let estilos = this.estilo()
     const loading = this.state.loading;
     const Bandeja = this.state.BandejaAut.sdtBandejaTipoAut;
 
     if (loading != true) {
       return (   
         <View style={estilos.container}>
-          <ScrollView contentContainerStyle={styles.contentContainer}>
+          <ScrollView contentContainerStyle={estilos.ScrollContainer}>
             <FlatList
               data={Bandeja}
               keyExtractor= {(item, index) => item.TIPAUTID.toString() }
@@ -163,29 +176,3 @@ export default class BandejaDeAutorizaciones extends React.Component {
     }
   }
 }
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    paddingTop: 0,
-    height: '100%'
-  },
-  navCardTouch: {
-    marginVertical: 4,
-    marginHorizontal: 8,
-  },
-  navCard: {
-    elevation: 3,
-    backgroundColor: 'white', 
-  },
-  navCardContent: {
-    margin: 5,
-  },
-  emailItem:{
-    borderBottomWidth: 0.5,
-    borderColor: 'rgba(0,0,0,0.3)',
-    padding: 10
-  },
-  emailSubject: {
-    color: 'rgba(0,0,0,0.5)'
-  },
-});

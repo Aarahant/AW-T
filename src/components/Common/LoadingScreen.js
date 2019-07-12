@@ -18,7 +18,7 @@ export default class LoadingScreen extends React.Component {
         break; 
       }
         return (   
-            <View style={estilos.loadingContainer}>
+            <View style={estilos.loadingContainerCommon}>
               <Image style={estilos.kds_logo_image} source={require("../../../assets/gifs/bars6.gif")}/>
             </View>
         );

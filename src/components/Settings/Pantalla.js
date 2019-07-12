@@ -80,20 +80,19 @@ export default class Pantalla extends React.Component {
     // })
     // .catch(error => console.log(error));
   }
+  estilo(){
+    switch (global.style){
+      case 'light':
+        return(light);
+      case 'dark':
+        return(dark);
+      default:
+        return(light);
+    }
+  }
   render() { 
     const loading = this.state.loading;
-    let estilos;
-    switch (global.style){
-    case 'light':
-      estilos = light;
-      break;
-    case 'dark':
-      estilos = dark;
-      break;
-    default:
-      estilos = light;
-      break; 
-    }
+    let estilos = this.estilo()
     if (loading != true) {
     return (   
       <View style={estilos.container}>

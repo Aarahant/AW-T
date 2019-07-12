@@ -21,7 +21,8 @@ import { strings } from '../../i18n';
 import ProgressBarAnimated from 'react-native-progress-bar-animated';
 import NumberFormat from 'react-number-format';
 import LoadingScreen from '../Common/LoadingScreen';
-import estilos from "../Common/mode";
+import light from '../Common/mode';
+import dark from '../Common/DarkMode';
 
 export default class AutorizacionRav extends React.Component {
   constructor(props) {
@@ -102,10 +103,11 @@ export default class AutorizacionRav extends React.Component {
   }
 
   renderNiveles(data){
+    let estilos = this.estilo()
     let estatusAutStyle;
     switch (data.item.ACRAVPANAUHE){
       case 0:
-        estatusAutStyle = styles.información;
+        estatusAutStyle = estilos.información;
         break;
       case 1:
         estatusAutStyle = styles.estatuts_autorizo;
@@ -117,13 +119,13 @@ export default class AutorizacionRav extends React.Component {
         estatusAutStyle = styles.estatuts_rechazo;
         break;
       default:
-        estatusAutStyle = styles.información;
+        estatusAutStyle = estilos.información;
         break;
     }
     if (data.item.pendiente_aut){
       return (
         <View style={styles.Contenedor}>
-          <Text style={styles.postTitle}>{data.item.ACRAVPANNIV} - {data.item.CNUSERDSC}</Text>
+          <Text style={estilos.postTitle}>{data.item.ACRAVPANNIV} - {data.item.CNUSERDSC}</Text>
           <Text style={estilos.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.status")}:
             <Text  style={estatusAutStyle}> {data.item.estatus_aut}</Text>
           </Text>
@@ -132,15 +134,15 @@ export default class AutorizacionRav extends React.Component {
     } else {
       return (
         <View style={styles.Contenedor}>
-          <Text style={styles.postTitle}>{data.item.ACRAVPANNIV} - {data.item.CNUSERDSC}</Text>
+          <Text style={estilos.postTitle}>{data.item.ACRAVPANNIV} - {data.item.CNUSERDSC}</Text>
           <Text style={estilos.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.status")}:
             <Text style={estatusAutStyle}> {data.item.estatus_aut}</Text>
           </Text>
           <Text style={estilos.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.date")}:
-            <Text style={styles.información}> {data.item.ACRAVPANFECOP}</Text>
+            <Text style={estilos.información}> {data.item.ACRAVPANFECOP}</Text>
           </Text>
           <Text style={estilos.subTitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.comments")}:
-            <Text style={styles.información}> {data.item.ACRAVPANCOM}</Text>
+            <Text style={estilos.información}> {data.item.ACRAVPANCOM}</Text>
           </Text>
         </View>
       );
@@ -244,8 +246,20 @@ export default class AutorizacionRav extends React.Component {
   onJustificacionChange(text) {
     this.setState({ justificacion: text });
   }
+  
+  estilo(){
+    switch (global.style){
+      case 'light':
+        return(light);
+      case 'dark':
+        return(dark);
+      default:
+        return(light);
+    }
+  }
 
   render() {
+    let estilos = this.estilo()
     const loading = this.state.loading;
     const datos = this.state.aut_data;
     const niveles = this.state.aut_data.sdtRestNivelesAutAvance;
@@ -268,14 +282,14 @@ export default class AutorizacionRav extends React.Component {
               </View>
             </Overlay>
             <View style={estilos.datosContainer}>
-              <Text style={estilos.subtituloChido}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.number")}</Text>
+              <Text style={estilos.subtituloGrande}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.number")}</Text>
               <Text style={estilos.contenidoNoDoc}>#{datos.ACRAVPANDOC}</Text>
               <Text style={estilos.subtitulo}>{strings("transactions.ACMROI.ACMROIFDOC")}</Text>
-              <Text style={styles.contenido}>{datos.ACMROIFDOC}</Text>
+              <Text style={estilos.contenido}>{datos.ACMROIFDOC}</Text>
               <Text style={estilos.subtitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.procurer")}</Text>
-              <Text style={styles.contenido}>{datos.comp}</Text>
+              <Text style={estilos.contenido}>{datos.comp}</Text>
               <Text style={estilos.subtitulo}>{strings("transactions.PMCTCG.PMCTCGDSC")}</Text>
-              <Text style={styles.contenido}>{datos.PMCTCGDSC}</Text>
+              <Text style={estilos.contenido}>{datos.PMCTCGDSC}</Text>
               <Text style={estilos.subtitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.advance")}</Text>
               <NumberFormat value={parseFloat(datos.AvanceMnt)} displayType={'text'} renderText={value => <Text style={estilos.contenidoMonto}>{value} {datos.CNCMNMID}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
               <Text style={estilos.subtitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.amortization")}</Text>
@@ -285,30 +299,30 @@ export default class AutorizacionRav extends React.Component {
               <Text style={estilos.subtitulo}>{strings("transactions.ACMVOI.ACMVOICOM")}</Text>
               <Text style={estilos.contenidoLargo}>{datos.ACMVOICOM}</Text>
               <Text style={estilos.subtitulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.service_period")}</Text>
-              <Text style={styles.contenido}>{datos.ACMROIFIREG} - {datos.ACMROIFFREG}</Text>
+              <Text style={estilos.contenido}>{datos.ACMROIFIREG} - {datos.ACMROIFFREG}</Text>
               <Text style={estilos.subtitulo}>{strings("transactions.ACMROI.ACMROIOBST")}</Text>
               <Text style={estilos.contenidoLargo}>{datos.ACMROIOBST}</Text>
             </View>
-            <View style ={styles.separadorContainer}>
-              <Text style = {styles.separador}>
+            <View style ={estilos.separadorContainer}>
+              <Text style = {estilos.separador}>
                 {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.purchase_order_details")}
               </Text>
             </View>
             <View style={styles.Contenedor}>
-              <Text style={styles.TituloInsumo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.number")}: 
+              <Text style={estilos.Titulo}>{strings("modules.BandejaDeAutorizaciones.AutorizacionRav.number")}: 
                 <Text style={estilos.contenidoNoDoc}> #{datos.ACMROIDOC}</Text>
               </Text>
-              <Text style={styles.TotalInsumo}>
+              <Text style={estilos.TotalInsumo}>
                 {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.total_without_tax")}:
                 <NumberFormat value={parseFloat(datos.TotoSinImpuesto)} displayType={'text'} renderText={value => <Text style={estilos.TotalInsumoArgent}> {value} {datos.CNCMNMID_F}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
               </Text>
               <Text style={estilos.subTitulo}>
                 {strings("transactions.PMCTPR.PMCTPRDSC")}:
-                <Text style={styles.información}> {datos.PMCTPRDSC}</Text>
+                <Text style={estilos.información}> {datos.PMCTPRDSC}</Text>
               </Text>
               <Text style={estilos.subTitulo}>
                 {strings("transactions.ACMVOI.ACMVOIPORA")}:
-                <Text style={styles.información}> {datos.ACMVOIPORA}%</Text>
+                <Text style={estilos.información}> {datos.ACMVOIPORA}%</Text>
               </Text>
               <ProgressBarAnimated
                 width={Dimensions.get("window").width - 140}
@@ -319,19 +333,19 @@ export default class AutorizacionRav extends React.Component {
               />
               <Text style={estilos.subTitulo}>
                 {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.advance_without_tax")}:
-                <Text style={styles.información}> {datos.AnticipoSinImpuesto}</Text>
+                <Text style={estilos.información}> {datos.AnticipoSinImpuesto}</Text>
               </Text>
               <Text style={estilos.subTitulo}>
                 {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.amortized_advance")}:
-                <NumberFormat value={parseFloat(datos.AnticipoAmortizado)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
+                <NumberFormat value={parseFloat(datos.AnticipoAmortizado)} displayType={'text'} renderText={value => <Text style={estilos.información}> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
               </Text>
               <Text style={estilos.subTitulo}>
                 {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.advance_to_amortize")}:
-                <NumberFormat value={parseFloat(datos.AnticipoPorAmortizar)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
+                <NumberFormat value={parseFloat(datos.AnticipoPorAmortizar)} displayType={'text'} renderText={value => <Text style={estilos.información}> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
               </Text>
               <Text style={estilos.subTitulo}>
                 {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.authorized_progress_percentage")}:
-                <NumberFormat value={parseFloat(datos.PAvanceConAutorizacion)} displayType={'text'} renderText={value => <Text style={styles.información}> {value}% </Text>} thousandSeparator={true} prefix={''}></NumberFormat>
+                <NumberFormat value={parseFloat(datos.PAvanceConAutorizacion)} displayType={'text'} renderText={value => <Text style={estilos.información}> {value}% </Text>} thousandSeparator={true} prefix={''}></NumberFormat>
               </Text>
               <ProgressBarAnimated
                 width={Dimensions.get("window").width - 140}
@@ -342,24 +356,26 @@ export default class AutorizacionRav extends React.Component {
               />
               <Text style={estilos.subTitulo}>
                 {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.authorized_progress_amount")}:
-                <NumberFormat value={parseFloat(datos.MAvanceConAutorizacion)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
+                <NumberFormat value={parseFloat(datos.MAvanceConAutorizacion)} displayType={'text'} renderText={value => <Text style={estilos.información}> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
               </Text>
               <Text style={estilos.subTitulo}>
                 {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.pending_amount")}:
-                <NumberFormat value={parseFloat(datos.MontoPendiente)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
+                <NumberFormat value={parseFloat(datos.MontoPendiente)} displayType={'text'} renderText={value => <Text style={estilos.información}> {value} </Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
               </Text>
             </View>
-            <TouchableHighlight onPress={() =>
-              Linking.openURL('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/' + this.state.pdfLink)}>
-              <ListItem
-                key={"1"}
-                leftAvatar={{source: require( '../../../assets/images/reportePdf.jpg')}}
-                title= {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.report_title")}
-                subtitle={strings("modules.BandejaDeAutorizaciones.AutorizacionRav.report_text")}
-              />
-            </TouchableHighlight>
-            <View style ={styles.separadorContainer}>
-              <Text style = {styles.separador}>
+            
+            <ListItem
+              onPress={() =>
+              Linking.openURL('http://kyrios.fortidyndns.com:83/KDSProyectosJavaEnvironment/' + this.state.pdfLink)}
+              containerStyle={estilos.PressListItem}
+              leftAvatar={{source: require( '../../../assets/images/reportePdf.jpg')}}
+              title= {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.report_title")}
+              subtitle={strings("modules.BandejaDeAutorizaciones.AutorizacionRav.report_text")}
+              titleStyle={estilos.titleListItem}
+              subtitleStyle={estilos.subtitleListItem}
+            />
+            <View style ={estilos.separadorContainer}>
+              <Text style = {estilos.separador}>
                 {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.authorization_levels")}
               </Text>
             </View>
@@ -368,37 +384,37 @@ export default class AutorizacionRav extends React.Component {
               keyExtractor= {(item, index) => niveles + index.toString()}
               renderItem={this.renderNiveles.bind(this)}
             />
-            <View style ={styles.separadorContainer}>
-              <Text style = {styles.separador}>
+            <View style ={estilos.separadorContainer}>
+              <Text style = {estilos.separador}>
                 {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.service_detail")}
               </Text>
             </View>
             <View style={styles.Contenedor}>
-              <Text style={styles.TituloInsumo}>{datos.INPRODDSC}</Text>
-              <Text style={styles.TotalInsumo}>
+              <Text style={estilos.Titulo}>{datos.INPRODDSC}</Text>
+              <Text style={estilos.TotalInsumo}>
                 {strings("modules.BandejaDeAutorizaciones.AutorizacionRav.price")}:
                 <NumberFormat value={parseFloat(datos.MONTO)} displayType={'text'} renderText={value => <Text style={estilos.TotalInsumoArgent}> {value} {datos.CNCMNMID}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
               </Text>
-              <Text style={styles.informaciónGrande}>{datos.ACMVORDSC4}</Text>
+              <Text style={estilos.informaciónGrande}>{datos.ACMVORDSC4}</Text>
               <Text style={estilos.subTitulo}>
                 {strings("transactions.ACMVOI.ACMVOIFDOC")}:
-                <Text style={styles.información}> {datos.ACMVOIFDOC}</Text>
+                <Text style={estilos.información}> {datos.ACMVOIFDOC}</Text>
               </Text>
               <Text style={estilos.subTitulo}>
                 {strings("transactions.ACMVOI.ACMVOIFCEP")}:
-                <Text style={styles.información}> {datos.ACMVOIFCEP}</Text>
+                <Text style={estilos.información}> {datos.ACMVOIFCEP}</Text>
               </Text>
               <Text style={estilos.subTitulo}>
                 {strings("transactions.ACMVOI.ACMVOIQTO")}:
-                <NumberFormat value={parseFloat(datos.ACMVOIQTO)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} {datos.ACMVOIUMT} </Text>} thousandSeparator={true} prefix={''}></NumberFormat>
+                <NumberFormat value={parseFloat(datos.ACMVOIQTO)} displayType={'text'} renderText={value => <Text style={estilos.información}> {value} {datos.ACMVOIUMT} </Text>} thousandSeparator={true} prefix={''}></NumberFormat>
               </Text>
               <Text style={estilos.subTitulo}>
                 {strings("transactions.ACMROI.ACMROIFP")}:
-                <NumberFormat value={parseFloat(datos.PRECIO)} displayType={'text'} renderText={value => <Text style={styles.información}> {value} {datos.CNCMNMID}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
+                <NumberFormat value={parseFloat(datos.PRECIO)} displayType={'text'} renderText={value => <Text style={estilos.información}> {value} {datos.CNCMNMID}</Text>} thousandSeparator={true} prefix={'$'}></NumberFormat>
               </Text>
               <Text style={estilos.subTitulo}>
                 {strings("transactions.ACMROI.ACMROIPAREG")}:
-                <NumberFormat value={parseFloat(datos.ACMROIPAREG)} displayType={'text'} renderText={value => <Text style={styles.información}> {value}% </Text>} thousandSeparator={true} prefix={''}></NumberFormat>
+                <NumberFormat value={parseFloat(datos.ACMROIPAREG)} displayType={'text'} renderText={value => <Text style={estilos.información}> {value}% </Text>} thousandSeparator={true} prefix={''}></NumberFormat>
               </Text>
               <ProgressBarAnimated
                 width={Dimensions.get("window").width - 140}
@@ -409,7 +425,7 @@ export default class AutorizacionRav extends React.Component {
               />
               <Text style={estilos.subTitulo}>
                 {strings("transactions.ACMVOI.ACMVOICOM")}:
-                <Text style={styles.información}> {datos.ACMVOICOM}</Text>
+                <Text style={estilos.información}> {datos.ACMVOICOM}</Text>
               </Text>
             </View>
             <View style = {estilos.pieAutorización}>
@@ -458,48 +474,8 @@ const styles = StyleSheet.create({
     width: '30%',
     borderRadius:10
   },
-  separador: {
-    alignItems: 'flex-start',
-    fontSize: 24,
-    marginTop: 12,
-    marginBottom: 12,
-    paddingHorizontal: 15
-  },
-  separadorContainer:{
-    alignItems: 'flex-start',
-    backgroundColor: '#f2f2f2'
-  },
-  postTitle: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    color: 'rgb(66, 66, 66)'
-  },
-  contenido: {
-    fontFamily: 'sans-serif-condensed',
-    color: 'grey',
-    fontSize: 18
-  },
   Contenedor: {
     margin: 15
-  },
-  TituloInsumo: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 20,
-    color: 'black'
-  },
-  TotalInsumo: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 19
-  },
-  información: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 16,
-    color: '#b7b6b6'
-  },
-  informaciónGrande: {
-    fontFamily: 'sans-serif-condensed',
-    fontSize: 18,
-    color: '#b7b6b6'
   },
   estatuts_autorizo: {
     fontFamily: 'sans-serif-condensed',
