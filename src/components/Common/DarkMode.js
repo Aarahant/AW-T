@@ -7,6 +7,9 @@ export default StyleSheet.create({
     width: 120,
     alignSelf: 'center'
   },
+  celdaOption: {
+    height: 40
+  },
   menuOption: {
     paddingVertical:10,
     marginHorizontal: 20,
@@ -14,7 +17,7 @@ export default StyleSheet.create({
     fontSize: 16,
     width: 260,
     borderTopWidth: 1,
-    borderColor: 'rgb(1,1,1)'
+    borderColor: 'rgb(224,224,224)'
   },
   menuOptionFinal:{
     padding: 10,
@@ -24,11 +27,12 @@ export default StyleSheet.create({
     width: 260,
     borderWidth: 1,
     borderBottomWidth: 1,
-    borderColor: 'rgb(1,1,1)'
+    borderColor: 'rgb(224,224,224)'
   },
   curvedCardLeft:{
     borderRadius: 10,
     backgroundColor: 'rgb(26, 81, 115)',
+    borderColor: 'rgb(26, 81, 115)',
     elevation: 6,
     marginTop: 0,
     marginBottom: 10,
@@ -38,6 +42,7 @@ export default StyleSheet.create({
   curvedCardRight:{
     borderRadius: 10,
     backgroundColor: 'rgb(26, 81, 115)',
+    borderColor: 'rgb(26, 81, 115)',
     elevation: 6,
     marginTop: 0,
     marginBottom: 10,
@@ -58,10 +63,10 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     margin:5
   },
-  drawer: {
-    backgroundColor: 'rgb(18, 56, 79)',
-    justifyContent: 'space-between'
-  },
+  // drawer: {
+  //   backgroundColor: 'rgb(18, 56, 79)',
+  //   justifyContent: 'space-between'
+  // },
 
   justificación: {
     flexDirection: 'row',
@@ -310,11 +315,11 @@ export default StyleSheet.create({
     marginVertical: 3
   },
   table_general_head: {
-    backgroundColor: "#f6f8fa"
+    backgroundColor: 'rgb(26, 81, 115)'
   },
   general_title:{
     fontFamily: 'sans-serif-condensed',
-    color: 'black',
+    color: 'rgb(207, 253, 255)',
     fontSize: 16,
     margin: 4
   },
@@ -323,5 +328,11 @@ export default StyleSheet.create({
     color: 'rgb(195, 218, 232)',
     fontSize: 16,
     margin: 4
-  }
+  },
+  // Router Navbar
+  navBar: {
+      backgroundColor: "#1aa6a8",
+      color: "#FFF",
+      fontWeight: "normal"
+  } 
 });

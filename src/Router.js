@@ -8,6 +8,10 @@ import {
     StyleSheet,
     StatusBar 
 } from 'react-native';
+
+import light from './components/Common/mode';
+import dark from './components/Common/DarkMode';
+
 import Login from './components/Login';
 import HomeScreen from './components/HomeScreen';
 import MusicianList from './components/Empleados/MusicianList';
@@ -26,9 +30,45 @@ import Pantalla from './components/Settings/Pantalla';
 import LoadingScreen from './components/Common/LoadingScreen';
 import IdiomaInicial from './components/IdiomaInicial';
 
-const RouterComponent = () => {
-    return (
-        <Router tintColor='white' navigationBarStyle={style.navBar} titleStyle={{color: "white"}}>
+// const RouterComponent = () => {
+    // let estilos;
+    // console.log('################## EMPIRE');
+    // console.log(global.style);
+    // switch (global.style){
+        
+    // case 'light':
+    //   estilos = light;
+    //   break;
+    // case 'dark':
+    //   estilos = dark;
+    //   break;
+    // default:
+    //   estilos = dark;
+    //   break; 
+    // }
+    // let switchy = 1;
+    // this.interval = setInterval(() => if (switchy === 1) {} else {},1000);
+
+export default class RouterComponent extends React.Component {
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+            loading: true,
+            back_color: 'blue'
+        };
+    }
+
+    componentDidMount() {
+        console.log("===============STAR WARS CHRISTMAS SPECIAL============")
+        console.log("===============STAR WARS CHRISTMAS SPECIAL END============")
+        this.interval = setInterval(() => this.setState({back_color: 'purple'}) , 30000);        
+    }
+    
+    // return (
+    render() {
+        return (
+        <Router tintColor='white' navigationBarStyle={[style.navBar, {backgroundColor: this.state.back_color}]} titleStyle={{color: "white"}}>
             <Stack hideNavBar key="root">
                 <Stack
                     key="auth"
@@ -154,7 +194,8 @@ const RouterComponent = () => {
                 </Stack>
             </Stack>
         </Router>
-    );
+    // );
+    )}
 };
 
 const style = StyleSheet.create({
@@ -177,4 +218,4 @@ const style = StyleSheet.create({
     }
 });  
   
-export default RouterComponent;
+// export default RouterComponent;

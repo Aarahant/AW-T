@@ -181,9 +181,9 @@ export default class HomeScreen extends React.Component {
 
        
     var navigationView = (
-      <View style={estilos.drawer}>
-        <View>
-          <ScrollView>
+      <View style={estilos.container}>
+        <ScrollView style={estilos.ScrollContainer} contentContainerStyle={estilos.contentContainer}>
+            <View>
             <View style ={styles.header}>
                 <View >
                     <Image style={styles.profilepicWrap} source={randomImages[0]}/>
@@ -195,51 +195,51 @@ export default class HomeScreen extends React.Component {
             </View >   
 
             <TouchableOpacity onPress={() => {Actions.musician_list()}}>
-              <View>
+              <View style={estilos.celdaOption}>
                 <Text style={estilos.menuOption}>{strings('modules.HomeScreen.employees')}</Text>
               </View>
             </TouchableOpacity>
             
             <TouchableOpacity onPress={() => {Actions.bandeja_de_autorizaciones()}}>
-              <View>
+              <View style={estilos.celdaOption}>
                 <Text style={estilos.menuOption}>{strings('modules.HomeScreen.authorization_bin')}</Text>
+                {AutPend}
               </View>
-              {AutPend}
             </TouchableOpacity>
             
             <TouchableOpacity onPress={() => {Actions.settings()}}>
-              <View>
+              <View style={estilos.celdaOption}>
                 <Text style={estilos.menuOption}>{strings('modules.HomeScreen.settings')}</Text>
               </View>
             </TouchableOpacity>
 
-          </ScrollView>
-        </View>
-        <View>
-          <TouchableOpacity onPress={this.handleRequest.bind(this)}>
-            <View>
-              <Text style={estilos.menuOptionFinal}>{strings('modules.HomeScreen.log_out')}</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+          </View>
+          <View style={{paddingBottom: 10}}>
+            <TouchableOpacity onPress={this.handleRequest.bind(this)}>
+              <View style={estilos.celdaOption}>
+                <Text style={estilos.menuOptionFinal}>{strings('modules.HomeScreen.log_out')}</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>    
     ); 
     
     return ( 
-        <DrawerLayoutAndroid
-          ref = "mainDrawer"
-          drawerWidth={300}
-        renderNavigationView={() => navigationView}>
-          <Header
-            backgroundColor= '#1aa6a8' //'#003366'
-            leftComponent={{ icon: 'menu', color: '#fff', onPress:() => this.refs['mainDrawer'].openDrawer() }}
-            centerComponent={{ text: strings('modules.HomeScreen.title'), style: { color: '#fff' } }}
-            containerStyle={{
-              elevation: 5,
-              borderWidth: 0
-            }}
-          />
-            <View style={estilos.container}>
+      <DrawerLayoutAndroid style={estilos.container}
+      ref = "mainDrawer"
+      drawerWidth={300}
+      renderNavigationView={() => navigationView}>
+      <Header
+        backgroundColor= '#1aa6a8' //'#003366'
+        leftComponent={{ icon: 'menu', color: '#fff', onPress:() => this.refs['mainDrawer'].openDrawer() }}
+        centerComponent={{ text: strings('modules.HomeScreen.title'), style: { color: '#fff' } }}
+        containerStyle={{
+          marginTop: Platform.OS === 'ios' ? 0 : - 24,
+          borderBottomWidth: 0
+        }}
+      />
+            <View >
               <ScrollView>
                 <View style = {{flexDirection: 'row', flex: 1, paddingTop: 5}}>
                   <View style={styles.columna}>

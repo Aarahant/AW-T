@@ -101,6 +101,7 @@ export default class AutorizacionRet extends React.Component {
           lines_with_decision += 1;
         } else {
           element.authorized = false;
+          element.justification = false;
         }
       } else {
         if (element.authorized || element.rejected) {
@@ -134,6 +135,7 @@ export default class AutorizacionRet extends React.Component {
           lines_with_decision += 1;
         } else {
           element.rejected = false;
+          element.justification = false;
         }
       } else {
         if (element.authorized || element.rejected) {
@@ -150,23 +152,7 @@ export default class AutorizacionRet extends React.Component {
     });
   }
 
-  updateObservations(line_number) {
-    let clone = JSON.parse(JSON.stringify(this.state.line_data));
-    // let clone = {...this.state.line_data};
-    const stored_observation = this.state.observation
-    clone.forEach(function(element) {
-      if (element.RETREQLIN == line_number) {
-        element.justification = '';
-      }
-    });
-    if (lines_with_decision > 0){ 
-      save_button_should_be_disabled = false;
-    }
-    this.setState({
-      line_data: clone,
-      save_button_is_disabled: save_button_should_be_disabled
-    });
-  }
+
 
   aceptarImpacto(){
     Alert.alert(
@@ -180,60 +166,60 @@ export default class AutorizacionRet extends React.Component {
   }
 
   impactarRets(){
-    // // Desglose de significado de valores de Autorizar
-    // // 1 = Autoriza
-    // // 2 = Rechaza
-    // const requisition_lines = this.state.line_data;
-    // let line_decisions = [];
-    // const parms = this.state.parametros;
-    // requisition_lines.forEach(function(line){
-    //   let Autorizar = 0;
-    //   if (line.authorized || line.rejected) {
-    //     if (line.authorized) {
-    //       Autorizar = 1
-    //     } else {
-    //       Autorizar = 2
-    //     }
-    //     line_decisions.push({
-    //       "Autorizar": Autorizar,
-    //       "ACRCOIOBSAUT": line.justification,
-    //       "RETREQLIN": line.RETREQLIN
-    //     })
-    //   }
-    // });
+    // Desglose de significado de valores de Autorizar
+    // 1 = Autoriza
+    // 2 = Rechaza
+    const requisition_lines = this.state.line_data;
+    let line_decisions = [];
+    const parms = this.state.parametros;
+    requisition_lines.forEach(function(line){
+      let Autorizar = 0;
+      if (line.authorized || line.rejected) {
+        if (line.authorized) {
+          Autorizar = 1
+        } else {
+          Autorizar = 2
+        }
+        line_decisions.push({
+          "Autorizar": Autorizar,
+          "ACRCOIOBSAUT": line.justification,
+          "ACRCPALIN": line.RETREQLIN
+        })
+      }
+    });
 
-    // const parametros = {
-    //   "TOKEN_P": global.token,
-    //   "BANAUTCIA_P": parms["BANAUTCIA_P"],
-    //   "BANAUTTDC_P": parms["BANAUTTDC_P"],
-    //   "BANAUTNDC_P": parms["BANAUTNDC_P"],
-    //   "sdtRestListaDecisionLinRequisicion_P": JSON.stringify(line_decisions)
-    // };
+    const parametros = {
+      "TOKEN_P": global.token,
+      "BANAUTCIA_P": parms["BANAUTCIA_P"],
+      "BANAUTTDC_P": requisition_lines[0].RETREQTDC,
+      "BANAUTNDC_P": parms["BANAUTNDC_P"],
+      "sdtRestListaDecisionLinRequisicion_P": JSON.stringify(line_decisions)
+    };
 
-    // console.log(parametros);
-    // this.setState({ processingTransaction: true });
-    // axios.post('restpArcRequisiciones',
-    //   parametros
-    // )
-    // .then(response => {
-    //   if (response.data.SUCCESS){
-    //     this.setState({ processingTransaction: false });
-    //     console.log(response.data)
-    //     Actions.pop({ refresh: {key: Math.random()} }); // Sale y actualiza.
-    //   }  else {
-    //     this.setState({ processingTransaction: false });
-    //     Alert.alert(
-    //       strings("common.session.alert_title"),
-    //       strings("common.session.alert_content"),
-    //       [
-    //         {text: strings('common.session.alert_ok'), onPress: () => Actions.auth()}
-    //       ],
-    //       {cancelable: false}
-    //     );
-    //     Actions.auth();
-    //   }
-    // })
-    // .catch(error => this.handleTransactionProcessError(error));
+    console.log(parametros);
+    this.setState({ processingTransaction: true });
+    axios.post('restpArcRetenciones',
+      parametros
+    )
+    .then(response => {
+      if (response.data.SUCCESS){
+        this.setState({ processingTransaction: false });
+        console.log(response.data)
+        Actions.pop({ refresh: {key: Math.random()} }); // Sale y actualiza.
+      }  else {
+        this.setState({ processingTransaction: false });
+        Alert.alert(
+          strings("common.session.alert_title"),
+          strings("common.session.alert_content"),
+          [
+            {text: strings('common.session.alert_ok'), onPress: () => Actions.auth()}
+          ],
+          {cancelable: false}
+        );
+        Actions.auth();
+      }
+    })
+    .catch(error => this.handleTransactionProcessError(error));
   }
 
   handleTransactionProcessError() {
@@ -259,18 +245,26 @@ export default class AutorizacionRet extends React.Component {
   }
 
   handle_writing_of_observations(RETREQLIN) {
-    if (this.state.observation === '') {
-      this.setState({
-        filling_observations: true,
-      })
-    } else {
-      this.updateLineReject(RETREQLIN)
-      this.setState({
-        filling_observations: true,
-        aux_RETREQLIN: RETREQLIN,
-        observation: ''
-      })
+    if (this.observation != '') {
+      this.updateObservations(RETREQLIN)
     }
+    this.setState({
+      filling_observations: false,
+      observation: ''
+    })
+  }
+
+  updateObservations(line_number) {
+    let clone = JSON.parse(JSON.stringify(this.state.line_data));
+    const stored_observation = this.state.observation
+    clone.forEach(function(element) {
+      if (element.RETREQLIN == line_number) {
+        element.justification = stored_observation;
+      }
+    });
+    this.setState({
+      line_data: clone
+    });
   }
 
   handle_authorization_click(RETREQLIN, authorized) {
@@ -301,9 +295,17 @@ export default class AutorizacionRet extends React.Component {
     let estilos = this.estilo()
 
     let justification;
-    if (data.item.rejected === true) {
+    let observation_border_color;
+    if (data.item.justification != '') {
+      if (data.item.authorized || data.item.rejected ){
+        if (data.item.authorized) {
+          observation_border_color = 'green';
+        } else {
+          observation_border_color = 'pink';
+        }
+      }
       justification = 
-      <View style={styles.justification_box}>
+      <View style={[styles.justification_box, {borderColor: observation_border_color}]}>
         <Text style={estilos.subTitulo}>
           {strings("modules.BandejaDeAutorizaciones.AutorizacionRet.justification")}: 
           <Text style={estilos.información}> {data.item.justification}</Text>
@@ -427,6 +429,7 @@ export default class AutorizacionRet extends React.Component {
               windowBackgroundColor="rgba(0, 0, 0, .3)"
               overlayBackgroundColor={estilos.Overlay.backgroundColor}
               height={250}
+              onBackdropPress={() => this.setState({ filling_observations: false })}
             >
               <View style ={estilos.header}>
                 <Text style = {estilos.justification_title_style}>
@@ -446,7 +449,7 @@ export default class AutorizacionRet extends React.Component {
                 />
               </View>
               <View style={estilos.containerButton}>
-                <Button title={strings("modules.BandejaDeAutorizaciones.AutorizacionRet.accept")}  onPress={() => this.updateLineReject(this.state.aux_RETREQLIN)} />
+                <Button title={strings("modules.BandejaDeAutorizaciones.AutorizacionRet.accept")}  onPress={() => this.handle_writing_of_observations(this.state.aux_RETREQLIN)} />
                 <Text>{" "}</Text>
                 <Button title={strings("modules.BandejaDeAutorizaciones.AutorizacionRet.close")} type="outline" onPress={() => this.setState({filling_observations: false})}/>
               </View>

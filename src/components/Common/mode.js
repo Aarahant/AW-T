@@ -7,6 +7,9 @@ export default StyleSheet.create({
     width: 120,
     alignSelf: 'center'
   },
+  celdaOption: {
+    height: 40
+  },
   menuOption: {
     paddingVertical:10,
     marginHorizontal: 20,
@@ -310,5 +313,11 @@ export default StyleSheet.create({
     color: 'grey',
     fontSize: 16,
     margin: 4
-  }
+  },
+  // Router Navbar
+  navBar: {
+    backgroundColor: "red",
+    color: "#FFF",
+    fontWeight: "normal"
+  } 
 });
