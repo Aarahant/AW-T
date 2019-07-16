@@ -63,9 +63,9 @@ export default class Pantalla extends React.Component {
        await AsyncStorage.setItem("A_MODE",mode)
       })()
       global.style = mode;
+      global.skip = true;
       Actions.refresh();
       Actions.load();
-      Actions.main();
     //  } else {
     //    Alert.alert(
     //      strings('common.session.alert_title'),

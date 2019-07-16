@@ -49,15 +49,8 @@ export default class HomeScreen extends React.Component {
       });
   }
   handleRequest() {
+    global.skip = false;
     Actions.auth()
-    axios
-      .get('/auth/logout/')
-      .then(response => {
-        console.log(response.status);
-        delete axios.defaults.headers.common.Authorization;
-        Actions.auth();
-      })
-      .catch(error =>  console.log(error));
   };
 
   async componentDidMount() {
@@ -231,7 +224,7 @@ export default class HomeScreen extends React.Component {
       drawerWidth={300}
       renderNavigationView={() => navigationView}>
       <Header
-        backgroundColor= '#1aa6a8' //'#003366'
+        backgroundColor= {estilos.navBar.backgroundColor}
         leftComponent={{ icon: 'menu', color: '#fff', onPress:() => this.refs['mainDrawer'].openDrawer() }}
         centerComponent={{ text: strings('modules.HomeScreen.title'), style: { color: '#fff' } }}
         containerStyle={{

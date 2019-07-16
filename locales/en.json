@@ -103,6 +103,7 @@
             "alert_title": "Attention",
             "alert_content": "The session has expired.",
             "alert_ok": "OK"
-        }
+        },
+        "loading": "Loading..."
     }
 }

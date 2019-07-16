@@ -79,6 +79,7 @@
                 "Autorizar": "Sí",
                 "NoAutorizar": "No",
                 "detail": "Detalle",
+                "ProgPag": "Programación de Pago",
                 "messages": {
                     "attention": "Atención",
                     "ok": "OK",
@@ -290,7 +291,8 @@
             "alert_title": "Atención",
             "alert_content": "La sesión ha expirado.",
             "alert_ok": "OK"
-        }
+        },
+        "loading": "Cargando..."
     },
     "router": {
         "authorization_bin": "Bandeja de autorización"

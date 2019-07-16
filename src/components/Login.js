@@ -24,14 +24,14 @@ class Login extends Component {
     super(props);
     this.state = {
       loginProcessing: false,
-      // PRUEBAS ---------------------
       username: '',
+      // PRUEBAS ---------------------
       password: '12345678',
       // PRUEBAS END ----------------------
     };
   }  
   
-  componentDidMount() {
+  async componentDidMount() {
     this.getAsync();
   }
 
@@ -47,7 +47,6 @@ class Login extends Component {
       console.log(global.style);
     } catch(e) {
       console.log("####### FALLASSSSSSSS")
-      // read error
     }
   }
 
@@ -146,7 +145,7 @@ class Login extends Component {
       estilos = light;
       break; 
     }
-3
+
     const {
       formContainerStyle,
       fieldStyle,
@@ -177,7 +176,7 @@ class Login extends Component {
             <View style={{ flex: 1 }}>
               <View style={{ flex: 1 }}>
                 <View style={formContainerStyle}>
-                  <Image style={kds_logo_image} source={require("../../assets/gifs/KDS_LOGO.gif")}/>
+                  <Image style={kds_logo_image} source={require("../../assets/images/KDS_LOGO.png")}/>
                   <View style = {viewFontLogin}>
                     <Text style = {fontLogin}> {strings('modules.Login.username')}</Text>
                   </View>
@@ -250,8 +249,9 @@ const style = StyleSheet.create({
     color: 'black'
   },
   kds_logo_image: {
-    height: 190,
-    width: 190
+    height: 146,
+    width: 190,
+    marginBottom: 22
   }
 });
 

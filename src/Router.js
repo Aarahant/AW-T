@@ -2,12 +2,14 @@ import React from 'react';
 import {
     Scene,
     Stack,
-    Router
+    Router,
+    Actions
 } from 'react-native-router-flux';
 import { 
     StyleSheet,
     StatusBar 
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import light from './components/Common/mode';
 import dark from './components/Common/DarkMode';
@@ -30,25 +32,6 @@ import Pantalla from './components/Settings/Pantalla';
 import LoadingScreen from './components/Common/LoadingScreen';
 import IdiomaInicial from './components/IdiomaInicial';
 
-// const RouterComponent = () => {
-    // let estilos;
-    // console.log('################## EMPIRE');
-    // console.log(global.style);
-    // switch (global.style){
-        
-    // case 'light':
-    //   estilos = light;
-    //   break;
-    // case 'dark':
-    //   estilos = dark;
-    //   break;
-    // default:
-    //   estilos = dark;
-    //   break; 
-    // }
-    // let switchy = 1;
-    // this.interval = setInterval(() => if (switchy === 1) {} else {},1000);
-
 export default class RouterComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -59,13 +42,52 @@ export default class RouterComponent extends React.Component {
         };
     }
 
-    componentDidMount() {
-        console.log("===============STAR WARS CHRISTMAS SPECIAL============")
-        console.log("===============STAR WARS CHRISTMAS SPECIAL END============")
-        this.interval = setInterval(() => this.setState({back_color: 'purple'}) , 30000);        
+    async componentWillMount() {
+        this.getAsync();
     }
-    
-    // return (
+
+    componentDidMount() {
+        this.interval = setInterval(() => (global.skip) ? this.setState({loading: false}) : console.log("Nadita papita") , 5000);             
+    }
+
+    getAsync = async () => {
+        try {
+            let mode = await AsyncStorage.getItem("A_MODE")
+            global.style = mode
+            switch (global.style) {
+                case 'dark':
+                    this.setState({back_color: 'rgb(13, 97, 114)'});
+                    break;
+                case 'light': 
+                    this.setState({back_color: '#1AA6A8'});
+                    break;
+                default: 
+                    this.setState({back_color: '#1AA6A8'});
+                    break;
+            }
+        } catch(e) {
+            console.log("####### FALLASSSSSSSS" + e)
+        }
+    }
+
+    handle_mode_change() {
+        if (global.skip) {
+            switch (global.style) {
+                case 'dark':
+                    this.setState({back_color: 'rgb(13, 97, 114)'});
+                    break;
+                case 'light': 
+                    this.setState({back_color: '#1AA6A8'});
+                    break;
+                default: 
+                    this.setState({back_color: '#1AA6A8'});
+                    break;
+            }
+            global.skip = false;
+            Actions.main()
+        }
+    }
+
     render() {
         return (
         <Router tintColor='white' navigationBarStyle={[style.navBar, {backgroundColor: this.state.back_color}]} titleStyle={{color: "white"}}>
@@ -82,6 +104,9 @@ export default class RouterComponent extends React.Component {
                         component={Login}
                         initial
                         style={style.sceneStyle}
+                        on={() => global.skip === true}
+                        success={()=>this.handle_mode_change()}  
+                        failure="login"
                     />
                     <Scene
                         title = "Elegir Idioma"

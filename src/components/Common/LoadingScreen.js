@@ -2,9 +2,20 @@ import React from 'react';
 import { StyleSheet, Image, View } from 'react-native';
 import light from '../Common/mode';
 import dark from '../Common/DarkMode';
+import { Actions } from 'react-native-router-flux';
+import { strings } from '../../i18n';
 
 export default class LoadingScreen extends React.Component {
-    render(){
+  
+  updateTitle() {
+    Actions.refresh({title: strings("common.loading")});
+    clearInterval(this.titleInterval);
+  }
+  componentDidMount(){
+    this.titleInterval = setInterval(() => this.updateTitle(),1);
+  }  
+  
+  render(){
       let estilos;
       switch (global.style){
       case 'light':

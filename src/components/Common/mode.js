@@ -316,7 +316,7 @@ export default StyleSheet.create({
   },
   // Router Navbar
   navBar: {
-    backgroundColor: "red",
+    backgroundColor: '#1aa6a8',
     color: "#FFF",
     fontWeight: "normal"
   } 

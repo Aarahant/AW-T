@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   imgCard: {
-    backgroundColor: 'rgb(26, 81, 115)', 
+    backgroundColor: "#1e2736", 
     height: 120,
     width: 120,
     alignSelf: 'center'
@@ -31,8 +31,9 @@ export default StyleSheet.create({
   },
   curvedCardLeft:{
     borderRadius: 10,
-    backgroundColor: 'rgb(26, 81, 115)',
-    borderColor: 'rgb(26, 81, 115)',
+    // backgroundColor: 'rgb(26, 81, 115)',
+    backgroundColor: "#1e2736",
+    borderColor: "#1e2736",
     elevation: 6,
     marginTop: 0,
     marginBottom: 10,
@@ -41,8 +42,8 @@ export default StyleSheet.create({
   },
   curvedCardRight:{
     borderRadius: 10,
-    backgroundColor: 'rgb(26, 81, 115)',
-    borderColor: 'rgb(26, 81, 115)',
+    backgroundColor: "#1e2736",
+    borderColor: "#1e2736",
     elevation: 6,
     marginTop: 0,
     marginBottom: 10,
@@ -81,7 +82,8 @@ export default StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: 'rgb(18, 56, 79)',
+    // backgroundColor: 'rgb(18, 56, 79)',
+    backgroundColor: '#141d29',
     justifyContent: "space-around"
   },
   containerButton: {
@@ -130,7 +132,7 @@ export default StyleSheet.create({
   },
   loadingContainerCommon: {
     flex: 1,
-    backgroundColor: 'rgb(18, 56, 79)',
+    backgroundColor: '#141d29',
     justifyContent: "center",
     alignItems: "center"
   },
@@ -219,7 +221,8 @@ export default StyleSheet.create({
   },
   separadorContainer:{
     alignItems: 'flex-start',
-    backgroundColor: 'rgb(26, 81, 115)'
+    // backgroundColor: 'rgb(26, 81, 115)'
+    backgroundColor: "#1e2736"
   },
   separador: {
     alignItems: 'flex-start',
@@ -266,13 +269,15 @@ export default StyleSheet.create({
     textAlignVertical: 'top'
   },
   Overlay: {
-    backgroundColor: 'rgb(26, 81, 115)'
+    // backgroundColor: 'rgb(26, 81, 115)'
+    backgroundColor: "#1e2736"
   },
   
   curvedCard:{
     padding: 20,
     borderRadius: 10,
-    backgroundColor: 'rgb(26, 81, 115)',
+    // backgroundColor: 'rgb(26, 81, 115)',
+    backgroundColor: "#1e2736",
     elevation: 10,
     marginTop: 5,
     marginBottom: 15,
@@ -315,7 +320,8 @@ export default StyleSheet.create({
     marginVertical: 3
   },
   table_general_head: {
-    backgroundColor: 'rgb(26, 81, 115)'
+    // backgroundColor: 'rgb(26, 81, 115)'
+    backgroundColor: "#1e2736"
   },
   general_title:{
     fontFamily: 'sans-serif-condensed',
@@ -331,7 +337,7 @@ export default StyleSheet.create({
   },
   // Router Navbar
   navBar: {
-      backgroundColor: 'rgb(18, 56, 79)',
+      backgroundColor: '#233446',
       color: "#FFF",
       fontWeight: "normal"
   } 
