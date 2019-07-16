@@ -207,7 +207,7 @@ export default class HomeScreen extends React.Component {
             </TouchableOpacity>
 
           </View>
-          <View style={{paddingBottom: 10}}>
+          <View style={{paddingBottom: 25}}>
             <TouchableOpacity onPress={this.handleRequest.bind(this)}>
               <View style={estilos.celdaOption}>
                 <Text style={estilos.menuOptionFinal}>{strings('modules.HomeScreen.log_out')}</Text>

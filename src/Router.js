@@ -54,6 +54,7 @@ export default class RouterComponent extends React.Component {
         try {
             let mode = await AsyncStorage.getItem("A_MODE")
             global.style = mode
+            global.userId = await AsyncStorage.getItem("A_CNUSERID")
             switch (global.style) {
                 case 'dark':
                     this.setState({back_color: 'rgb(13, 97, 114)'});

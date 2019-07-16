@@ -13,11 +13,22 @@
             "title": "Main Menu"
         },
         "Settings": {
-            "language": "Language"
+            "title": "Configuration",
+            "language": "Language",
+            "Idioma": {
+                "title": "Language"
+            },
+            "Screen": "Appearance",
+            "Pantalla": {
+                "title": "Appearance",
+                "light": "Light mode",
+                "dark": "Dark mode"
+            }
         },
         "BandejaDeAutorizaciones": {
             "BandejaDeAutorizaciones": {
-                "title": "Authorization bin"
+                "title": "Authorization bin",
+                "non_pending": "You don't have any pending authorizations"
             },
             "AutorizacionPorTDC": {
                 "title": "Authorization bin",
@@ -53,27 +64,150 @@
                 "validations": {
                     "missing_justification": "Please add a justification for your decision."
                 }
+            },
+            "AutorizacionPag": {
+                "title": "Payment authorization",
+                "PAGOID": "Payment number",
+                "IncludesANT": "INCLUDES ADVANCE",
+                "CNUSERDSC": "User",
+                "CNCDIRNOM": "Supplier",
+                "CANTIDAD": "Amount",
+                "CNCD03DSC": "Concept of partition",
+                "PAGOFEC": "Registration date",
+                "PAGOFEPR": "Programming date",
+                "Comentarios": "Comments",
+                "Autorizar": "Yes",
+                "NoAutorizar": "No",
+                "detail": "Associated payments",
+                "ProgPag": "Payment program",
+                "messages": {
+                    "attention": "Attention",
+                    "ok": "OK",
+                    "yes": "Yes",
+                    "no": "No",
+                    "confirmAutorizar": "The payment will be authorized. Do you wish to continue with the process?",
+                    "confirmRechazar": "The payment will be rejected. Do you wish to continue with the process?"  
+                },
+                "validations": {
+                    "missing_justification": "Please justify your decision."
+                }
+            },
+            "AutorizacionPagCXP": {
+                "title": "Associated payments",
+                "PDF_OC": "Purhase Order Preliminary Report",
+                "PDF_XML": "Payment Bill",
+                "CXP": "Debts to pay",
+                "CNTDOCDSC": "Type",
+                "PMCTPRDSC": "Project",
+                "PMNumDocOC": "Purchase Order Number",
+                "PMFolioFac": "Bill Folio",
+                "PMFechFac": "Bill Date",
+                "PMFechVen": "Expiration Date",
+                "Pago": "Original Amount",
+                "Cantidad": "Pending Balance",
+                "ACMVOIPORA": "Advance Percentage"
+            },
+            "AutorizacionRav": {
+                "title": "Progress Registration",
+                "status": "Status",
+                "date": "Date",
+                "comments": "Comments",
+                "report_title":"Report",
+                "report_text":"Purchase Order Preliminary Report",
+                "authorization_levels": "Auhtorization Levels",
+                "service_detail": "Service Details",
+                "justification":"Justification",
+                "write_justification":"Write the jsutification for your decision",
+                "accept": "Accept",
+                "reject": "Reject",
+                "number": "Document Number",
+                "price": "Amount",
+                "procurer": "Buyer",
+                "advance": "Advance",
+                "amortization": "Amortization",
+                "advance_minus_amortization": "Advance - Amortization",
+                "service_period": "Service period",
+                "purchase_order_details": "Purchase Order Summary",
+                "total_without_tax": "Total without tax",
+                "advance_without_tax": "Advance without tax",
+                "amortized_advance": "Amortized advance",
+                "advance_to_amortize": "Advance to amortize",
+                "authorized_progress_percentage": "Authorized advance percentage",
+                "authorized_progress_amount": "Authorized advance amount",
+                "pending_amount": "Pending amount",
+                "messages": {
+                    "attention": "Attention",
+                    "authorization": "The service progress will be authorized. Do you wish to continue with the process?",
+                    "rejection": "The service progress will be rejected. Do you wish to continue with the process?",
+                    "ok": "OK",
+                    "yes": "yes",
+                    "no": "No"
+                },
+                "validations": {
+                    "missing_justification": "Please justify your decision."
+                }
+            },
+            "AutorizacionReq": {
+                "title": "Requisition authorization",
+                "status": "Status",
+                "date": "Date",
+                "comments": "Comments",
+                "report_title":"Report",
+                "report_text":"Purchase Order Preliminary Report",
+                "authorization_levels": "Auhtorization Levels",
+                "lines": "Lines",
+                "justification":"Justification",
+                "write_justification":"Write the justification for your decision",
+                "accept": "Accept",
+                "reject": "Reject",
+                "number": "Document number",
+                "budget_title": "Budget",
+                "general_budget_title": "General",
+                "monthly_budget_title": "Monthly",
+                "budgeted_budget": "Budgeted",
+                "compromised_budget": "Compromised",
+                "available_budget": "Available",
+                "num": "Days without attending",
+                "close": "Close",
+                "messages": {
+                    "attention": "Attention",
+                    "authorization": "The requisition will be impacted Do you wish to continue with the process?",
+                    "ok": "OK",
+                    "yes": "Yes",
+                    "no": "No"
+                },
+                "validations": {
+                    "missing_justification": "Please justifiy your decision."
+                }
+            },
+            "AutorizacionRet": {
+                "title": "Requisition Liberations",
+                "status": "Status",
+                "date": "Date",
+                "authorization_levels": "Authorization Levels",
+                "lines": "Lines",
+                "justification":"Justification",
+                "write_observations":"Optional: Write your considered observations...",
+                "accept": "Accept",
+                "reject": "Reject",
+                "number": "Document number",
+                "buyer": "Buyer",
+                "close": "Close",
+                "observations": "Observations",
+                "messages": {
+                    "attention": "Attention",
+                    "authorization": "The requisition will be impacted. Do you wish to continue with the process?",
+                    "ok": "OK",
+                    "yes": "Yes",
+                    "no": "No"
+                },
+                "validations": {
+                    "missing_justification": "Please justifiy your decision."
+                }
             } 
         }
     },
     "transactions": {
-        "CNCIAS": {
-            "CNCIASDSC": "Company"
-        },
-        "BANAUT": {
-            "BANAUTNDC": "Document number",
-            "BANAUTTDC": "Document type",
-            "BANAUTFEC": "Date"
-        },
-        "TIPAUT": {
-            "TIPAUTDSC": "Authorization type"
-        },
-        "CNCDIR": {
-            "CNCDIRNOM": "Supplier"
-        },
-        "PMCTPR": {
-            "PMCTPRDSC":  "Project"
-        },
         "ACOCPA": {
             "ACOCPAQTY": "Quantity",
             "ACOCPAUM": "Measure unit",
@@ -89,13 +223,67 @@
             "ACMVOICOM":"Justification",
             "ACMVOIQTA":"Additional",
             "ACMVOIPORA": "Percentage in advance",
-            "ACMVOIBAUT": "Observations"
+            "ACMVOIBAUT": "Observations",
+            "ACMVOIFDOC": "Purchase order date",
+            "ACMVOIFCEP": "Commited date",
+            "ACMVOIQTO": "Cantidad"
+        },
+        "ACMVOR": {
+            "ACMVORDSC4": "Description"
+        },
+        "ACMROI": {
+            "ACMROIFP": "Unit price",
+            "ACMROIPAREG": "Advance percentage",
+            "ACMROIFDOC": "Registration date",
+            "ACMROIOBST": "Comment that supports this progress registration"
+        },
+        "ACRCOI": {
+            "ACRCOILIN": "Line",
+            "ACRCOIDSC4": "Observations",
+            "ACRCOIQTO": "Requested amount",
+            "ACRCOIFDO2": "Date" 
+        },
+        "ACRCPA": {
+            "ACRCPALIN": "Line",
+            "ACRCPAQTY": "Requested amount",
+            "ACRCPAFREQ": "Requisition date",
+            "ACRCPAOBS": "Observations",
+            "ACRCPAQTYR": "Required amount",
+            "ACRCPAQTYOC": "Purchase order amount",
+            "ACRCPAQTYRC": "Amount received",
+            "ACRCPAQTYP": "Budget amount",
+            "ACRCPAULPCM": "Last purchase price",
+            "ACRCPAVACMEST": "Estimated purchase value",
+            "ACRCPACNRQPDIAS": "Required amount in the last two weeks"
+        },
+        "BANAUT": {
+            "BANAUTNDC": "Document number",
+            "BANAUTTDC": "Document type",
+            "BANAUTFEC": "Date"
+        },
+        "CNCIAS": {
+            "CNCIASDSC": "Company"
+        },
+        "CNCDIR": {
+            "CNCDIRNOM": "Supplier"
+        },
+        "CNTCPG": {
+            "CNTCPGDSC": "Payment conditions"
+        },
+        "PMCTPR": {
+            "PMCTPRDSC":  "Project"
         },
         "PMCTCG": {
             "PMCTCGDSC":"Charge account"
         },
-        "CNTCPG": {
-            "CNTCPGDSC": "Payment conditions"
+        "TIPAUT": {
+            "TIPAUTDSC": "Authorization type"
+        },
+        "RETREQ": {
+            "RETREQLIN": "Line",
+            "RETREQPRE": "Budget",
+            "RETREQREQ": "Requested",
+            "RETREQMT": "Motive"
         }
     },
     "common": {
@@ -105,5 +293,8 @@
             "alert_ok": "OK"
         },
         "loading": "Loading..."
+    },
+    "router": {
+        "authorization_bin": "Authorization bin"
     }
 }

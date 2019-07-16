@@ -1,6 +1,9 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
+  loginBackground: {
+    backgroundColor: 'rgb(18, 56, 79)'
+  },
   imgCard: {
     backgroundColor: 'rgb(26, 81, 115)', 
     height: 120,
@@ -17,7 +20,7 @@ export default StyleSheet.create({
     fontSize: 16,
     width: 260,
     borderTopWidth: 1,
-    borderColor: 'rgb(224,224,224)'
+    borderColor: 'rgba(255,255,255,0.1)'
   },
   menuOptionFinal:{
     padding: 10,
@@ -27,7 +30,7 @@ export default StyleSheet.create({
     width: 260,
     borderWidth: 1,
     borderBottomWidth: 1,
-    borderColor: 'rgb(224,224,224)'
+    borderColor: 'rgba(255,255,255,0.2)'
   },
   curvedCardLeft:{
     borderRadius: 10,
@@ -250,7 +253,7 @@ export default StyleSheet.create({
 
   emailItem:{
     borderBottomWidth: 0.5,
-    borderColor: 'rgba(255,255,255,0.8)',
+    borderColor: 'rgba(255,255,255,0.1)',
     padding: 10
   },
   

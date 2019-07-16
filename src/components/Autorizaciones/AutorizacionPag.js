@@ -264,7 +264,6 @@ const styles = StyleSheet.create({
   },
   detalleButton: {
     height: 40,
-    width: '30%',
     borderRadius:10,
     marginTop: 5
   }

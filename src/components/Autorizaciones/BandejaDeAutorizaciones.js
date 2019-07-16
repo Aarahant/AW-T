@@ -126,7 +126,7 @@ export default class BandejaDeAutorizaciones extends React.Component {
           textAlign: 'center',
           paddingTop: 3,
           borderRadius: 50,
-          marginTop: 10,
+          marginTop: 6,
           marginRight: 10,
         }}>
         {pending}

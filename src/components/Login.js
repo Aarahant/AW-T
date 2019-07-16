@@ -24,31 +24,13 @@ class Login extends Component {
     super(props);
     this.state = {
       loginProcessing: false,
-      username: '',
+      // username: '',
       // PRUEBAS ---------------------
       password: '12345678',
       // PRUEBAS END ----------------------
+      username: global.userId
     };
   }  
-  
-  async componentDidMount() {
-    this.getAsync();
-  }
-
-  getAsync = async () => {
-    let userId = await AsyncStorage.getItem("A_CNUSERID")
-    this.setState({
-      username: userId
-    });
-    try {
-      let mode = await AsyncStorage.getItem("A_MODE")
-      global.style = mode
-      console.log('################## The Force Unleashed');
-      console.log(global.style);
-    } catch(e) {
-      console.log("####### FALLASSSSSSSS")
-    }
-  }
 
   setUserId(CNUSERID) {
     (async ()=>{
@@ -134,15 +116,20 @@ class Login extends Component {
 
   render() {
     let estilos;
+    let bgimage;
+    console.log("GLOBAL STYLE => "+ global.style)
     switch (global.style){
     case 'light':
       estilos = light;
+      bgimage = require('../../assets/images/blue_background.png')
       break;
     case 'dark':
       estilos = dark;
+      bgimage = require('../../assets/images/dark_backgroundv3.png')
       break;
     default:
       estilos = light;
+      bgimage = require('../../assets/images/blue_background.png')
       break; 
     }
 
@@ -157,8 +144,8 @@ class Login extends Component {
     } = style;
     const version = 'V0.0.0';
     return (
-      <ScrollView style={{backgroundColor: "#24aebb"}}>
-        <ImageBackground source={require('../../assets/images/blue_background.png')} style={{width: '100%'}}>
+      <ScrollView style={estilos.loginBackground}>
+        <ImageBackground source={bgimage} style={{width: '100%'}}>
           <View style={styles.versionPosition}>
             <Text>{version}</Text>
           </View>

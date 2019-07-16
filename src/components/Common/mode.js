@@ -1,6 +1,9 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
+  loginBackground: {
+    backgroundColor: '#24aebb'
+  },
   imgCard: {
     backgroundColor: 'white', 
     height: 120,
